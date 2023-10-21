@@ -1,0 +1,389 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>7.0</ProjectVersion>
+    <ToolchainName>com.Atmel.ARMGCC.C</ToolchainName>
+    <ProjectGuid>dce6c7e3-ee26-4d79-826b-08594b9ad897</ProjectGuid>
+    <avrdevice>ATSAMD51J19A</avrdevice>
+    <avrdeviceseries>none</avrdeviceseries>
+    <OutputType>Executable</OutputType>
+    <Language>C</Language>
+    <OutputFileName>$(MSBuildProjectName)</OutputFileName>
+    <OutputFileExtension>.elf</OutputFileExtension>
+    <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
+    <AssemblyName>ProtoRomulusIIFwre</AssemblyName>
+    <Name>drivePACK</Name>
+    <RootNamespace>ProtoRomulusIIFwre</RootNamespace>
+    <ToolchainFlavour>Native</ToolchainFlavour>
+    <KeepTimersRunning>true</KeepTimersRunning>
+    <OverrideVtor>false</OverrideVtor>
+    <CacheFlash>true</CacheFlash>
+    <ProgFlashFromRam>true</ProgFlashFromRam>
+    <RamSnippetAddress>0x20000000</RamSnippetAddress>
+    <UncachedRange />
+    <preserveEEPROM>true</preserveEEPROM>
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
+    <BootSegment>2</BootSegment>
+    <ResetRule>0</ResetRule>
+    <eraseonlaunchrule>0</eraseonlaunchrule>
+    <EraseKey />
+    <AsfFrameworkConfig>
+      <framework-data>
+        <options />
+        <configurations />
+        <files />
+        <documentation help="" />
+        <offline-documentation help="" />
+        <dependencies>
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.42.0" />
+        </dependencies>
+      </framework-data>
+    </AsfFrameworkConfig>
+    <avrtool>com.atmel.avrdbg.tool.atmelice</avrtool>
+    <avrtoolserialnumber>J41800021951</avrtoolserialnumber>
+    <avrdeviceexpectedsignature>0x60060305</avrdeviceexpectedsignature>
+    <avrtoolinterface>SWD</avrtoolinterface>
+    <com_atmel_avrdbg_tool_atmelice>
+      <ToolOptions>
+        <InterfaceProperties>
+          <SwdClock>2000000</SwdClock>
+        </InterfaceProperties>
+        <InterfaceName>SWD</InterfaceName>
+      </ToolOptions>
+      <ToolType>com.atmel.avrdbg.tool.atmelice</ToolType>
+      <ToolNumber>J41800021951</ToolNumber>
+      <ToolName>Atmel-ICE</ToolName>
+    </com_atmel_avrdbg_tool_atmelice>
+    <avrtoolinterfaceclock>2000000</avrtoolinterfaceclock>
+    <custom>
+      <ToolOptions xmlns="">
+        <InterfaceProperties>
+        </InterfaceProperties>
+        <InterfaceName>SWD</InterfaceName>
+      </ToolOptions>
+      <ToolType xmlns="">custom</ToolType>
+      <ToolNumber xmlns="">
+      </ToolNumber>
+      <ToolName xmlns="">Custom Programming Tool</ToolName>
+    </custom>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <ToolchainSettings>
+      <ArmGcc>
+  <armgcc.common.outputfiles.hex>True</armgcc.common.outputfiles.hex>
+  <armgcc.common.outputfiles.lss>True</armgcc.common.outputfiles.lss>
+  <armgcc.common.outputfiles.eep>True</armgcc.common.outputfiles.eep>
+  <armgcc.common.outputfiles.bin>True</armgcc.common.outputfiles.bin>
+  <armgcc.common.outputfiles.srec>True</armgcc.common.outputfiles.srec>
+  <armgcc.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>NDEBUG</Value>
+    </ListValues>
+  </armgcc.compiler.symbols.DefSymbols>
+  <armgcc.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\arm\cmsis\5.0.1\CMSIS\Include\</Value>
+      <Value>%24(PackRepoDir)\atmel\SAMD51_DFP\1.0.70\include</Value>
+    </ListValues>
+  </armgcc.compiler.directories.IncludePaths>
+  <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
+  <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
+  <armgcc.linker.general.AdditionalSpecs>Use rdimon (semihosting) library (--specs=rdimon.specs)</armgcc.linker.general.AdditionalSpecs>
+  <armgcc.linker.libraries.Libraries>
+    <ListValues>
+      <Value>libm</Value>
+    </ListValues>
+  </armgcc.linker.libraries.Libraries>
+  <armgcc.linker.libraries.LibrarySearchPaths>
+    <ListValues>
+      <Value>%24(ProjectDir)\Device_Startup</Value>
+    </ListValues>
+  </armgcc.linker.libraries.LibrarySearchPaths>
+  <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+  <armgcc.linker.memorysettings.Flash>
+    <ListValues>
+      <Value>.text=0x6000</Value>
+    </ListValues>
+  </armgcc.linker.memorysettings.Flash>
+  <armgcc.linker.memorysettings.ExternalRAM />
+  <armgcc.linker.miscellaneous.LinkerFlags>-Tsamd51j19a_flash.ld</armgcc.linker.miscellaneous.LinkerFlags>
+  <armgcc.assembler.general.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\arm\cmsis\5.0.1\CMSIS\Include\</Value>
+      <Value>%24(PackRepoDir)\atmel\SAMD51_DFP\1.0.70\include</Value>
+    </ListValues>
+  </armgcc.assembler.general.IncludePaths>
+  <armgcc.preprocessingassembler.general.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\arm\cmsis\5.0.1\CMSIS\Include\</Value>
+      <Value>%24(PackRepoDir)\atmel\SAMD51_DFP\1.0.70\include</Value>
+    </ListValues>
+  </armgcc.preprocessingassembler.general.IncludePaths>
+</ArmGcc>
+    </ToolchainSettings>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <ToolchainSettings>
+      <ArmGcc>
+  <armgcc.common.outputfiles.hex>True</armgcc.common.outputfiles.hex>
+  <armgcc.common.outputfiles.lss>True</armgcc.common.outputfiles.lss>
+  <armgcc.common.outputfiles.eep>True</armgcc.common.outputfiles.eep>
+  <armgcc.common.outputfiles.bin>True</armgcc.common.outputfiles.bin>
+  <armgcc.common.outputfiles.srec>True</armgcc.common.outputfiles.srec>
+  <armgcc.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>DEBUG</Value>
+    </ListValues>
+  </armgcc.compiler.symbols.DefSymbols>
+  <armgcc.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\arm\cmsis\5.0.1\CMSIS\Include\</Value>
+      <Value>%24(PackRepoDir)\atmel\SAMD51_DFP\1.0.70\include</Value>
+    </ListValues>
+  </armgcc.compiler.directories.IncludePaths>
+  <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
+  <armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>
+  <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
+  <armgcc.linker.general.AdditionalSpecs>Use rdimon (semihosting) library (--specs=rdimon.specs)</armgcc.linker.general.AdditionalSpecs>
+  <armgcc.linker.libraries.Libraries>
+    <ListValues>
+      <Value>libm</Value>
+    </ListValues>
+  </armgcc.linker.libraries.Libraries>
+  <armgcc.linker.libraries.LibrarySearchPaths>
+    <ListValues>
+      <Value>%24(ProjectDir)\Device_Startup</Value>
+    </ListValues>
+  </armgcc.linker.libraries.LibrarySearchPaths>
+  <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+  <armgcc.linker.memorysettings.ExternalRAM />
+  <armgcc.linker.miscellaneous.LinkerFlags>-Tsamd51j19a_flash.ld --verbose</armgcc.linker.miscellaneous.LinkerFlags>
+  <armgcc.assembler.general.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\arm\cmsis\5.0.1\CMSIS\Include\</Value>
+      <Value>%24(PackRepoDir)\atmel\SAMD51_DFP\1.0.70\include</Value>
+    </ListValues>
+  </armgcc.assembler.general.IncludePaths>
+  <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
+  <armgcc.preprocessingassembler.general.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\arm\cmsis\5.0.1\CMSIS\Include\</Value>
+      <Value>%24(PackRepoDir)\atmel\SAMD51_DFP\1.0.70\include</Value>
+    </ListValues>
+  </armgcc.preprocessingassembler.general.IncludePaths>
+  <armgcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</armgcc.preprocessingassembler.debugging.DebugLevel>
+</ArmGcc>
+    </ToolchainSettings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="aux_funcs.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="aux_funcs.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Commands\commands.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Commands\commands.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Commands\commands_defs.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Commands\commands_fs_impl.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Commands\commands_fs_impl.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Commands\commands_impl.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Commands\commands_impl.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="console.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="console.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="data_io.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="data_io.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Device_Startup\startup_samd51.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Device_Startup\system_samd51.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dpack.s">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dpack_ctrl.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dpack_ctrl.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FatFsSrc\diskio.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FatFsSrc\diskio.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FatFsSrc\ff.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FatFsSrc\ff.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FatFsSrc\ffconf.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FatFsSrc\ffsystem.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FatFsSrc\ffunicode.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="file_sys.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="file_sys.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpio.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpio.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="graphix.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="graphix.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LCDs\lcdio.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LCDs\lcdio.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LCDs\lcd_ili9481.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LCDs\lcd_ili9481.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LCDs\lcd_sh1106.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LCDs\lcd_sh1106.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LCDs\lcd_st7565.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LCDs\lcd_st7565.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LCDs\lcd_st7735.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LCDs\lcd_st7735.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Screens\screens.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Screens\screens.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Screens\screens_dialog.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Screens\screens_dialog.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Screens\screens_enter_txt.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Screens\screens_enter_txt.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Screens\screens_f_explorer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Screens\screens_f_explorer.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Screens\screens_menus.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Screens\screens_menus.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Screens\screens_params_edition.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Screens\screens_params_edition.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sys_defs.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sys_defs.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdmmc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdmmc.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="timing.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="timing.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usart.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usart.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="user_iface.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="user_iface.h">
+      <SubType>compile</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Device_Startup\" />
+    <Folder Include="FatFsSrc" />
+    <Folder Include="LCDs" />
+    <Folder Include="Commands" />
+    <Folder Include="Screens" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Device_Startup\samd51j19a_flash.ld">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="Device_Startup\samd51j19a_sram.ld">
+      <SubType>compile</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
+</Project>
