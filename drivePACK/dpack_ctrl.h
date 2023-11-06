@@ -30,26 +30,7 @@
 #define MAX_ROM_FILE_NAME              13  // The older MS-DOS FAT file system allows for a maximum of 8 characters in the basic file name and 3 characters in the extension, for a total of 12 characters with the dot separator.
 #define MAX_ROM_FILE_PATH              64  // size of the buffer used to store the string with current song path
 
-// Synthkore  09-07-2022  Tolaemon
-// Description: initialize the dpack module main data structures
-// Receives:
-// Returns:
-//   By reference:
-//   By value:
 void DPACK_CTRL_Init();
-
-// Synthkore  03-08-2022  Tolaemon
-// Description: 
-// Checks that the first ROMPACK_HEADER_NUM_BYTES in the nibbles buffer correspond to
-// the expected nibbles for a valid ROM pack. If that bytes are not the expected then
-// it means that the nibbles buffer contains invalid data.
-// Receives:
-// Returns:
-//   By reference:
-//   By value:
-//     >=0 if the first ROMPACK_HEADER_NUM_BYTES in the nibbles buffer are the expected
-//    and the content of the nibbles buffer corresponds to a valid ROM pack.
-//     <0 the nibbles buffer does not correspond to a valid ROM pack.
 int8_t DPACK_CTRL_check_buffer();
 
 #endif // _DPACK_CTRL_H_

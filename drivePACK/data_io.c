@@ -311,7 +311,7 @@ int16_t DATA_IO_1KXmodem_rom_receive(){
 	if (AUX_FUNCS_lstrcmp((uint8_t*)ROMPACK_FILE_TAG_N_VERSION, ui8_version_bytes, ROMPACK_FILE_TAG_N_VERSION_SIZE)!=0){
 			
 		// FILE_SYS_file_close();
-		i16_ret_val = -2;//Error in ROM PACK file format / version
+		i16_ret_val = USART_1KX_HEADER_ERR;//Error in ROM PACK file format / version
 			
 	}//if
 				

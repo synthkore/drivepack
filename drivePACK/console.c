@@ -37,8 +37,6 @@ struct {
 } commands;
 
 
-
-// Initializes parser and console variables
 void CONSOLE_Init(){
 	int16_t i=0;
 	int16_t j=0;
@@ -71,14 +69,6 @@ void CONSOLE_Init(){
 }//CONSOLE_init
 
 
-
-// Enables the CONSOLE module. When the CONSOLE module is enabled the module functions
-// are executed on each cycle. When the CONSOLE module is not enabled the module functions
-// are not executed on each cycle.
-// Receives:
-// Returns:
-//		By reference:
-//		By value:
 void CONSOLE_enable(){
 	
     commands.ui8_enabled=1;	
@@ -86,14 +76,6 @@ void CONSOLE_enable(){
 }//CONSOLE_enable
 
 
-
-// Disables the CONSOLE module. When the CONSOLE module is enabled the module functions
-// are executed on each cycle. When the CONSOLE module is NOT enabled the module functions
-// are not executed on each cycle, so the console is not executed.
-// Receives:
-// Returns:
-//		By reference:
-//		By value:
 void CONSOLE_disable(){
 	
 	commands.ui8_enabled=0;
@@ -101,130 +83,11 @@ void CONSOLE_disable(){
 }//CONSOLE_enable
 
 
-
-// Stores a new command string into the the console command strings queue to allow the
-// user to use that command string again.
-//		By value:
-//			1 the command string has been enqueued
-//		   -1 the command string  has not been enqueued
-int16_t CONSOLE_enqueue_command_string(uint8_t * command_to_store){
-	int16_t i16_ret_val=-1;
-	int16_t i;
-
-
-	// if the content is>0, store the received command into the comands queue
-	if (AUX_FUNCS_lstrlen(command_to_store,MAX_LINE_CONSOLE_BUFFER)>0){
-
-		// move the index if is still place in the buffer
-		if (commands.i16_last_index<(MAX_COMMANDS_QUEUE-1)){
-			commands.i16_last_index++;
-		}//if
-
-		// move one position all the stored commands 
-		for (i=commands.i16_last_index;i>0;i--){
-			AUX_FUNCS_lstrcpy((uint8_t*)commands.queue[i],(uint8_t*)commands.queue[i-1],MAX_LINE_CONSOLE_BUFFER);
-		}//for
-		// store the received new command
-		AUX_FUNCS_lstrcpy((uint8_t*)commands.queue[0],command_to_store,MAX_LINE_CONSOLE_BUFFER);
-	
-		i16_ret_val = 1;
-	
-	}//if
-	
-	return i16_ret_val;
-
-}//CONSOLE_enqueue_command_string
-
-
-
-// Returns the next command string in the queue of entered command strings
-// Receives:
-// Returns:
-//		By reference:
-//			The string with the next command in the queue
-//		By value:
-//			1 if the next command has been delvierd
-//		   -1 if there ar no commands in the queue
-int16_t CONSOLE_get_next_queue_command_string(uint8_t* next_command){
-	int16_t return_value=-1;
-
-
-	// check if there are commands in the queue
-	if ((commands.i16_index>=-1)&&(commands.i16_index<commands.i16_last_index)){
-
-		// move the index to the next command
-		commands.i16_index++;
-
-		// copy the next command in the queue into the string
-		AUX_FUNCS_lstrcpy((uint8_t*)next_command,(uint8_t*)commands.queue[commands.i16_index],MAX_LINE_CONSOLE_BUFFER);
-		
-		// limit next position
-		if (commands.i16_index>commands.i16_last_index){
-			commands.i16_index=commands.i16_last_index;
-		}//if
-
-		return_value=1;
-
-	}else{
-
-		next_command[0]='\0';
-		return_value=-1;
-
-	}//if
-
-	return return_value;
-	
-}//CONSOLE_get_next_queue_command_string
-
-
-
-// Returns the previous command string in the queue of entered command strings
-// Receives:
-// Returns:
-//		By reference:
-//			The string with the previous command in the queue
-//		By value:
-//			1 if the prev command has been delvierd
-//		   -1 if there are no commands in the queue
-int16_t CONSOLE_get_prev_queue_command_string(uint8_t* prev_command){
-	int16_t return_value=-1;
-
-
-	// check if there are commands in the queue
-	if ((commands.i16_index>0)&&(commands.i16_index<=commands.i16_last_index)){
-
-		// move the index to the prev command
-		commands.i16_index--;
-
-		// copy the next command in the queue into the string
-		AUX_FUNCS_lstrcpy((uint8_t*)prev_command,(uint8_t*)commands.queue[commands.i16_index],MAX_LINE_CONSOLE_BUFFER);
-		
-		// limit next position
-		if (commands.i16_index==0){
-			commands.i16_index=1;
-		}//if
-
-		return_value=1;
-
-	}else{
-
-		prev_command[0]='\0';
-		return_value=-1;
-
-	}//if
-
-	return return_value;
-	
-}//CONSOLE_get_prev_queue_command_string
-
-
-
-// Initilizes parser and console variables
 void CONSOLE_reset(){
 
 
 	rx_chars.i16_cursor_index=0;
-	rx_chars.i16_last_index=0;	
+	rx_chars.i16_last_index=0;
 	
 	rx_chars.ui8_buffer[0]='\0';
 	esc_seq.ui8_receiving = 0;
@@ -233,23 +96,11 @@ void CONSOLE_reset(){
 
 	commands.i16_index=-1;
 
-	USART_send_string(CONSOLE_PROMPT_STRING,20);  
+	USART_send_string(CONSOLE_PROMPT_STRING,20);
 
 }//CONSOLE_reset
 
 
-
-// Function: int16_t CONSOLE_decode_key_from_char(uint8_t ui8_usart_char, uint8_t * pui8_received_char,uint8_t * pui8_received_char_type)
-// Takes the received char code and finds out the associated key and key type
-// Receives:
-//   By reference:
-// Returns:
-//   By reference:
-//		pui8_received_key_type: pointing to the type of the decoded key ( normal character key, control key ...)
-//		pui8_received_key: pointing to the decoded key identifier
-//   By value:
-//      >0 a key has been decoded
-//      no key has been decoded
 int16_t CONSOLE_decode_key_from_char(uint8_t ui8_usart_char, uint8_t * pui8_received_key_type, uint8_t * pui8_received_key){
 	int16_t i16_aux;
 	uint8_t ui8_received_key;
@@ -378,26 +229,17 @@ int16_t CONSOLE_decode_key_from_char(uint8_t ui8_usart_char, uint8_t * pui8_rece
 }//CONSOLE_decode_key_from_char
 
 
-// Function: 
-// It uses ANSI Escape Codes to delete all characters from end of line to current cursor
-// position in the same line, and then rewrites the line from the current cursor position
-// to the end of the line.
-// Receives:
-//   By reference:
-// Returns:
-//   By reference:
-//   By value:
 void CONSOLE_rewrite_from_cursor_to_end(){
 	int16_t i16_aux;
 
 
 	// Erase End of Line <ESC>[K: Erases from the current cursor position to the end of the current line.
 	USART_send_char(0x1B);//<ESC>
-	USART_send_char('[');//[			
+	USART_send_char('[');//[
 	USART_send_char('K');//K
 
 	// print again all the buffer chars that have been cleared
- 	for (i16_aux=rx_chars.i16_cursor_index;i16_aux<=rx_chars.i16_last_index;i16_aux++){
+	for (i16_aux=rx_chars.i16_cursor_index;i16_aux<=rx_chars.i16_last_index;i16_aux++){
 		USART_send_char(rx_chars.ui8_buffer[i16_aux]);
 	}//for
 	
@@ -408,25 +250,104 @@ void CONSOLE_rewrite_from_cursor_to_end(){
 		USART_send_char('[');//[
 		USART_send_char('1');//{count}
 		USART_send_char('D');//D
-	}//for	
+	}//for
 
 }//CONSOLE_rewrite_from_cursor_to_end
+
+
+int16_t CONSOLE_enqueue_command_string(uint8_t * command_to_store){
+	int16_t i16_ret_val=-1;
+	int16_t i;
+
+
+	// if the content is>0, store the received command into the comands queue
+	if (AUX_FUNCS_lstrlen(command_to_store,MAX_LINE_CONSOLE_BUFFER)>0){
+
+		// move the index if is still place in the buffer
+		if (commands.i16_last_index<(MAX_COMMANDS_QUEUE-1)){
+			commands.i16_last_index++;
+		}//if
+
+		// move one position all the stored commands 
+		for (i=commands.i16_last_index;i>0;i--){
+			AUX_FUNCS_lstrcpy((uint8_t*)commands.queue[i],(uint8_t*)commands.queue[i-1],MAX_LINE_CONSOLE_BUFFER);
+		}//for
+		// store the received new command
+		AUX_FUNCS_lstrcpy((uint8_t*)commands.queue[0],command_to_store,MAX_LINE_CONSOLE_BUFFER);
 	
+		i16_ret_val = 1;
+	
+	}//if
+	
+	return i16_ret_val;
+
+}//CONSOLE_enqueue_command_string
 
 
-// Function: int16_t CONSOLE_process_received_keys(uint8_t pui8_received_char_type, uint8_t ui8_received_char)
-// Processes the received keys and prepares the command corresponding to the received keys
-// Receives:
-//   By reference:
-//		ui8_received_char_type: the type of the key to process ( normal character key, control key ...)
-//		ui8_received_char: the character or code of the key to process
-// Returns:
-//   By reference:
-//		command_string: when the whole command string has been received, a string with the whole content
-//   read from the keyboard.
-//   By value:
-//      1 a command string has been received and processed
-//      no command string completed
+int16_t CONSOLE_get_next_queue_command_string(uint8_t* next_command){
+	int16_t return_value=-1;
+
+
+	// check if there are commands in the queue
+	if ((commands.i16_index>=-1)&&(commands.i16_index<commands.i16_last_index)){
+
+		// move the index to the next command
+		commands.i16_index++;
+
+		// copy the next command in the queue into the string
+		AUX_FUNCS_lstrcpy((uint8_t*)next_command,(uint8_t*)commands.queue[commands.i16_index],MAX_LINE_CONSOLE_BUFFER);
+		
+		// limit next position
+		if (commands.i16_index>commands.i16_last_index){
+			commands.i16_index=commands.i16_last_index;
+		}//if
+
+		return_value=1;
+
+	}else{
+
+		next_command[0]='\0';
+		return_value=-1;
+
+	}//if
+
+	return return_value;
+	
+}//CONSOLE_get_next_queue_command_string
+
+
+int16_t CONSOLE_get_prev_queue_command_string(uint8_t* prev_command){
+	int16_t return_value=-1;
+
+
+	// check if there are commands in the queue
+	if ((commands.i16_index>0)&&(commands.i16_index<=commands.i16_last_index)){
+
+		// move the index to the prev command
+		commands.i16_index--;
+
+		// copy the next command in the queue into the string
+		AUX_FUNCS_lstrcpy((uint8_t*)prev_command,(uint8_t*)commands.queue[commands.i16_index],MAX_LINE_CONSOLE_BUFFER);
+		
+		// limit next position
+		if (commands.i16_index==0){
+			commands.i16_index=1;
+		}//if
+
+		return_value=1;
+
+	}else{
+
+		prev_command[0]='\0';
+		return_value=-1;
+
+	}//if
+
+	return return_value;
+	
+}//CONSOLE_get_prev_queue_command_string
+
+
 int16_t CONSOLE_process_received_keys(uint8_t ui8_received_key_type, uint8_t ui8_received_key, uint8_t * command_string){
 	int16_t i16_ret_vale = 0;
 	int16_t i16_aux;
@@ -719,21 +640,6 @@ int16_t CONSOLE_process_received_keys(uint8_t ui8_received_key_type, uint8_t ui8
 }//CONSOLE_process_received_keys
 
 
-
-// Function: int16_t CONSOLE_check_input(uint8_t * command_string){
-// Is the console main function. Each time a character is received it is stored into the KEYBOARD BUFFER, and when
-// then CONSOLE_END_KEY key is pressed, the KEYBOARD BUFFER content is stored into a string and returned to
-// the main program in order to let it parse it into a command. This routines distinguishes between single
-// byte characters ( normal ASCII characters ) and multiple byte characters special sequences ( escape sequence 
-// characters ).
-// Receives:
-// Returns:
-//   By reference:
-//		When the whole command string has been received, a string with the whole content read from the keyboard
-//   By value:
-//      1 a complete command string has been received ( CONSOLE_KEY_CTRL_RETURN character )
-//     -1  no complete command string has been received yet
-//     -2 when the QUIT key has been detected
 int16_t CONSOLE_check_input(uint8_t * command_string){
 		uint8_t ui8_usart_char=0;
 		uint8_t ui8_received_char=0;

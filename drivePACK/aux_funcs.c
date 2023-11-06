@@ -2,7 +2,7 @@
 // ****                       drivePACK                         ****
 // ****                  www.tolaemon.com/dpack                 ****
 // ****                       Source code                       ****
-// ****                       12/04/2015                        ****
+// ****                       12/04/2021                        ****
 // ****                     Jordi Bartolome                     ****
 // ****                                                         ****
 // **** IMPORTANT:                                              ****
@@ -12,15 +12,6 @@
 
 #include "aux_funcs.h"
 
-
-
-// Synthkore  12-10-2014  Tolaemon
-// Function: int32_t AUX_FUNCS_ceil(double value_to_round){
-// Rounds up the received double into the nearest upper whole number and returns it into
-// a long integer value.
-// Receives:
-//   value_to_round: with the double value we want to round to the nearest whole number.
-// Returns:
 int32_t AUX_FUNCS_ceil(double value_to_round){
 	int32_t return_value=0;
 	
@@ -33,16 +24,6 @@ int32_t AUX_FUNCS_ceil(double value_to_round){
 }//AUX_FUNCS_ceil
 
 
-
-// Synthkore  12-10-2014  Tolaemon
-// Function: void AUX_FUNCS_set_substring(uint8_t * destination_string,uint8_t * string_to_print,int16_t start_index,int16_t end_index)
-// Prints the string_to_print inside the destination_string at the specified position start_index
-// Receives:
-//		pui8_dest: the string where the smaller string is going to be printed.
-//		pui8_src: the string that is going to be placed inside the destination string.
-//		i16_start_index: the position where the string is going to start.
-//		i16_end_index: the last position where the string can be copied.
-// Returns:
 void AUX_FUNCS_set_substring(uint8_t * pui8_dest,uint8_t * pui8_src,int16_t i16_start_index,int16_t i16_end_index){
 	
 /* TBD-2022-03-03 Rehacer sin utilizar tamaños fijos constantes AUX_FUNCS_F_P_MAX_STR_LEN	
@@ -65,15 +46,6 @@ void AUX_FUNCS_set_substring(uint8_t * pui8_dest,uint8_t * pui8_src,int16_t i16_
 }//AUX_FUNCS_set_substring
 
 
-
-// Synthkore  23-11-2014  Tolaemon
-// Prints the string_to_print inside the destination_string centered between the space specified with start and end indexes.
-// Receives:
-//	 pui8_dest: the string where the string_to_center is going to be printed in.
-//	 pui8_src_to_center: the string that is going to be placed centered inside the destination_string.
-//	 i16_start_index: the start index of the space where the string is going to be printed.
-//	 i16_end_index: the end index of the space where the string is going to be printed.
-// Returns:
 void AUX_FUNCS_center_into_string(uint8_t * pui8_dest, uint8_t * pui8_src_to_center,int16_t i16_start_index,int16_t i16_end_index){
 	int16_t i16_aux,i16_aux2,i16_aux3,i16_aux4;
 	int16_t i16_strlen=0;
@@ -111,19 +83,6 @@ void AUX_FUNCS_center_into_string(uint8_t * pui8_dest, uint8_t * pui8_src_to_cen
 }//AUX_FUNCS_center_into_string
 
 
-
-// Synthkore  27-11-2014  Tolaemon
-// Function: uint8_t AUX_FUNCS_check_endstring(uint8_t * source_string,uint8_t * end_string,uint8_t remove)
-// Checks if the specified end_string is contained at the end of source_string and removes it if
-// if it is found amd remove is TRUE.
-// Receives:
-//	 pui8_src: the string where the end_string is going to be searched and removed from.
-//	 pui8_end: the string that is going to be searched and removed from the end of the source_string
-//   ui8_remove: when TRUE the end_string is removed from the source_string if it is contained there. If
-//   FALSE then the routine only checks if the end_string is contianed into the source_string.
-// Returns:
-// 	 >=0: if end_string has been found and removed from the end of the source_string
-//   <0 if end_string was not found or could not be removed from the end of the source_string
 int16_t AUX_FUNCS_check_endstring(uint8_t * pui8_src, uint8_t * pui8_end, uint8_t ui8_remove){
 	int16_t i16_strlen1;
 	int16_t i16_strlen2;
@@ -167,21 +126,6 @@ int16_t AUX_FUNCS_check_endstring(uint8_t * pui8_src, uint8_t * pui8_end, uint8_
 }//AUX_FUNCS_check_endstring
 
 
-
-// Synthkore  30-05-2013  Tolaemon
-// Fills the received string with he specified character. The parameter ui16_MAX_STR_ARRAY is used
-// to take care of how many chars are filled into the destination array, and to avoid filling
-// beyond the space of the destination string.
-// Receives:
-//   pui8_dest: pointer to the string that will be filled with the specified character
-//   ui8_char: the character used to fill the received destination string
-//   ui16_MAX_STR_ARRAY: the size of the array of the destination string, the last allowed 
-//  character can be stored in (ui16_MAX_STR_ARRAY-2) and in that case (ui16_MAX_STR_ARRAY-1)
-//  should contain a '\0'.
-// Returns:
-// By reference:
-//   pui8_dest: pointer to a string with ui8_char copied ui16_dest_MAX_STR_ARRAY times
-// By value:
 void AUX_FUNCS_lstrfill( uint8_t * pui8_dest, uint8_t ui8_char, uint16_t ui16_dest_MAX_STR_ARRAY ){
 	int16_t i16_aux;
 
@@ -196,21 +140,6 @@ void AUX_FUNCS_lstrfill( uint8_t * pui8_dest, uint8_t ui8_char, uint16_t ui16_de
 }//AUX_FUNCS_lstrfill
 
 
-
-// Synthkore  30-05-2013  Tolaemon
-// Custom version of the string copy command: the difference with the standard strcpy instruction
-// is that this function uses the ui16_MAX_STR_ARRAY parameter to take care of how many chars are copied into 
-// the destination array, and avoid copying beyond the space reserved for the destination string.
-// Receives: 
-//   pui8_dest: pointer to the string where the source will be copied to
-//   pui8_source: pointer with the string to copy into the destination string.
-//   ui16_MAX_STR_ARRAY: the size of the array used to store the destination string, the last
-//  allowed character can be stored in (ui16_MAX_STR_ARRAY-2) and in that case (ui16_MAX_STR_ARRAY-1)
-//  should contain a '\0'.
-// Returns:
-// By reference:
-//   pui8_dest: pointer to a string with a copy the source string.
-// By value:
 void AUX_FUNCS_lstrcpy( uint8_t * pui8_dest, uint8_t * pui8_source, uint16_t ui16_dest_MAX_STR_ARRAY ){
 	int16_t i16_aux;
 
@@ -225,22 +154,6 @@ void AUX_FUNCS_lstrcpy( uint8_t * pui8_dest, uint8_t * pui8_source, uint16_t ui1
 }//AUX_FUNCS_lstrcpy
 
 
-
-// Synthkore  21-05-2016  Tolaemon
-// Custom version of the string compare function that uses ui16_MAX_STR_ARRAY parameter to check how many chars 
-// are compared, and avoid array overrun copying beyond the space reserved for the string
-// Receives:
-//   pui8_string_A: first string to compare 
-//   pui8_string_B: second string to compare 
-//   ui16_MAX_STR_ARRAY: the size of the shortest array used to store the strings, the last
-//  allowed character in the shortest string can be stored in (ui16_MAX_STR_ARRAY-2) and in that 
-//  case (ui16_MAX_STR_ARRAY-1) should contain a '\0'. 
-// Returns:
-// By reference:
-// By value:
-//   <0	the first character that does not match has a lower value in source than in dest
-//    0	the contents of both strings are equal
-//   >0	the first character that does not match has a greater value in source than in dest
 int16_t AUX_FUNCS_lstrcmp( uint8_t * pui8_string_A, uint8_t * pui8_string_B, uint16_t ui16_MAX_STR_ARRAY ){
 	int16_t ret_val=0;
 	int16_t i16_aux;
@@ -262,19 +175,6 @@ int16_t AUX_FUNCS_lstrcmp( uint8_t * pui8_string_A, uint8_t * pui8_string_B, uin
 }//AUX_FUNCS_lstrcmp
 
 
-
-// Synthkore  26-11-2016  Tolaemon
-// Appends a copy of the source string to the end of the destination string. The terminating null character in destination is 
-// overwritten by the first character of source string, and a null-character is included at the end of the new string formed 
-// by the concatenation of both in destination.
-// Receives:
-//   pui8_dest: the destination string where the source string will be appended
-//   pui8_source: the string to append at the end of the destination string
-//   ui16_MAX_STR_ARRAY: the size of the array used to store the destination string, the last
-//  allowed character can be stored in (ui16_MAX_STR_ARRAY-2) and in that case (ui16_MAX_STR_ARRAY-1)
-//  should contain a '\0'.
-// Returns:
-//		destination_string: with the concatenation of received destination_string and source_string
 void AUX_FUNCS_strcat(uint8_t * pui8_dest, uint8_t * pui8_source, uint16_t ui16_MAX_STR_ARRAY){
 	int16_t i16_aux,i16_aux2;
 
@@ -299,19 +199,6 @@ void AUX_FUNCS_strcat(uint8_t * pui8_dest, uint8_t * pui8_source, uint16_t ui16_
 }//AUX_FUNCS_strcat
 
 
-
-// Synthkore  26-11-2016  Tolaemon
-// Appends the specified character to the end of the destination string. The terminating null character in 
-// destination is overwritten by the source character, and a null-character is included at the end of the 
-// new string formed by the concatenation of both in destination.
-// Receives:
-//   pui8_dest: the destination string where the received char will be appended
-//   ui8_char: the char to append at the end of the destination string
-//   ui16_MAX_STR_ARRAY: the size of the array used to store the destination string, the last
-//  allowed character can be stored in (ui16_MAX_STR_ARRAY-2) and in that case (ui16_MAX_STR_ARRAY-1)
-//  should contain a '\0'.
-// Returns:
-//		destination_string: with the concatenation of received destination_string and source_string
 void AUX_FUNCS_strcat_char(uint8_t * pui8_dest, uint8_t ui8_source_char, uint16_t ui16_MAX_STR_ARRAY){
 	int16_t i16_aux;
 
@@ -335,19 +222,6 @@ void AUX_FUNCS_strcat_char(uint8_t * pui8_dest, uint8_t ui8_source_char, uint16_
 }//AUX_FUNCS_strcat_char
 
 
-
-// Synthkore  01-04-2022  Tolaemon
-// Removes all the characters between the end of the string and the first occurrence of the specified
-// character, including the specified character.
-// Receives:
-//   pui8_string: with the string to remove the characters from the end to the specified character.
-//   ui16_MAX_STR_ARRAY: the size of the array used to store the string, as is the array size the 
-// string allowed character can be stored in (ui16_MAX_STR_ARRAY-2) and in that case (ui16_MAX_STR_ARRAY-1)
-// should contain a '\0'.
-//   ui8_char: the char to remove all the char
-// Returns:
-//   pui8_string: the string without the characters from the end to the specifed char. If the specified 
-// char is not found then all characters are removed.
 void AUX_FUNCS_remove_from_end_to_char(uint8_t * pui8_string, uint8_t ui8_char){
 	int16_t i16_aux;
 
@@ -365,16 +239,6 @@ void AUX_FUNCS_remove_from_end_to_char(uint8_t * pui8_string, uint8_t ui8_char){
 
 
 
-// Synthkore  19-03-2016  Tolaemon
-// Copies the content of the two received strings on the destination string 
-// Receives:
-//   pui8_dest: the destination string where the two strings will be copied
-//   pui8_first: the string that will be copied on first position
-//   pui8_second: the string that will be copied on second position
-//   ui16_MAX_STR_ARRAY: the size of the array used to store the destination string, the last
-//  allowed character can be stored in (ui16_MAX_STR_ARRAY-2) and in that case (ui16_MAX_STR_ARRAY-1)
-//  should contain a '\0'.
-// Returns:
 void AUX_FUNCS_strjoin(uint8_t * pui8_dest,uint8_t * pui8_first,uint8_t * pui8_second,uint16_t ui16_MAX_STR_ARRAY){
 	int16_t i16_aux,i16_aux2;
 	
@@ -400,17 +264,6 @@ void AUX_FUNCS_strjoin(uint8_t * pui8_dest,uint8_t * pui8_first,uint8_t * pui8_s
 }//AUX_FUNCS_strjoin
 
 
-
-// Synthkore  29-05-2013  Tolaemon
-// Removes the blank spaces and tab characters at the beginning and the end of the string
-// Receives:
-//	  pui8_string_to_trim: with the string we want to remove the blank chars or spaces
-// Returns:
-// By reference:
-//    pui8_string_to_trim: the received string without the blank spaces and tab characters at beginning and the end.
-// By value:
-//   TRUE: if the string could be trimmed
-//   FALSE: if was not possible to trim the string
 void  AUX_FUNCS_trim_begining_end( uint8_t * pui8_string_to_trim){
 	int ui_strlen;
 	int ui_aux;
@@ -443,16 +296,6 @@ void  AUX_FUNCS_trim_begining_end( uint8_t * pui8_string_to_trim){
 }//AUX_FUNCS_trim_begining_end
 
 
-
-// Synthkore  15-11-2016  Tolaemon
-//   Procedure that removes the specified char from the beginning and the end of the
-// received string.
-// Receives:
-//	  pui8_string_to_trim: with the string we want to remove the specified char
-//	  ui8_char_to_remove: the char we want to remove from the beginning and the end
-// Returns:
-//	  by reference:
-//		pui8_string_to_trim: pointing to the trimmed string y value:
 void AUX_FUNCS_trim_string_char(uint8_t * pui8_string_to_trim,uint8_t ui8_char_to_remove ){
 	int ui_strlen;
 	int ui_aux;
@@ -484,15 +327,6 @@ void AUX_FUNCS_trim_string_char(uint8_t * pui8_string_to_trim,uint8_t ui8_char_t
 }//AUX_FUNCS_trim_string_char
 
 
-
-// Synthkore  15-11-2016  Tolaemon
-// Returns the length of the received string. It also checks that the length of the received
-// string is not beyond the MAX_LEN max allowed value. In that case it returns an error code.
-// Receives:
-//   pui8_string: with the string whose length in chars we want to get
-// Returns:
-//    >=0 with the length of the string
-//    -1 the received string cannot be processed
 int16_t AUX_FUNCS_strlen(uint8_t * pui8_string ){
 	int16_t i16_ret_value=0;
 
@@ -515,17 +349,6 @@ int16_t AUX_FUNCS_strlen(uint8_t * pui8_string ){
 }//AUX_FUNCS_strlen
 
 
-// Synthkore  15-11-2016  Tolaemon
-// Returns the length of the received string. It also checks that the length of the received
-// string is not beyond the MAX_LEN max allowed value. In that case it returns an error code.
-// Receives:
-//   pui8_string: with the string whose length in chars we want to get
-//   ui16_MAX_STR_ARRAY: the size of the array that contains the string whose length we want to calculate. 
-//  The last allowed character can be stored in (ui16_MAX_STR_ARRAY-2) and in that case (ui16_MAX_STR_ARRAY-1)
-//  should contain a '\0'.
-// Returns:
-//    >=0 with the length of the string
-//    -1 the received string is greater than ush_MAX_LEN and cannot be processed
 int16_t AUX_FUNCS_lstrlen(uint8_t * pui8_string, uint16_t ui16_MAX_STR_ARRAY ){
 	int16_t i16_ret_value=0;
 
@@ -554,17 +377,6 @@ int16_t AUX_FUNCS_lstrlen(uint8_t * pui8_string, uint16_t ui16_MAX_STR_ARRAY ){
 }//AUX_FUNCS_lstrlen
 
 
-
-// Function:AUX_FUNCS_reverse_str(char str[], int length)
-// Inverts the order of the characters in a string: first character becomes last, 
-// last becomes first...
-// Receives:
-//   pui8_string: with the string to reverse
-//   ui16_MAX_STR_ARRAY: the size of the array that contains the string to reverse. The last allowed 
-// character can be stored in (ui16_MAX_STR_ARRAY-2) and in that case (ui16_MAX_STR_ARRAY-1)
-// should contain a '\0'.
-//  By reference:
-//   pui8_string: the reversed string
 void AUX_FUNCS_reverse_str(uint8_t * pui8_string, uint16_t ui16_MAX_STR_ARRAY ){
 	uint8_t ui8_aux;
 	int16_t i16_start = 0;
@@ -589,22 +401,6 @@ void AUX_FUNCS_reverse_str(uint8_t * pui8_string, uint16_t ui16_MAX_STR_ARRAY ){
 }//AUX_FUNCS_reverse_str
 
 
-
-// Based on: https://www.geeksforgeeks.org/implement-itoa/
-// Function: void AUX_FUNCS_itoa(int32_t i32_num, uint8_t * pui8_string, int16_t i16_base, uint16_t ui16_MAX_STR_ARRAY )
-// Converts the received integer into a string.
-// Receives:
-//   ui32_num: the integer to convert to string
-//   i16_base: base used to convert the integer to string
-//   ui16_MAX_STR_ARRAY: the size of the array that contains the conversion of rceived value to
-// string. The last allowed digit can be stored in (ui16_MAX_STR_ARRAY-2) and in that case 
-// (ui16_MAX_STR_ARRAY-1) should contain a '\0'. To use that function the size of the destination
-// array must be always specified
-// Returns:
-//  By reference:
-//    pui8_string: text representation of the received value, with the result of converting 
-//   the received integer to a string
-//  By value:
 void AUX_FUNCS_itoa(int32_t i32_num, uint8_t * pui8_string, int16_t i16_base, uint16_t ui16_MAX_STR_ARRAY ){
 	int16_t i = 0;
 	int16_t i16_start = 0;
@@ -672,22 +468,6 @@ void AUX_FUNCS_itoa(int32_t i32_num, uint8_t * pui8_string, int16_t i16_base, ui
 }//AUX_FUNCS_itoa
 
 
-
-// Based on: https://www.geeksforgeeks.org/implement-itoa/
-// Function: void AUX_FUNCS_uitoa(uint32_t ui32_num, uint8_t * pui8_string, int16_t i16_base, uint16_t ui16_MAX_STR_ARRAY )
-// Converts the received UNSIGNED integer into a string.
-// Receives:
-//   ui32_num: the unsigned integer to convert to string
-//   i16_base: base used to convert the unsigned integer to string
-//   ui16_MAX_STR_ARRAY: the size of the array that contains the conversion of rceived value to
-// string. The last allowed digit can be stored in (ui16_MAX_STR_ARRAY-2) and in that case
-// (ui16_MAX_STR_ARRAY-1) should contain a '\0'. To use that function the size of the destination
-// array must be always specified
-// Returns:
-//  By reference:
-//    pui8_string: text representation of the received value, with the result of converting
-//   the received unsigned integer to a string
-//  By value:
 void AUX_FUNCS_uitoa(uint32_t ui32_num, uint8_t * pui8_string, int16_t i16_base, uint16_t ui16_MAX_STR_ARRAY ){
 	int16_t i = 0;
 	int16_t i16_start = 0;
@@ -745,21 +525,6 @@ void AUX_FUNCS_uitoa(uint32_t ui32_num, uint8_t * pui8_string, int16_t i16_base,
 }//AUX_FUNCS_uitoa
 
 
-
-// Function: void AUX_FUNCS_atoi(uint8_t * string, int16_t sh_base, uint16_t ush_MAX_LEN, int32_t * sh_num)
-// Converts the received string to an integer
-// Receives:
-//   pui8_string: the string to convert to an integer
-//   ui8_base: base used to convert the string to integer
-//   ui16_MAX_STR_ARRAY: the size of the array that contains the text representation of the value to 
-// convert to number. The last allowed digit can be stored in (ui16_MAX_STR_ARRAY-2) and in that case
-// (ui16_MAX_STR_ARRAY-1) should contain a '\0'.
-// Returns:
-//  By reference:
-//    i32_num: with the result of converting the received string to a integer
-//  By value:
-//    >=0 if the string could be converted
-//    -1 if the received string could not be converted to an integer
 int16_t AUX_FUNCS_atoi(uint8_t * pui8_string, uint8_t ui8_base, uint16_t ui16_MAX_STR_ARRAY, int32_t * i32_num){
 	int32_t  i32_value;
 	int16_t  i16_ret_val = 0;
@@ -828,26 +593,6 @@ int16_t AUX_FUNCS_atoi(uint8_t * pui8_string, uint8_t ui8_base, uint16_t ui16_MA
 }//AUX_FUNCS_atoi
 
 
-
-// Synthkore  02-05-2016  Tolaemon
-// Function: uint8_t AUX_FUNCS_random_xorshift8(void)
-// 8 bit random generator function, obtained from: www.arklyffe.com/main/2010/08/29/xorshift-pseudorandom-number-generator/:
-// "...
-// In 2003, George Marsaglia published a pseudorandom number generator based on repeated shift and XOR operations, a relative
-// of the linear feedback shift register generators. With y seeded with any non-zero starting value. The generator will never
-// produce zero, which is something to be careful of, but with the right values for a, b, and c, will cycle through all 
-// non-zero values. If only a subset of the bits are used, a generator with the full period results where zeros do occur, 
-// though not as frequently as the other values in the cycle: if you take 6 bits from an 8 bit generator, you will get each 
-// non-zero 6-bit number 4 times per cycle, and only 3 zeros. Alternatively, you can simply subtract 1 from the output, and take
-// the usual approaches to obtaining the desired range without unacceptable bias. The published generators I've found all use 
-// 32 bit values or greater, but sometimes something simpler and smaller is needed. Here is the C code for the generators I have
-// been testing. Note that they have been verified to be full cycle and to give reasonably random-looking results, but little more
-//..."
-// Receives:
-// Returns:
-// By reference:
-// By value:
-//    returns values from 1 to 255 inclusive, period is 255
 uint8_t AUX_FUNCS_random_xorshift8(void){
 	static uint8_t y8 = 1;
 
@@ -858,14 +603,6 @@ uint8_t AUX_FUNCS_random_xorshift8(void){
 }//AUX_FUNCS_random_xorshift8
 
 
-
-// Function: AUX_FUNCS_character_to_low_case(uint8_t upper_character)
-// Converts the received character in uppercase to lowercase if possible.
-// Receives:
-//   ui8_uppercase_character: with the character to convert to uppercase
-// Returns:
-//   the character in uppercase if it has been possible to convert to 
-// upper case
 uint8_t AUX_FUNCS_character_to_low_case(uint8_t ui8_uppercase_character){
 	
 	
@@ -880,21 +617,6 @@ uint8_t AUX_FUNCS_character_to_low_case(uint8_t ui8_uppercase_character){
 }//AUX_FUNCS_character_to_low_case
 
 
-
-// Synthkore  09-04-2021 Tolaemon
-// Simply checks if the received string contains a valid number or it does contain 
-// invalid numerical data.
-// Receives:
-//	  pui8_str_to_check: the string we want to check if contains a valid number
-//    ui16_MAX_STR_ARRAY: the size of the array that contains the string to reverse. The last allowed
-// character can be stored in (ui16_MAX_STR_ARRAY-2) and in that case (ui16_MAX_STR_ARRAY-1)
-// should contain a '\0'.
-// Returns:
-//	By value:
-//		 1 if the string contains a valid number 
-//		-1 if does not contain a valid number
-// Note: 
-//  trim the string before calling this function.
 int16_t AUX_FUNCS_check_if_valid_number(uint8_t * pui8_str_to_check, uint16_t ui16_MAX_STR_ARRAY ){
 	int16_t i16_ret_val=1;
 	uint16_t i=0;
@@ -935,25 +657,6 @@ int16_t AUX_FUNCS_check_if_valid_number(uint8_t * pui8_str_to_check, uint16_t ui
 }//check_if_valid_number
 
 
-
-// Synthkore  17-04-2021 Tolaemon
-//    Adds the specified character at the beginning of the received string
-// as many times as needed to get a string of the specified length. So sets
-// the length of the received string to the specified length, filling empty
-// spaces at the beginning with received character.
-// Receives:
-//	  pui8_dest_str: the string we want to add specified character at the beginning
-//	  ui8_character: the character to add at the beginning of the string
-//    i16_str_length: the final desired length for the received string
-//    ui16_MAX_STR_ARRAY: the size of the array that contains the string to pad with the specified
-// character. The last allowed character can be stored in (ui16_MAX_STR_ARRAY-2) and in that case 
-// (ui16_MAX_STR_ARRAY-1) should contain a '\0'.
-// Returns:
-//  By reference:
-//    pui8_dest_str: with the padded string
-//	By value:
-//    >=0 if the string has been succesfully padded with the specified character
-//    -1  an error has occurred while padding the string
 int16_t AUX_FUNCS_pad_begin_with_char(uint8_t * pui8_dest_str, uint8_t ui8_character, int16_t i16_str_length,  uint16_t ui16_MAX_STR_ARRAY ){
 	int16_t ret_val=0;
 	int16_t i16_dest_str_length = 0;
@@ -992,25 +695,6 @@ int16_t AUX_FUNCS_pad_begin_with_char(uint8_t * pui8_dest_str, uint8_t ui8_chara
 }//AUX_FUNCS_pad_begin_with_char
 
 
-
-// Synthkore  17-04-2021 Tolaemon
-//    Adds the specified character at the end of the received string
-// as many times as needed to get a string of the specified length. So sets
-// the length of the received string to the specified length, filling empty
-// spaces at the end with received character.
-// Receives:
-//	  pui8_dest_str: the string we want to add specified character at the beginning
-//	  ui8_character: the character to add at the beginning of the string
-//    i16_str_length: the final desired length for the received string
-//    ui16_MAX_STR_ARRAY: the size of the array that contains the string to pad with the specified
-// character. The last allowed character can be stored in (ui16_MAX_STR_ARRAY-2) and in that case
-// (ui16_MAX_STR_ARRAY-1) should contain a '\0'.
-// Returns:
-//  By reference:
-//    pui8_dest_str: with the padded string
-//	By value:
-//    >=0 if the string has been succesfully padded with the specified character
-//    -1  an error has occurred while padding the string
 int16_t AUX_FUNCS_pad_end_with_char(uint8_t * pui8_dest_str, uint8_t ui8_character, int16_t i16_str_length,  uint16_t ui16_MAX_STR_ARRAY ){
 	int16_t ret_val=0;
 	int16_t i16_dest_str_length = 0;
@@ -1040,25 +724,6 @@ int16_t AUX_FUNCS_pad_end_with_char(uint8_t * pui8_dest_str, uint8_t ui8_charact
 }//AUX_FUNCS_pad_end_with_char
 
 
-
-// Synthkore  17-04-2021 Tolaemon
-//    Replaces in the received string all the occurrences of the specified old character 
-// with the specified new character.
-// Receives:
-//	  pui8_str: the string where the specified old characters shall be replaced with the
-//  specified new character.
-//	  ui8_old_char: the character to remove and replace with the new received string
-//	  ui8_new_char: the character to write in all occurrences of the old character
-//    ui16_MAX_STR_ARRAY: the size of the array that contains the string 
-//  character. The last allowed character can be stored in (ui16_MAX_STR_ARRAY-2) and in 
-//  that case (ui16_MAX_STR_ARRAY-1) should contain a '\0'.
-// Returns:
-//  By reference:
-//    pui8_str: the received string after having replaced all the occurrences of the specified
-//  old character with the new character.
-// By value:
-//   >=0 if the string has been succesfully padded with the specified character
-//   -1  an error has occurred while padding the string
 int16_t AUX_FUNCS_replace_char(uint8_t * pui8_str, uint8_t ui8_old_char, uint8_t ui8_new_char, uint16_t ui16_MAX_STR_ARRAY ){
 	int16_t ret_val=0;
 	int16_t i16_aux = 0;
@@ -1077,30 +742,3 @@ int16_t AUX_FUNCS_replace_char(uint8_t * pui8_str, uint8_t ui8_old_char, uint8_t
 	return ret_val;
 
 }//AUX_FUNCS_replace_char
-
-
-
-// Synthkore  28-04-2023 Tolaemon
-//   Converts the received chars with the hexadecimal ASCII representation of an 8 bits value
-//  to the corresponding int8_t value. So it receives a 2 chars array and converts it to an 
-//  uint8_ value. 
-// I.e:
-//   [0]0 [1]A -> 10
-//   [0]2 [1]B -> 43
-// Receives:
-//    pui8_str: pointer to the 2 uint8_t elements with the chars wit the uint8 hexadecimal 
-// representation that must be converted.
-// Returns:
-//  By reference:
-//    pui8_byte_value: pointing to the 8 bits value with the result of converting the 2 received
-//  chars with the hexadecimal representation of an 8 bits value.
-// By value:
-//   >=0 with the conversion 
-//   <0  if something failed and was not possible to do the conversion
-int16_t AUX_FUNCS_hexchars_to_ui8(uint8_t * pui8_str, uint8_t * pui8_byte_value ){
-	int16_t ret_val=0;
-	
-	
-	return ret_val;
-
-}//AUX_FUNCS_hexchars_to_ui8

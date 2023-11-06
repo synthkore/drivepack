@@ -19,7 +19,6 @@ FIL fil_fobj;// File object structure
 DIR dir_obj;// Directory object structure
 
 
-
 int16_t FILE_SYS_Init(){
 
 	memset(&fatfs_fsys,0,sizeof(FATFS));
@@ -28,7 +27,6 @@ int16_t FILE_SYS_Init(){
 	memset(&dir_obj,0,sizeof(DIR));
 	
 }//FILE_SYS_Init
-
 
 
 int16_t FILE_SYS_dir_file_count(uint8_t * pui8_file_extension, uint8_t ui8_consider_file_folders){
@@ -93,7 +91,6 @@ int16_t FILE_SYS_dir_file_count(uint8_t * pui8_file_extension, uint8_t ui8_consi
 }//FILE_SYS_dir_file_count
 
 
-
 int16_t FILE_SYS_dir_file_goto_next(uint8_t * pui8_file_extension, uint8_t ui8_consider_file_folders){
 	int16_t i16_ret_val=-1;
 	FRESULT funcResult;
@@ -137,7 +134,6 @@ int16_t FILE_SYS_dir_file_goto_next(uint8_t * pui8_file_extension, uint8_t ui8_c
 	return i16_ret_val;
 	
 }//FILE_SYS_dir_file_goto_next
-
 
 
 int16_t FILE_SYS_dir_file_goto_index(int16_t i16_index, uint8_t * pui8_file_extension, uint8_t ui8_consider_file_folders){
@@ -215,7 +211,6 @@ int16_t FILE_SYS_dir_file_goto_index(int16_t i16_index, uint8_t * pui8_file_exte
 }//FILE_SYS_dir_file_goto_index
 
 
-
 int16_t FILE_SYS_dir_rewind(){
 	int16_t i16_ret_val=0;
 	FRESULT funcResult;
@@ -231,7 +226,6 @@ int16_t FILE_SYS_dir_rewind(){
 	return i16_ret_val;
 
 }//FILE_SYS_dir_rewind
-
 
 
 int16_t FILE_SYS_get_current_info(uint8_t * pui8_file_folder_name, uint16_t ui16_max_name_len, uint64_t * pui64_size, uint8_t * pui8_flag_folder_files){
@@ -265,7 +259,6 @@ int16_t FILE_SYS_get_current_info(uint8_t * pui8_file_folder_name, uint16_t ui16
 }//FILE_SYS_get_current_info
 
 
-
 int16_t FILE_SYS_check_current_state(){
 	int16_t i16_ret_val=0;
 	FRESULT funcResult;
@@ -277,7 +270,6 @@ int16_t FILE_SYS_check_current_state(){
 	return i16_ret_val;
 	
 }//FILE_SYS_check_current_state
-
 
 
 int16_t FILE_SYS_file_write( const void * p_data_to_write, uint32_t ui32_n_bytes_to_write, uint32_t * pui32_n_written_bytes){
@@ -294,8 +286,7 @@ int16_t FILE_SYS_file_write( const void * p_data_to_write, uint32_t ui32_n_bytes
 
 	return i16_ret_val;
 
-}////FILE_SYS_file_write
-
+}//FILE_SYS_file_write
 
 
 int16_t FILE_SYS_file_read(const void * p_read_data, uint32_t ui32_n_bytes_to_read, uint32_t * pui32_n_read_bytes){
@@ -312,8 +303,7 @@ int16_t FILE_SYS_file_read(const void * p_read_data, uint32_t ui32_n_bytes_to_re
 
 	return i16_ret_val;
 
-}////FILE_SYS_file_read
-
+}//FILE_SYS_file_read
 
 
 int16_t FILE_SYS_file_open(const uint8_t* pui8_path, uint8_t ui8_mode){
@@ -333,7 +323,6 @@ int16_t FILE_SYS_file_open(const uint8_t* pui8_path, uint8_t ui8_mode){
 }//FILE_SYS_file_open
 
 
-
 int16_t FILE_SYS_file_close(){
 	int16_t i16_ret_val=0;
 	FRESULT funcResult;
@@ -351,7 +340,6 @@ int16_t FILE_SYS_file_close(){
 }//FILE_SYS_file_close
 
 
-
 int16_t FILE_SYS_file_lseek(uint64_t ui64_ofs){
 	int16_t i16_ret_val=0;
 	FRESULT funcResult;
@@ -367,7 +355,6 @@ int16_t FILE_SYS_file_lseek(uint64_t ui64_ofs){
 	return i16_ret_val;
 	
 }//FILE_SYS_file_lseek
-
 
 
 int16_t FILE_SYS_mount(const uint8_t* pui8_path, uint8_t ui8_mode){
@@ -397,7 +384,6 @@ int16_t FILE_SYS_mount(const uint8_t* pui8_path, uint8_t ui8_mode){
 }//FILE_SYS_mount
 
 
-
 int16_t FILE_SYS_dir_open(const uint8_t* pui8_path){
 	int16_t i16_ret_val=0;
 	FRESULT funcResult;
@@ -418,7 +404,6 @@ int16_t FILE_SYS_dir_open(const uint8_t* pui8_path){
 }//FILE_SYS_dir_open
 
 
-
 int16_t FILE_SYS_file_eof(){
 
 	return  ( (int16_t)((f_eof(&fil_fobj)==1)?-1:0) );
@@ -426,13 +411,11 @@ int16_t FILE_SYS_file_eof(){
 }//FILE_SYS_file_eof
 
 
-
 uint64_t FILE_SYS_file_tell(){
 
     return (uint64_t)f_tell(&fil_fobj);
 
 }//FILE_SYS_file_tell
-
 
 
 int16_t FILE_SYS_dir_ch(const uint8_t* pui8_path){
@@ -454,7 +437,6 @@ int16_t FILE_SYS_dir_ch(const uint8_t* pui8_path){
 }//FILE_SYS_dir_ch
 
 
-
 int16_t FILE_SYS_dir_mk(const uint8_t* pui8_path){
 	int16_t i16_ret_val=0;
 	FRESULT funcResult;
@@ -470,7 +452,6 @@ int16_t FILE_SYS_dir_mk(const uint8_t* pui8_path){
 	return i16_ret_val;
 
 }//FILE_SYS_dir_mk
-
 
 
 int16_t FILE_SYS_dir_rm(const uint8_t* pui8_path){
@@ -490,7 +471,6 @@ int16_t FILE_SYS_dir_rm(const uint8_t* pui8_path){
 }//FILE_SYS_dir_rm
 
 
-
 int16_t FILE_SYS_get_cur_dir(uint8_t * pui8_cur_dir,uint16_t ui16_max_fir_name_len){
 	int16_t i16_ret_val = 0;
 	FRESULT funcResult;
@@ -507,7 +487,6 @@ int16_t FILE_SYS_get_cur_dir(uint8_t * pui8_cur_dir,uint16_t ui16_max_fir_name_l
 }//FILE_SYS_get_cur_dir
 
 
-
 int16_t FILE_SYS_get_label(uint8_t * pui8_label, uint32_t * pui32_serial_n){
 	int16_t i16_ret_val = 0;
 	FRESULT funcResult;
@@ -522,7 +501,6 @@ int16_t FILE_SYS_get_label(uint8_t * pui8_label, uint32_t * pui32_serial_n){
 	return i16_ret_val;
 
 }//FILE_SYS_get_label
-
 
 
 int16_t FILE_SYS_get_unit_size_MBs(uint32_t * pui32_size_in_MB){

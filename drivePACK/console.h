@@ -57,13 +57,99 @@
 #define CONSOLE_KEY_CODE_DELETE              0x1F
 #define CONSOLE_KEY_CODE_ESC_SEQUENCE_START  0x1B
 
+/*********************************************************************************************
+* @brief Initializes parser and console variables
+* @note Tolaemon 21/08/2020
+*********************************************************************************************/
 void CONSOLE_Init();
+
+/*********************************************************************************************
+* @brief Enables the CONSOLE module. When the CONSOLE module is enabled the module functions
+* are executed on each cycle. When the CONSOLE module is not enabled the module functions
+* are not executed on each cycle.
+* @note Tolaemon 21/08/2020
+*********************************************************************************************/
 void CONSOLE_enable();
+
+/*********************************************************************************************
+* @brief Disables the CONSOLE module. When the CONSOLE module is enabled the module functions
+* are executed on each cycle. When the CONSOLE module is NOT enabled the module functions
+* are not executed on each cycle, so the console is not executed.
+* @note Tolaemon 21/08/2020
+*********************************************************************************************/
 void CONSOLE_disable();
+
+/*********************************************************************************************
+* @brief Initializes parser and console variables
+* @note Tolaemon 21/08/2020
+*********************************************************************************************/
 void CONSOLE_reset();
+
+/*********************************************************************************************
+* @brief Takes the received char code and finds out the associated key and key type
+* @param[out] pui8_received_key_type pointing to the type of the decoded key ( normal character
+* key, control key ...)
+* @param[out] pui8_received_key pointing to the decoded key identifier
+* @return >0 a key has been decoded, <=0 no key has been decoded
+* @note Tolaemon 21/08/2020
+*********************************************************************************************/
+int16_t CONSOLE_decode_key_from_char(uint8_t ui8_usart_char, uint8_t * pui8_received_key_type, uint8_t * pui8_received_key);
+
+/*********************************************************************************************
+* @brief It uses ANSI Escape Codes to delete all characters from end of line to current cursor
+* position in the same line, and then rewrites the line from the current cursor position
+* to the end of the line.
+* @note Tolaemon 21/08/2020
+*********************************************************************************************/
+void CONSOLE_rewrite_from_cursor_to_end();
+
+/*********************************************************************************************
+* @brief Processes the received keys and prepares the command corresponding to the received keys
+* @param[in] ui8_received_char_type the type of the key to process ( normal character key, control
+* key ...)
+* @param[in] ui8_received_char the character or code of the key to process
+* @param[out] command_string: when the whole command string has been received, a string with the
+* whole contentread from the keyboard.
+* @return 1 a command string has been received and processed, !=1 no command string completed
+*********************************************************************************************/
+int16_t CONSOLE_process_received_keys(uint8_t ui8_received_key_type, uint8_t ui8_received_key, uint8_t * command_string);
+
+/*********************************************************************************************
+* @brief Is the console main function. Each time a character is received it is stored into the
+* KEYBOARD BUFFER, and when then CONSOLE_END_KEY key is pressed, the KEYBOARD BUFFER content is
+* stored into a string and returned to the main program in order to let it parse it into a command.
+* This routines distinguishes between single byte characters ( normal ASCII characters ) and
+* multiple byte characters special sequences ( escape sequence characters ).
+* @param[out] When the whole command string has been received, a string with the whole content
+* read from the keyboard
+* @return 1 a complete command string has been received ( CONSOLE_KEY_CTRL_RETURN character ),
+* -1  no complete command string has been received yet, -2 when the QUIT key has been detected
+* @note Tolaemon  06-11-2021
+*********************************************************************************************/
 int16_t CONSOLE_check_input(uint8_t * command_string);
+
+/*********************************************************************************************
+* @brief Stores a new command string into the the console command strings queue to allow the
+* user to use that command string again.
+* @return 1 the command string has been enqueued,-1 the command string  has not been enqueued
+* @note Tolaemon 21/08/2020
+*********************************************************************************************/
 int16_t CONSOLE_enqueue_command_string(uint8_t * command_to_store);
+
+/*********************************************************************************************
+* @brief  Returns the next command string in the queue of entered command strings
+* @param[out]  The string with the next command in the queue
+* @return 1 if the next command has been delivered,  -1 if there are no commands in the queue
+* @note Tolaemon 21/08/2020
+*********************************************************************************************/
 int16_t CONSOLE_get_next_queue_command_string(uint8_t* next_command);
+
+/*********************************************************************************************
+* @brief Returns the previous command string in the queue of entered command strings
+* @param[out] The string with the previous command in the queue
+* @return 1 if the prev command has been delivered, -1 if there are no commands in the queue
+* @note Tolaemon 21/08/2020
+*********************************************************************************************/
 int16_t CONSOLE_get_prev_queue_command_string(uint8_t* prev_command);
 
 #endif //__CONSOLE_H__
