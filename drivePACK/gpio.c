@@ -13,7 +13,6 @@
 #include "gpio.h"
 
 
-
 void GPIO_InitClock(){
 		
     //  Clock configuration:                                          EIC: External Interrupt and NMI Controller config
@@ -133,7 +132,6 @@ void GPIO_InitClock(){
 }//GPIO_InitClock
 
 
-
 void GPIO_DeinitClock(){
 
     //  Clock configuration:
@@ -209,7 +207,6 @@ void GPIO_DeinitClock(){
 }//GPIO_DeinitClock
 
 
-
 void GPIO_KeepOnlyDrivePackInterrupts(){
 
 	// disable all IRQs while reconfiguring them
@@ -245,7 +242,6 @@ void GPIO_KeepOnlyDrivePackInterrupts(){
 }//GPIO_KeepOnlyDrivePackInterrupts
 
 
-
 void GPIO_RestoreAllSystemInterrupts(){
 	
 	// disable all IRQs while reconfiguring them
@@ -275,7 +271,6 @@ void GPIO_RestoreAllSystemInterrupts(){
     __enable_irq();
 
 }//GPIO_RestoreAllSystemInterrupts
-
 
 
 void GPIO_Init(){
@@ -625,7 +620,9 @@ void GPIO_Init(){
 }//GPIO_Init
 
 
-
+/*********************************************************************************************
+* @brief
+*********************************************************************************************/
 void GPIO_SetDataLinesOutput(uint8_t ui8_data_value){
 	uint16_t ui16_aux = 0;
 	uint32_t ui32_aux = 0;
@@ -665,7 +662,9 @@ void GPIO_SetDataLinesOutput(uint8_t ui8_data_value){
 }//GPIO_SetDataLinesOutput
 
 
-
+/*********************************************************************************************
+* @brief
+*********************************************************************************************/
 void GPIO_SetCtrlLinesOutput(uint8_t ui8_ctrl_value){
 	uint16_t ui16_aux = 0;
 	uint32_t ui32_aux = 0;
@@ -727,7 +726,9 @@ void GPIO_SetCtrlLinesOutput(uint8_t ui8_ctrl_value){
 }//GPIO_SetCtrlLinesOutput
 
 
-
+/*********************************************************************************************
+* @brief
+*********************************************************************************************/
 uint8_t GPIO_GetDataLinesInput(){
 	uint8_t ui8_ret_val = 0;
 	uint32_t ui32_aux = 0;
@@ -764,7 +765,9 @@ uint8_t GPIO_GetDataLinesInput(){
 }//GPIO_GetDataLinesInput
 
 
-
+/*********************************************************************************************
+* @brief
+*********************************************************************************************/
 uint8_t GPIO_GetCtrlLinesInput(){
 	uint8_t ui8_ret_val = 0;
 	uint32_t ui32_aux = 0;

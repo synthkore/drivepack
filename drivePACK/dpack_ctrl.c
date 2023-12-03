@@ -58,12 +58,6 @@ uint32_t ui32_read_nibble_address                    = 0; // variable used to st
 uint8_t  ui8_read_nibble_val                         = 0; // variable used to store address nibble value read on last read cycle
 uint8_t  ui8_write_nibble_val                        = 0; // variable used to store the nibble to write into the bus into the next nibble write cycle
 
-// Synthkore  09-07-2022  Tolaemon
-// Description: initialize the dpack module main data structures
-// Receives:
-// Returns:
-//   By reference:
-//   By value:
 void DPACK_CTRL_Init(){
 	
 	// clear the ui8_dpack_dumper_nibbles_buffer content to all 0xFF
@@ -85,18 +79,6 @@ void DPACK_CTRL_Init(){
 }//DPACK_CTRL_Init
 
 
-// Synthkore  03-08-2022  Tolaemon
-// Description:
-// Checks that the first ROMPACK_HEADER_NUM_BYTES in the nibbles buffer correspond to
-// the expected nibbles for a valid ROM pack. If that bytes are not the expected then
-// it means that the nibbles buffer contains invalid data.
-// Receives:
-// Returns:
-//   By reference:
-//   By value:
-//     >=0 if the first ROMPACK_HEADER_NUM_BYTES in the nibbles buffer are the expected
-//    and the content of the nibbles buffer corresponds to a valid ROM pack.
-//     <0 the nibbles buffer does not correspond to a valid ROM pack.
 int8_t DPACK_CTRL_check_buffer(){
     int8_t i8_ret_val = 0;
 	int16_t i16_ret_val=0;
@@ -104,11 +86,11 @@ int8_t DPACK_CTRL_check_buffer(){
 	uint8_t ui8_expected_header[] = ROMPACK_HEADER_NIBBLES;
 
 // JBR 2023-09-22
-uint8_t ui8_borra[4];
-ui8_borra[0]=ui8_dpack_dumper_nibbles_buffer[0];
-ui8_borra[1]=ui8_dpack_dumper_nibbles_buffer[1];
-ui8_borra[2]=ui8_dpack_dumper_nibbles_buffer[2];
-ui8_borra[3]=ui8_dpack_dumper_nibbles_buffer[3];
+// uint8_t ui8_borra[4];
+// ui8_borra[0]=ui8_dpack_dumper_nibbles_buffer[0];
+// ui8_borra[1]=ui8_dpack_dumper_nibbles_buffer[1];
+// ui8_borra[2]=ui8_dpack_dumper_nibbles_buffer[2];
+// ui8_borra[3]=ui8_dpack_dumper_nibbles_buffer[3];
 // FIN JBR 2023-09-22	
 	
 	// print current header bytes and compare them with expected

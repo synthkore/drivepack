@@ -49,12 +49,11 @@ void SDMMC_GenerateCRCTable(){
 }//SDMMC_GenerateCRCTable
 
 
-
 uint8_t SDMMC_CRCAdd(uint8_t CRC,  uint8_t message_byte){
+	
 	return CRCTable[(CRC << 1) ^ message_byte];
 	
 }//SDMMC_CRCAdd
-
 
 
 uint8_t SDMMC_GetCRC(uint8_t message[],  int length){

@@ -57,10 +57,10 @@ void AUX_FUNCS_center_into_string(uint8_t * destination_string,uint8_t * string_
 /*********************************************************************************************
 * @brief Checks if the specified end_string is contained at the end of source_string and removes
 * if it is found and remove is TRUE.
-* @param[in] pui8_src: the string where the end_string is going to be searched and removed from.
-* @param[in] pui8_end: the string that is going to be searched and removed from the end of the
+* @param[in] pui8_src the string where the end_string is going to be searched and removed from.
+* @param[in] pui8_end the string that is going to be searched and removed from the end of the
 * source_string
-* @param[in] ui8_remove: when TRUE the end_string is removed from the source_string if it is
+* @param[in] ui8_remove when TRUE the end_string is removed from the source_string if it is
 * contained there. If FALSE then the routine only checks if the end_string is contianed into the
 * source_string.
 * @return =0: if end_string has been found and removed from the end of the source_string
@@ -89,7 +89,7 @@ void AUX_FUNCS_lstrfill( uint8_t * pui8_dest, uint8_t  ui8_char, uint16_t ui16_d
 * for the destination string.
 * @param[out] pui8_dest pointer to the string where the source will be copied to
 * @param[in]  pui8_source pointer with the string to copy into the destination string.
-* @param[in] ui16_MAX_STR_ARRAY: the size of the array used to store the destination string, the last
+* @param[in] ui16_MAX_STR_ARRAY the size of the array used to store the destination string, the last
 * allowed character can be stored in (ui16_MAX_STR_ARRAY-2) and in that case (ui16_MAX_STR_ARRAY-1)
 * should contain a '\0'.
 * @note Tolaemon 30-05-2013
@@ -105,7 +105,7 @@ for the string
 * @param[in] ui16_MAX_STR_ARRAY the size of the shortest array used to store the strings, the
 * last allowed character in the shortest string can be stored in (ui16_MAX_STR_ARRAY-2) and in
 * that case (ui16_MAX_STR_ARRAY-1) should contain a '\0'.
-* @return <0	the first character that does not match has a lower value in source than in dest,
+* @return <0 the first character that does not match has a lower value in source than in dest,
 * 0	the contents of both strings are equal, >0 the first character that does not match has a
 * greater value in source than in dest
 * @note Tolaemon 21-05-2016
@@ -155,7 +155,6 @@ void AUX_FUNCS_remove_from_end_to_char(uint8_t * pui8_string, uint8_t ui8_char);
 
 /*********************************************************************************************
 * Copies the content of the two received strings on the destination string
-* Receives:
 * @param[out] pui8_dest the destination string where the two strings will be copied
 * @param[in] pui8_first the string that will be copied on first position
 * @param[in] pui8_second the string that will be copied on second position
@@ -168,7 +167,6 @@ void AUX_FUNCS_strjoin(uint8_t * pui8_dest,uint8_t * pui8_first,uint8_t * pui8_s
 
 /*********************************************************************************************
 * @brief Removes the blank spaces and tab characters at the beginning and the end of the string
-* Receives:
 * @param[in|out] pui8_string_to_trim with the string we want to remove the blank chars or spaces
 * It retunrs the received string without the blank spaces and tab characters at beginning and the end.
 * @note Tolaemon 29-05-2013
