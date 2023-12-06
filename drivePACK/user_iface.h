@@ -82,71 +82,56 @@ typedef struct{
 }t_push_button;
 
 
-
 void EIC_7_Handler( void ); // Declared in C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD51_DFP\1.0.70\include\samd51g19a.h
 void NMI_Handler( void ); // Declared in C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD51_DFP\1.0.70\include\samd51g19a.h
 
-// Function: void USER_IFACE_init()
-// Function which creates and initializes all necessary resources for the user interface ( knobs and push buttons ... )
-// Receives:
-// Returns:
-// 	 FALSE: if could not initialize the input user interface
-//   TRUE: if could initialize the input user interface
+/*********************************************************************************************
+* @brief creates and initializes all necessary resources for the user interface ( knobs and push buttons ... )
+* @return 
+* 	 FALSE: if could not initialize the input user interface
+*   TRUE: if could initialize the input user interface
+*********************************************************************************************/
 void USER_IFACE_Init();
 
-// Function: uint8_t USER_IFACE_process_pushbutton(uint8_t pushbutton_number,uint8_t pushbutton_state)
-// Function which applies the debouncing filter control and returns the state of the pushbutton
-// Receives:
-//		ui8_pushbutton_number: with the number of pushbutton that has to be updated
-//		ui8_pushbutton_state: with the last read value of the pushbutton input port
-// Returns:
-//    0 or 1 indicating the state of the pushbutton.
-// NOTE:
-//     Pay attention to the fact that the pushbuttons use inverse logic. This is
-// because they use microcontroller's internal pull up resistors of the GPIOs, so by
-// default, if the user is not pressing any key, the read value through these pins is "1".
-// When the user presses a button then the read value is "0". So when a "0" is read a
-// it means that the push button is pressed.
+/*********************************************************************************************
+* @brief applies the debouncing filter control and returns the state of the pushbutton
+* @param[in] ui8_pushbutton_number with the number of pushbutton that has to be updated
+* @param[in] ui8_pushbutton_state with the last read value of the pushbutton input port
+* @return 0 or 1 indicating the state of the pushbutton.
+* @note  Pay attention to the fact that the pushbuttons use inverse logic. This is
+* because they use microcontroller's internal pull up resistors of the GPIOs, so by
+* default, if the user is not pressing any key, the read value through these pins is "1".
+* When the user presses a button then the read value is "0". So when a "0" is read a
+* it means that the push button is pressed.
+*********************************************************************************************/
 uint8_t USER_IFACE_process_pushbutton(uint8_t ui8_pushbutton_number, uint8_t ui8_pushbutton_state);
 
-// Function: uint8_t USER_IFACE_sample_encoders(int16_t * encoders_var_value ){
-// Function which reads, processes all the GPIOs, and returns the state of all the encoders
-// Receives:
-// Returns:
-//  By reference:
-//	  i16_encoders_var_value: array with the variation of value of the encoders
-//  By value:
-//    1: if the encoders state could be sampled
-//    0: if the encoders state could NOT be sampled
+/*********************************************************************************************
+* @brief reads, processes all the GPIOs, and returns the state of all the encoders
+* @param[out] i16_encoders_var_value array with the variation of value of the configured encoders
+* @return
+*    1: if the encoders state could be sampled
+*    0: if the encoders state could NOT be sampled
+*********************************************************************************************/
 uint8_t USER_IFACE_sample_encoders(int16_t * i16_encoders_var_value );
 
-// Function: void USER_IFACE_sample_pushbuttons(uint8_t * buttons_state)
-// Function which reads and processes all the GPIOs of the pushbuttons
-// Receives:
-// Returns:
-//  By reference:
-//	  ui8_buttons_state: array with the state of each pushbuttons
-//  By value:
+/*********************************************************************************************
+* @brief reads and processes all the GPIOs of the pushbuttons
+* @param[out] ui8_buttons_state array with the state of each pushbuttons
+*********************************************************************************************/
 void USER_IFACE_sample_pushbuttons(uint8_t * ui8_buttons_state);
 
-// Function: void USER_IFACE_pusbuttons_clear(uint8_t * buttons_state)
-// Function that clears the buffer used to store the state of the push buttons
-// Receives:
-//  By reference:
-//	  ui8_buttons_state: array with the state of the push buttons
-// Returns:
-//  By reference:
-//	  buttons_state: array with the variation of value of the push buttons with all values cleared
+/*********************************************************************************************
+* @brief  clears the buffer used to store the state of the push buttons
+* @param[out] ui8_buttons_state array with the state of the push buttons that is going to be cleared
+*********************************************************************************************/
 void USER_IFACE_pusbuttons_clear(uint8_t * ui8_buttons_state);
 
-// Function: void USER_IFACE_encoders_clear(int16_t * encoders_var_value)
-// Function that clears the buffer used to store the state of the encoders
-// Receives:
-//  By reference:
-//	  i16_encoders_var_value: array with the encoder values
-// Returns:
-//  By reference:
-//	  encoders_var_value: array with the variation of value of the encoders with all values cleared
+/*********************************************************************************************
+* @brief clears the buffer used to store the state of the encoders
+* @param[in] i16_encoders_var_value: array with the current encoder values
+* @param[out] encoders_var_value: array with the variation of value of the encoders with all values cleared
+*********************************************************************************************/
 void USER_IFACE_encoders_clear(int16_t * i16_encoders_var_value);
 
 #endif // USER_IFACE_H_

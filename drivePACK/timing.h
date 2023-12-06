@@ -51,86 +51,80 @@ typedef uint64_t TIMING_TICKS;
 #define TIMMING_TICKS_4_S       327746
 #define TIMMING_TICKS_5_S       409682
 
-
 TIMING_TICKS tc_ticks_since_start;
 
+/*********************************************************************************************
+* @brief TC0 timer interrupt handler
+*********************************************************************************************/
 void TC0_Handler ( void );
 
-// 04-05-2021  Jordi Bartolome
-// Disables the TC0 interrupt used as reference for the timers.
-// Receives:
-// Returns:
-//  By reference:
-//  By value:
+/*********************************************************************************************
+* @brief Disables the TC0 interrupt used as reference for the timers.
+* @note 04-05-2021  Jordi Bartolome
+*********************************************************************************************/
 void TIMING_Disable_TC0();
 
-// 04-05-2021  Jordi Bartolome
-// Enables the TC0 interrupt used as reference for the timers.
-// Receives:
-// Returns:
-//  By reference:
-//  By value:
+/*********************************************************************************************
+* @brief Enables the TC0 interrupt used as reference for the timers.
+* @note 04-05-2021  Jordi Bartolome
+*********************************************************************************************/
 void TIMING_Restore_TC0();
 
-// 02-08-2020  Jordi Bartolome
-// Initializes the TIMING module variables
-// Receives:
-// Returns:
-//  By reference:
-//  By value:
+/*********************************************************************************************
+* @brief Initializes the TIMING module variables
+* @note 02-08-2020 Jordi Bartolome
+*********************************************************************************************/
 void TIMING_Init();
 
-// 02-08-2020  Jordi Bartolome
-// Returns the ticks that have been counted by the corresponding system timer since the
-// CPU has been started
-// Receives:
-// Returns:
-//  By reference:
-//  By value:
-//      The he ticks that have been counted since the CPU has been started
+/*********************************************************************************************
+* @brief Returns the ticks that have been counted by the corresponding system timer since the
+* CPU has been started
+* @return the he ticks that have been counted since the CPU has been started
+* @note 02-08-2020 Jordi Bartolome
+*********************************************************************************************/
 TIMING_TICKS TIMING_GetTicksSinceStart();
 
-// 02-08-2020  Jordi Bartolome
-// Receives a number of ticks with corresponding to a desired delay, and returns the value
-// that the internal system ticks counter should have when that number of ticks has elapsed.
-// Receives:
-//   desired_delay: the number of ticks of delay ( the number of ticks to add to current system ticks ).
-// Returns:
-//  By reference:
-//  By value:
-//     The value that the internal system ticks counter will have when the specified desired_delay
-//  ticks have elapsed.
+/*********************************************************************************************
+* @brief Receives a number of ticks with corresponding to a desired delay, and returns the value
+* that the internal system ticks counter should have when that number of ticks has elapsed.
+* @param[in] desired_delay the number of ticks of delay ( the number of ticks to add to current
+* system ticks ).
+* @return The value that the internal system ticks counter will have when the specified desired_delay
+* ticks have elapsed.
+* @note 02-08-2020 Jordi Bartolome
+*********************************************************************************************/
 TIMING_TICKS TIMING_SetTicksDelay(uint32_t desired_delay);
 
-// 02-08-2020  Jordi Bartolome
-// Receives a number of ticks including the desired delay and checks if this number of ticks has been
-// reached or not by the the internal system clock.
-// Receives:
-//   desired_delay: the number of ticks to check if have been reached or not by the internal system clock.
-// Returns:
-//  By reference:
-//  By value:
-//     TRUE if the internal system clock has reached the value received in ticks_to_reach parameter.
-//     FALSE if the internal system clock has NOT reached yet the value received in ticks_to_reach parameter,
+/*********************************************************************************************
+* @brief Receives a number of ticks including the desired delay and checks if this number of ticks has 
+* been reached or not by the the internal system clock.
+* @param[in] desired_delay the number of ticks to check if have been reached or not by the internal 
+* system clock.
+* @return  TRUE if the internal system clock has reached the value received in ticks_to_reach parameter.
+* FALSE if the internal system clock has NOT reached yet the value received in ticks_to_reach parameter,
+* @note 02-08-2020  Jordi Bartolome
+*********************************************************************************************/
 uint8_t TIMING_CheckTicksDelayReached(TIMING_TICKS ticks_to_reach);
 
-// 04-04-2022  Jordi Bartolome
-// Implements an active pause with a stupid loop waiting for the specified time specified 
-// in ui32_desired_delay.
-// Receives:
-//   ui32_desired_delay:
-// Returns:
-// Note: AVOID USING THIS FUNCTION, USE IT ONLY WHEN IT IS STRICTLY NECESSARY !!!! Use
-// other non blocking timing control functions to implement pause when possible
+/*********************************************************************************************
+* @brief Implements an active pause with a stupid loop waiting for the specified time specified 
+* in ui32_desired_delay.
+* @param[in] ui32_desired_delay the number of ticks that the CPU will keep blocked.
+* Returns:
+* @note AVOID USING THIS FUNCTION, USE IT ONLY WHEN IT IS STRICTLY NECESSARY !!!! Use
+* other non blocking timing control functions to implement pause when possible
+* 04-04-2022 Jordi Bartolome
+*********************************************************************************************/
 void TIMMING_BlockingDelay(uint32_t ui32_desired_delay);
 
-// 02-08-2020  Jordi Bartolome
-// Implements an active pause with a stupid loop. It may be useful when the OS has not
-// been started because the vTaskDelay(x) can only be called when the OS is started.
-// Receives:
-// Returns:
-// Note: AVOID USING THIS FUNCTION, USE IT ONLY WHEN IT IS STRICTLY NECESSARY !!!! Use
-// other non blocking timing control functions to implement pause when possible
+/*********************************************************************************************
+* @brief Implements an active pause with a stupid loop. It may be useful when the OS has not
+* been started because the vTaskDelay(x) can only be called when the OS is started.
+* @param[in] the number of ++ then -- loops to execute in the loop
+* @note AVOID USING THIS FUNCTION, USE IT ONLY WHEN IT IS STRICTLY NECESSARY !!!! Use
+* other non blocking timing control functions to implement pause when possible
+* @note 02-08-2020  Jordi Bartolome
+*********************************************************************************************/
 void TIMING_ActiveDelay(uint16_t cycles);
 
 #endif /* TIMING_H_ */

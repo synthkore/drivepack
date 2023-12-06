@@ -183,33 +183,38 @@
 #define CTRLB_CMD_READSYNC  0x4 // 0x4 READSYNC Force a read synchronization of COUNT
 
 /*********************************************************************************************
-* @brief
+* @brief configures the uC peripherals ( GPIO, UARTs, TIMERs ) to match the application 
+* requirements.
 *********************************************************************************************/
 void GPIO_Init();
 
 /*********************************************************************************************
-* @brief
-*********************************************************************************************/
-void GPIO_DeinitClock();
-
-/*********************************************************************************************
-* @brief
+* @brief Configures the different CLCK peripherals to match the desired operational internal 
+* clock frequency.
 *********************************************************************************************/
 void GPIO_InitClock();
 
 /*********************************************************************************************
-* @brief
+* @brief Reconfigures the different CLCK peripherals to set the CPU at 32.768kHz
+*********************************************************************************************/
+void GPIO_DeinitClock();
+
+/*********************************************************************************************
+* @brief Disables all interrupts in the application (timer, encoder IO ) and enables only the 
+* interrupts needed to emulate the ROM PACK.
 *********************************************************************************************/
 void GPIO_KeepOnlyDrivePackInterrupts();
 
 /*********************************************************************************************
-* @brief
+* @brief Enables all the interrupts of the application (timer, encoder IO ), and disables the 
+* interrupts needed to emulate the ROM PACK.
 *********************************************************************************************/
 void GPIO_RestoreAllSystemInterrupts();
 
 /*********************************************************************************************
-* @brief
-* @param[in] ui8_data_value
+* @brief sets the data/addresses GPIOs and the INPUT/OUPTUT transceiver in output mode and sets
+* the received value in the address/data lines.
+* param[in] ui8_data_value the value to write into the output GPIO port
 *********************************************************************************************/
 void GPIO_SetDataLinesOutput(uint8_t ui8_data_value);
 
