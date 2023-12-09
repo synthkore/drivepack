@@ -44,45 +44,43 @@ struct ref_screens_enter_txt{
 };
 
 
-// Synthkore  18-02-2022  Tolaemon
-// Receives:
-// Returns:
-//  By value:
-void SCREENS_enter_txt_clear();
-
-// Synthkore  27-04-2022  Tolaemon
-// Initializes the module variables on program start.
-// Receives:
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief initializes the variables and structures used for the ENTER TEXT SCREENS to its default
+* values. It may be used to initialize the module variables on program start.
+* @note Synthkore  27-04-2022 Tolaemon
+*********************************************************************************************/
 void SCREENS_enter_txt_init();
 
-// Synthkore  18-02-2022  Tolaemon
-// Loads and initializes the enter text screen structure that corresponds to the received
-// i16_enter_txt_id
-// Receives:
-//   i16_enter_txt_id: indicates the enter text screen to load
-//   i16_enter_text_state:  indicates the substate of the specified enter text screen
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief clears the variables and pointers ( to NULL ) used to manage the current configured 
+* ENTER TEXT SCREEN.
+* @note Synthkore 18-02-2022  Tolaemon
+*********************************************************************************************/
+void SCREENS_enter_txt_clear();
+
+/*********************************************************************************************
+* @brief Loads and initializes the ENTER TEXT SCREEN variables, structures and pointers with 
+* the values that corresponds to the received i16_enter_txt_id.
+* @param[in] i16_enter_text_id indicates the enter text screen to load
+* @param[in] i16_enter_text_state indicates the substate of the specified enter text screen
+* @return >=0 the specified TEXT SCREEN has been succesfully loaded
+* <0 the specified screen could not be loaded.
+* @note Synthkore 18-02-2022  Tolaemon
+*********************************************************************************************/
 int8_t SCREENS_enter_txt_load(int16_t i16_enter_text_id,int16_t i16_enter_text_state);
 
-// Synthkore  18-02-2022  Tolaemon
-// Shows the current enter text screen.
-// Receives:
-//   i16_f_explorer_id: indicates the type of fire explorer to load
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief shows the current configured ENTER TEXT SCREEN.
+* @note Synthkore 18-02-2022  Tolaemon
+*********************************************************************************************/
 void SCREENS_enter_txt_show();
 
-// Synthkore  18-02-2022  Tolaemon
-// Manages the keys and knobs while in the enter text screens.
-// Receives:
-//   * pi16_encoders_var_value: pointing to the array with the encoders values.
-//   * pui8_pushbutton_values:  pointing to the array with the push button states.
-// Receives:
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief Manages the keys and knobs of the current configured ENTER TEXT SCREEN.
+* @param[in] pi16_encoders_var_value pointing to the array with the variation of value of the encoders.
+* @param[in] pui8_pushbutton_values pointing to the array with the push button states.
+* @note Synthkore 18-02-2022  Tolaemon
+*********************************************************************************************/
 void SCREENS_enter_txt_ev_manager(int16_t * pi16_encoders_var_value, uint8_t * pui8_pushbutton_values);
 
 // SAVE_RAM enter file name text screen

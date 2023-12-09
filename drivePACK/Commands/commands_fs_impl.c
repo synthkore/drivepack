@@ -13,10 +13,6 @@
 #include "commands_fs_impl.h"
 
 
-
-// Procedure that prints the text associated to the received FRESULT error code
-// Receives:
-// Returns:
 void COMMANDS_FS_IMPL_print_file_error(int16_t i16_file_result){
 
     i16_file_result = -1*i16_file_result;
@@ -90,14 +86,6 @@ void COMMANDS_FS_IMPL_print_file_error(int16_t i16_file_result){
 }//COMMANDS_FS_IMPL_print_file_error
 
 
-
-// Executes the actions related to the disk mount command
-// Recives:
-//  p_command: the command structure with the parsed tokens
-// Returns:
-//  By value:
-//   >=0 the command has been succesfully executed
-//	 -1 an error occurred while trying to execute the command
 int16_t COMMANDS_FS_IMPL_execute_mnt(t_command * p_command){
 	int16_t i16_ret_val=0;
 
@@ -116,15 +104,6 @@ int16_t COMMANDS_FS_IMPL_execute_mnt(t_command * p_command){
 }//COMMANDS_FS_IMPL_execute_mnt
 
 
-
-// Executes the actions related to the disk dir (list
-// available directories) command.
-// Recives:
-// p_command: the command structure with the parsed tokens
-// Returns:
-// By value:
-//  >=0 the command has been succesfully executed
-//	<0 an error occurred while trying to execute the command
 int16_t COMMANDS_FS_IMPL_execute_dir(t_command * p_command){
 	int16_t i16_ret_val=0;
 	uint8_t * path;
@@ -192,15 +171,6 @@ int16_t COMMANDS_FS_IMPL_execute_dir(t_command * p_command){
 }//COMMANDS_FS_IMPL_execute_dir
 
 
-
-// Executes the actions related to the mkdir ( create directory )
-// command.
-// Receives:
-// p_command: the command structure with the parsed tokens
-// Returns:
-// By value:
-//  >=0 the command has been succesfully executed
-//	-1 an error occurred while trying to execute the command
 int16_t COMMANDS_FS_IMPL_execute_make_dir(t_command * p_command){
 	int16_t i16_ret_val=0;
 
@@ -235,14 +205,6 @@ int16_t COMMANDS_FS_IMPL_execute_make_dir(t_command * p_command){
 }//COMMANDS_FS_IMPL_execute_make_dir
 
 
-
-// Executes the actions related to the directory change command
-// Receives:
-//  p_command: the command structure with the parsed tokens
-// Returns:
-//	By value:
-//   >=0 the command has been succesfully executed
-//	 -1 an error occurred while trying to execute the command
 int16_t COMMANDS_FS_IMPL_execute_change_dir(t_command * p_command){
 	int16_t i16_ret_val=0;
 
@@ -276,15 +238,6 @@ int16_t COMMANDS_FS_IMPL_execute_change_dir(t_command * p_command){
 }//COMMANDS_FS_IMPL_execute_change_dir
 
 
-
-// Executes the actions related to the remove ( delete specified
-// element ) command.
-// Receives:
-// p_command: the command structure with the parsed tokens
-// Returns:
-// By value:
-//  >=0 the command has been succesfully executed
-//	-1 an error occurred while trying to execute the command
 int16_t COMMANDS_FS_IMPL_execute_remove(t_command * p_command){
 	int16_t i16_ret_val=0;
 
@@ -318,15 +271,6 @@ int16_t COMMANDS_FS_IMPL_execute_remove(t_command * p_command){
 }//COMMANDS_FS_IMPL_execute_remove
 
 
-
-// Execeutes the TYPE command and shows the content of the specified file name
-// as text
-// Recives:
-//  pui8_file_name: name of the file to show
-// Returns:
-//	By value:
-//   >=0 the command has been succesfully executed
-//	 -1 an error occurred while trying to execute the command
 int16_t COMMANDS_FS_IMPL_execute_command_type_txt(uint8_t * pui8_file_name){
 	int16_t i16_ret_val=0;
 	uint32_t ui32_read_bytes; // read bytes on each f_read iteration
@@ -405,15 +349,6 @@ int16_t COMMANDS_FS_IMPL_execute_command_type_txt(uint8_t * pui8_file_name){
 }//COMMANDS_FS_IMPL_execute_command_type_txt
 
 
-
-// Execeutes the TYPE command and shows the content of the specified file name
-// byte by byte in 0x00 format
-// Recives:
-//	pui8_file_name: name of the file to show
-// Returns:
-//	By value:
-//   >=0 the command has been succesfully executed
-//	 -1 an error occurred while trying to execute the command
 int16_t COMMANDS_FS_IMPL_execute_command_type_hex(uint8_t * pui8_file_name){
 	int16_t i16_ret_val=0;
 	uint32_t ui32_read_bytes; // read bytes on each f_read iteration
@@ -489,15 +424,6 @@ int16_t COMMANDS_FS_IMPL_execute_command_type_hex(uint8_t * pui8_file_name){
 }//COMMANDS_FS_IMPL_execute_command_type_hex
 
 
-
-// Procedure that processes the type command and calls the corresponding
-// hex or text type function depending on the received parameters
-// Receives:
-//	p_command: the command structure with the parsed tokens
-// Returns:
-//	By value:
-//   >=0 the command has been succesfully executed
-//	 -1 an error occurred while trying to execute the command
 int16_t COMMANDS_FS_IMPL_execute_command_type(t_command * p_command){
 	int16_t ret_val=0;
 
@@ -544,15 +470,6 @@ int16_t COMMANDS_FS_IMPL_execute_command_type(t_command * p_command){
 }//COMMANDS_FS_IMPL_execute_command_type
 
 
-
-// Procedure that processes the write command wich creates a file with the
-// specified name and with the specified text string content
-// Receives:
-//	p_command: the command structure with the parsed tokens
-// Returns:
-//	By value:
-//   >=0 the command has been executed
-//	 -1 an error occurred while trying to execute the command
 int16_t COMMANDS_FS_IMPL_execute_command_write(t_command * p_command){
    int16_t ret_val=0;
    int16_t i16_aux = 0;

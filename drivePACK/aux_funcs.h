@@ -63,7 +63,7 @@ void AUX_FUNCS_center_into_string(uint8_t * destination_string,uint8_t * string_
 * @param[in] ui8_remove when TRUE the end_string is removed from the source_string if it is
 * contained there. If FALSE then the routine only checks if the end_string is contianed into the
 * source_string.
-* @return =0: if end_string has been found and removed from the end of the source_string
+* @return  =0 if end_string has been found and removed from the end of the source_string
 * <0 if end_string was not found or could not be removed from the end of the source_string
 * @note Tolaemon 27-11-2014
 *********************************************************************************************/
@@ -105,7 +105,7 @@ for the string
 * @param[in] ui16_MAX_STR_ARRAY the size of the shortest array used to store the strings, the
 * last allowed character in the shortest string can be stored in (ui16_MAX_STR_ARRAY-2) and in
 * that case (ui16_MAX_STR_ARRAY-1) should contain a '\0'.
-* @return <0 the first character that does not match has a lower value in source than in dest,
+* @return  <0 the first character that does not match has a lower value in source than in dest,
 * 0	the contents of both strings are equal, >0 the first character that does not match has a
 * greater value in source than in dest
 * @note Tolaemon 21-05-2016
@@ -187,7 +187,9 @@ void AUX_FUNCS_trim_string_char(uint8_t * pui8_string_to_trim,uint8_t ui8_char_t
 * received string is not beyond the MAX_LEN max allowed value. In that case it returns an error
 * code.
 * @param[in] pui8_string: with the string whose length in chars we want to get
-* @return >=0 with the length of the string, -1 the received string cannot be processed
+* @return 
+* >=0 with the length of the string
+* -1 the received string cannot be processed
 * @note Tolaemon  15-11-2016
 *********************************************************************************************/
 int16_t AUX_FUNCS_strlen(uint8_t * pui8_string);
@@ -200,7 +202,8 @@ int16_t AUX_FUNCS_strlen(uint8_t * pui8_string);
 * want to calculate.
 * The last allowed character can be stored in (ui16_MAX_STR_ARRAY-2) and in that case
 * (ui16_MAX_STR_ARRAY-1) should contain a '\0'.
-* @return >=0 with the length of the string, -1 the received string is greater than ush_MAX_LEN
+* @return  >=0 with the length of the string
+* -1 the received string is greater than ush_MAX_LEN
 * and cannot be processed
 * @note Synthkore  15-11-2016  Tolaemon
 *********************************************************************************************/
@@ -250,7 +253,8 @@ void AUX_FUNCS_uitoa(uint32_t ui32_num, uint8_t * pui8_string, int16_t i16_base,
 * the value to convert to number. The last allowed digit can be stored in (ui16_MAX_STR_ARRAY-2)
 * and in that case(ui16_MAX_STR_ARRAY-1) should contain a '\0'.
 * @param[out] i32_num: with the result of converting the received string to a integer
-* @return >=0 if the string could be converted, -1 if the received string could not be converted
+* @return >=0 if the string could be converted
+* -1 if the received string could not be converted
 * to an integer.
 *********************************************************************************************/
 int16_t AUX_FUNCS_atoi(uint8_t * pui8_string, uint8_t ui8_base, uint16_t ui16_MAX_STR_ARRAY, int32_t * i32_num);

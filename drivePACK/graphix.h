@@ -125,8 +125,8 @@ void GRAPHIX_text_buffer_refresh();
 /*********************************************************************************************
 * @brief places the received char with the specified attributes and colors at the specified
 * row and column of the text buffer.
-* @param[in] ui16_col column ( x coordinate ) at which the received char will be placed
-* @param[in] ui16_row row ( y coordinate ) at which the received char will be placed
+* @param[in] ui16_col column ( x of the buffer ) at which the received char will be placed
+* @param[in] ui16_row row ( y of the buffer ) at which the received char will be placed
 * @param[in] ui8_char the character to place at the specified (ui16_row, ui16_col) position
 * @param[in] ui8_attribs attributes for the received character in the text bfufer.
 * @param[in] ui8_idx_front_color color INDEX assigned to the received char in the text buffer.
@@ -141,8 +141,8 @@ void GRAPHIX_text_buffer_set_char(uint16_t ui16_col , uint16_t ui16_row, uint8_t
 * @brief laces the received string with the specified attributes and colors at the specified
 * row and column of the text buffer. The string is clipped in order it does not go beyond
 * the X limits of the text buffer.
-* @param[in] ui16_col column ( x coordinate ) at which the received string will be placed
-* @param[in] ui16_row row ( y coordinate ) at which the received string will be placed
+* @param[in] ui16_col column ( x of the buffer ) at which the received string will be placed
+* @param[in] ui16_row row ( y of the buffer ) at which the received string will be placed
 * @param[in] pui8_string the array of uint8s containing the ASCII codes that are going to be placed
 * in the text buffer. It must end with '\0'.
 * @param[in] ui8_attribs attributes for the characters of the received string in the text buffer.
@@ -184,10 +184,10 @@ void GRAPHIX_text_buffer_fill_attr(uint8_t ui8_attribs);
 
 /*********************************************************************************************
 * @brief implements the Bresenham algorithm to draw a line from x0,y0 to x1,y1
-* @param[in] i16_x0 X coordinate of the line origin point
-* @param[in] i16_y0 Y coordinate of the line origin point
-* @param[in] i16_x1 X coordinate of the line end point
-* @param[in] i16_y1 Y coordinate of the line end point
+* @param[in] i16_x0 X coordinate in pixels of the line origin point
+* @param[in] i16_y0 Y coordinate in pixels of the line origin point
+* @param[in] i16_x1 X coordinate in pixels of the line end point
+* @param[in] i16_y1 Y coordinate in pixels of the line end point
 * @param[in] ui16_color RGB color code used to draw the line in the screen.
 *********************************************************************************************/
 void GRAPHIX_line(int16_t i16_x0, int16_t i16_y0, int16_t i16_x1, int16_t i16_y1, uint16_t ui16_color);
@@ -195,8 +195,8 @@ void GRAPHIX_line(int16_t i16_x0, int16_t i16_y0, int16_t i16_x1, int16_t i16_y1
 /*********************************************************************************************
 * @brief Implements the algorithm to draw a circle of the specified radius and color centered 
 * at the x0,y0 coordinates.
-* @param[in] i16_x0 X coordinate of the center of the circle.
-* @param[in] i16_y0 Y coordinate of the center of the circle.
+* @param[in] i16_x0 X coordinate in pixels of the center of the circle.
+* @param[in] i16_y0 Y coordinate in pixels of the center of the circle.
 * @param[in] i16_radius radius of the circle to draw.
 * @param[in] ui16_color RGB color code used to draw the circle in the screen.
 *********************************************************************************************/
@@ -205,8 +205,8 @@ void GRAPHIX_raster_circle (int16_t i16_x0, int16_t i16_y0, int16_t i16_radius, 
 /*********************************************************************************************
 * @brief implements the algorithm to draw a circle of the specified radius and color centered
 * at the x0,y0 coordinates.
-* @param[in] i16_x0 X coordinate of the center of the circle.
-* @param[in] i16_y0 Y coordinate of the center of the circle.
+* @param[in] i16_x0 X coordinate in pixels of the center of the circle.
+* @param[in] i16_y0 Y coordinate in pixels of the center of the circle.
 * @param[in] i16_radius radius of the circle to draw.
 * @param[in] ui16_color RGB color code used to draw the circle in the screen.
 *********************************************************************************************/
@@ -217,10 +217,10 @@ void GRAPHIX_circle (int16_t i16_cx, int16_t i16_cy, int16_t i16_radius, uint16_
 * at the specified coordinates. The rectangle is drawn between the top left corner coordinates 
 * specified with the i16_x0,i16_y0 and the bottom right corner coordinates specified with the 
 * 16_x1,i16_y1:
-* @param[in] i16_x0 X coordinate of top left corner of the rectangle.
-* @param[in] i16_y0 Y coordinate of top left corner of the rectangle.
-* @param[in] i16_x1 X coordinate of bottom right corner of the rectangle.
-* @param[in] i16_y1 Y coordinate of bottom right corner of the rectangle.
+* @param[in] i16_x0 X coordinate in pixels of top left corner of the rectangle.
+* @param[in] i16_y0 Y coordinate in pixels of top left corner of the rectangle.
+* @param[in] i16_x1 X coordinate in pixels of bottom right corner of the rectangle.
+* @param[in] i16_y1 Y coordinate in pixels of bottom right corner of the rectangle.
 * @param[in] ui16_border_color when ui8_border is set, that is the RGB color code used to draw 
 * the border of the rectangle.
 * @param[in] ui16_back_color when ui8_solid is set, that is the RGB color code used to fill the
@@ -234,8 +234,8 @@ void GRAPHIX_rectangle(int16_t i16_x0, int16_t i16_y0, int16_t i16_x1, int16_t i
 
 /*********************************************************************************************
 * @brief sets the received color RGB code in the pixel at screen coordinates x,y
-* @param[in] x x coordinate of the pixel
-* @param[in] y x coordinate of the pixel
+* @param[in] x x coordinate in pixels of the pixel
+* @param[in] y x coordinate in pixels of the pixel
 * @param[in] ui16_color desired RGB color code for the pixel at X,Y coordinates.
 *********************************************************************************************/
 void GRAPHIX_set_pixel(uint16_t x, uint16_t y, uint16_t ui16_color);
@@ -243,8 +243,8 @@ void GRAPHIX_set_pixel(uint16_t x, uint16_t y, uint16_t ui16_color);
 /*********************************************************************************************
 * @brief prints the received character at the specified coordinates of the screen with 
 * the specified pixel sizes and colors.
-* @param[in] ui16_x_orig x coordinate at which the received character will be painted.
-* @param[in] ui16_y_orig y coordinate at which the received character will be painted.
+* @param[in] ui16_x_orig x coordinate in pixels at which the received character will be painted.
+* @param[in] ui16_y_orig y coordinate in pixels at which the received character will be painted.
 * @param[in] ui8_x_pixel_size number of pixels on X direction that will take each characters
 * pixel when printed in the screen.
 * @param[in] ui8_y_pixel_size  number of pixels on Y direction that will take each characters
@@ -252,15 +252,15 @@ void GRAPHIX_set_pixel(uint16_t x, uint16_t y, uint16_t ui16_color);
 * @param[in] ui16_color RGB color code used to print the character
 * buffer in the screen ( the colors can be different for each character ).
 * @param[in] ui16_back_color RGB color code for the character background.
-* @param[in] ui8_ascii the code of the character to print in the screeen.
+* @param[in] ui8_ascii the ASCII code of the character to print in the screen.
 *********************************************************************************************/
 void GRAPHIX_print_char(uint16_t ui16_x_orig, uint16_t ui16_y_orig, uint8_t ui8_x_pixel_size, uint8_t ui8_y_pixel_size, uint16_t ui16_color, uint16_t ui16_back_color, uint8_t ui8_ascii );
 
 /*********************************************************************************************
 * @brief prints the received string at the specified coordinates of the screen with
 * the specified pixel sizes and colors.
-* @param[in] ui16_x_orig X coordinate at which the received string will be printed.
-* @param[in] ui16_y_orig Y coordinate at which the received string will be printed.
+* @param[in] ui16_x_orig X coordinate in pixels at which the received string will be printed.
+* @param[in] ui16_y_orig Y coordinate in pixels at which the received string will be printed.
 * @param[in] ui8_x_pixel_size number of pixels on X direction that will take each characters
 * pixel when printed in the screen 
 * @param[in] ui8_y_pixel_size number of pixels on Y direction that will take each characters
@@ -274,10 +274,8 @@ void GRAPHIX_print_string(uint16_t ui16_x_orig, uint16_t ui16_y_orig, uint8_t ui
 
 /*********************************************************************************************
 * @brief receives an array with the pixels of an image and paints it into the screen.
-x coordinate in the screen at which the content of the text buffer will
-* be rendered.
-* @param[in] i16_x0 X coordinate in the screen at which the image will be rendered.
-* @param[in] i16_y0 y coordinate in the screen at which the image will be rendered.
+* @param[in] i16_x0 X coordinate in pixels at which the image will be rendered.
+* @param[in] i16_y0 y coordinate in pixels at which the image will be rendered.
 * @param[in] ui32_width original horizontal size of the image in pixels
 * @param[in] ui32_height original vertical size of the image in pixels
 * @param[in] ui8_pix_size number of screen pixels (XxY) used to paint each image pixel in the 

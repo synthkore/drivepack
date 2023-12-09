@@ -248,7 +248,7 @@ void LCD_ILI9481_write_data_16(uint16_t ui16_data) {
 
 
 
-void LCD_ILI9481_fast_fill(uint16_t ui16_color, uint16_t ui16_x1, uint16_t ui16_y1, uint16_t ui16_x2, uint16_t ui16_y2){
+void LCD_ILI9481_area_fast_fill(uint16_t ui16_color, uint16_t ui16_x1, uint16_t ui16_y1, uint16_t ui16_x2, uint16_t ui16_y2){
 	// uint32_t ui32_total = 0;
 	// uint32_t ui32_cter = 0;
 	uint16_t ui16_ax = 0;
@@ -282,7 +282,7 @@ void LCD_ILI9481_fast_fill(uint16_t ui16_color, uint16_t ui16_x1, uint16_t ui16_
 		}
 	}
 	
-}//LCD_ILI9481_fast_fill
+}//LCD_ILI9481_area_fast_fill
 
 
 
@@ -324,7 +324,6 @@ void LCD_ILI9481_set_xy(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2){
 	LCD_ILI9481_write_command(0x2c); // 2c: write memory start
 
 }//LCD_ILI9481_set_xy
-
 
 
 void LCD_ILI9481_set_pixel(uint16_t x, uint16_t y, uint16_t ui16_color){

@@ -54,45 +54,44 @@ struct ref_screens_menus{
 	uint8_t * pui8_title;// title of the current menu screen
 };
 
-// Synthkore  30-09-2014  Tolaemon
-// Clears all the information of the current menu
-// Receives:
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief clears the variables and pointers ( to NULL ) used to manage the current configured
+* MENU SCREEN.
+* @note Synthkore 30-09-2014   Tolaemon
+*********************************************************************************************/
 void SCREENS_menus_clear();
 
-// Synthkore  15-03-2022  Tolaemon
-// Initializes the menus structures
-// Receives:
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief initializes the variables and structures used for the MENU SCREEN to its default
+* values. It may be used to initialize the module variables on program start.
+* @note Synthkore  15-03-2022Tolaemon
+*********************************************************************************************/
 void SCREENS_menus_init();
 
-// Synthkore  02-10-2014  Tolaemon
-// Loads the options of the specified menu into the current menu structure
-// Receives:
-//    int16_t i16_menu_id : with the identifier of the menu we want to load into
-//   the current menu structure.
-// Returns:
-//  By value:
-//    >=0 if has been possible to load the specified menu screen
-//   -1: if has not been possible to load the specified menu screen
+/*********************************************************************************************
+* @brief Loads and initializes the MENU SCREEN variables, structures, pointers and the menu
+* options that that corresponds to the received i16_menu_id.
+* @param[in] i16_menu_id with the identifier of the menu we want to load into
+* the current menu structure.
+* @return >=0 if has been possible to load the specified menu screen
+* <0 i has not been possible to load the specified menu screen
+* @note Synthkore  02-10-2014   Tolaemon
+*********************************************************************************************/
 int8_t SCREENS_menus_load(int16_t i16_menu_id);
 
-// Synthkore  02-10-2014  Tolaemon
-// Shows the content of the current menu in the LCD
-// Receives:
-// Returns:
+/*********************************************************************************************
+* @brief shows the current configured MENU SCREEN.
+* @note Synthkore  02-10-2014  Tolaemon
+*********************************************************************************************/
 void SCREENS_menus_show();
 
-// Synthkore  30-09-2014  Tolaemon
-// Manages the menus. Checks if has to jump to another menu, if has to change the selected option
-// or call to another function.
-// Receives:
-//    int16_t * encoders_var_value: pointing to the array with the variation of value of the encoders
-//    uint8_t * pushbutton_values: pointing to the array with the state of all the push buttons
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief Manages the keys and knobs of the current configured MENU SCREEN. Checks if has to jump
+* to another menu, if has to change the selected option or call to another function.
+* @param[in] pi16_encoders_var_value pointing to the array with the variation of value of the encoders
+* @param[in] pui8_pushbutton_values  pointing to the array with the state of all the push buttons
+* @note Synthkore 18-02-2022  Tolaemon
+*********************************************************************************************/
 void SCREENS_menus_ev_manager(int16_t * pi16_encoders_var_value, uint8_t * pui8_pushbutton_values);
 
 #endif /* _SCREENS_MENUS_H_ */

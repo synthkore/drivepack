@@ -73,8 +73,8 @@ uint8_t USART_receive_char(uint8_t * pui8_received);
 
 /*********************************************************************************************
 * @brief Returns the requested number of bytes from the currently open 1KXModem connection. If
-* the requested bytes are not available in the current packet then requests following packet to
-* the sender.
+* the requested bytes are not available in the current packet then requests to the sender the 
+* following packet.
 * @param[in] ui32_n_bytes_to_read the number of bytes to read from the currently open 1KXModem
 * connection.
 * @param[out] p_read_data buffer where the function stores data read from current 1KXModem

@@ -223,7 +223,6 @@ int16_t COMMANDS_IMPL_execute_help(t_command * p_command){
 }//COMMANDS_IMPL_execute_help
 
 
-
 int16_t COMMANDS_IMPL_execute_gpio(t_command * p_command){
 	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
 	int32_t i32_aux = 0;
@@ -388,7 +387,6 @@ int16_t COMMANDS_IMPL_execute_gpio(t_command * p_command){
 }//COMMANDS_IMPL_execute_gpio
 
 
-
 int16_t COMMANDS_IMPL_execute_info(t_command * p_command){
 	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
 	int16_t i16_ret_val=0;
@@ -409,7 +407,6 @@ int16_t COMMANDS_IMPL_execute_info(t_command * p_command){
 	return i16_ret_val;
 	
 }//COMMANDS_IMPL_execute_info
-
 
 
 int16_t COMMANDS_IMPL_execute_command_rom_write(t_command * p_command){
@@ -482,7 +479,6 @@ int16_t COMMANDS_IMPL_execute_command_rom_write(t_command * p_command){
 }//COMMANDS_IMPL_execute_command_rom_write
 
 
-
 int16_t COMMANDS_IMPL_execute_command_rom_dump(t_command * p_command){
 	int16_t i16_ret_val=0;
 	
@@ -513,7 +509,6 @@ int16_t COMMANDS_IMPL_execute_command_rom_dump(t_command * p_command){
 	return i16_ret_val;	
 
 }//COMMANDS_IMPL_execute_command_rom_dump
-
 
 
 int16_t COMMANDS_IMPL_execute_command_rom_load(t_command * p_command){
@@ -571,7 +566,6 @@ int16_t COMMANDS_IMPL_execute_command_rom_load(t_command * p_command){
 }//COMMANDS_IMPL_execute_command_rom_load
 
 
-
 int16_t COMMANDS_IMPL_execute_command_rom_type(t_command * p_command){
 	int16_t i16_ret_val=0;
     int32_t i32_read_bytes;
@@ -623,7 +617,6 @@ int16_t COMMANDS_IMPL_execute_command_rom_type(t_command * p_command){
 }//COMMANDS_IMPL_execute_command_rom_type
 
 
-
 int16_t COMMANDS_IMPL_execute_command_rom_run(t_command * p_command){
 	int16_t i16_ret_val=0;
 	uint8_t ui8_usart_char = 0;
@@ -670,7 +663,6 @@ int16_t COMMANDS_IMPL_execute_command_rom_run(t_command * p_command){
 	return i16_ret_val;
 
 }//COMMANDS_IMPL_execute_command_rom_run
-
 
 
 int16_t COMMANDS_IMPL_execute_command_check(t_command * p_command){
@@ -728,7 +720,6 @@ int16_t COMMANDS_IMPL_execute_command_check(t_command * p_command){
 	 return i16_ret_val;
 
 }//COMMANDS_IMPL_execute_command_check
-
 
 
 int16_t COMMANDS_IMPL_execute_command_rom_info(t_command * p_command){
@@ -802,7 +793,6 @@ int16_t COMMANDS_IMPL_execute_command_rom_info(t_command * p_command){
 	return i16_ret_val;
 
 }//COMMANDS_IMPL_execute_command_rom_info
-
 
 
 int16_t COMMANDS_IMPL_execute_rom(t_command * p_command){
@@ -886,7 +876,6 @@ int16_t COMMANDS_IMPL_execute_rom(t_command * p_command){
 }//COMMANDS_IMPL_execute_rom
 
 
-
 int16_t COMMANDS_IMPL_execute_command_rom_rx1k(t_command * p_command){
 	int32_t i32_aux = 0;
 	uint8_t ui8_aux = 0;
@@ -952,7 +941,6 @@ int16_t COMMANDS_IMPL_execute_command_rom_rx1k(t_command * p_command){
 	return i16_ret_val;	
 
 }//COMMANDS_IMPL_execute_command_rom_rx1k
-
 
 
 int16_t COMMANDS_IMPL_execute_command_rom_tx1k(t_command * p_command){

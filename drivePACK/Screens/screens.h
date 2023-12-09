@@ -53,41 +53,49 @@ struct ref_screens_control{
 	int16_t i16_current_ID;// indicates the ID of the current screen of the specified type
 };
 
-// Synthkore  15-03-2022  Tolaemon
-// Receives:
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief initializes the SCREENs module internal structures and variables.
+* @note Synthkore  15-03-2022  Tolaemon
+*********************************************************************************************/
 void SCREENS_Init();
 
-// Synthkore  15-03-2022  Tolaemon
-// Receives:
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief procedure that manages the events on the different types of screens. It receives the
+* state of the encoders and pushbuttons and depending on the current configured screen it calls
+* the specific event manager configured for the current screen.
+* @param[in] pi16_encoders_var_value pointing to the array with the variation of value of the encoders
+* param[in] pui8_buttons_state current state of the push buttons
+* @note Synthkore  15-03-2022  Tolaemon
+*********************************************************************************************/
 void SCREENS_ev_manager(int16_t * pi16_encoders_var_value, uint8_t * pui8_buttons_state);
 
-// Synthkore  26-03-2022  Tolaemon
-// Shows the symbols that indicates to the user if there are more items to view in the list above or below.
-// Receives:
-//    i16_bottom_index: with the first element of the list of items ( menus, parameter, files ) shown in the LCD.
-//    i16_top_index: with the last element of the menu or list of items ( menus, parameter, files ) shown in the LCD.
-//	  i16_max_options: with the total number of elements of the menu or list
-// Returns:
+/*********************************************************************************************
+* @brief shows the symbols that indicates to the user if there are more items to view in the 
+* list above or below.
+* param[in] i16_bottom_index with the first element of the list of items ( menus, parameter, 
+* files ) shown in the LCD.
+* param[in] i16_top_index with the last element of the menu or list of items ( menus, parameter, 
+* files ) shown in the LCD.
+* param[in] i16_max_options with the total number of elements of the menu or list
+* @note Synthkore  26-03-2022  Tolaemon
+*********************************************************************************************/
 void SCREENS_print_up_down_symbols(int16_t i16_bottom_index, int16_t i16_top_index, int16_t i16_max_options );
 
-// Synthkore  26-03-2022  Tolaemon
-// Shows the title of the current screen
-// Receives:
-//    pui8_title: with the title to print in the current screen
-//    ui8_line_idx: the index of the title line to print
-// Returns:
+/*********************************************************************************************
+* @brief shows the title of the current screen
+* param[in] pui8_title with the title to print in the current screen
+* files ) shown in the LCD.
+* param[in]  ui8_line_idx the index of the title line to print
+* @note Synthkore  26-03-2022  Tolaemon
+*********************************************************************************************/
 void SCREENS_print_title(uint8_t * pui8_title, uint8_t ui8_line_idx);
 
-// Synthkore  26-03-2022  Tolaemon
-// Shows the help / informative text of the current screen
-// Receives:
-//    pui8_help: with the help / informative text to print in the current screen
-//    ui8_line_idx: the index of the help line to print
-// Returns:
+/*********************************************************************************************
+* @brief shows the help / informative text of the current screen
+* param[in] pui8_help with the help / informative text to print in the current screen
+* param[in] ui8_line_idx the index of the help line to print
+* @note Synthkore  26-03-2022  Tolaemon
+*********************************************************************************************/
 void SCREENS_print_help(uint8_t * pui8_help, uint8_t ui8_line_idx);
 
 #endif // SCREENS_H_ 

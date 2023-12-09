@@ -16,7 +16,6 @@
 struct ref_screens_control screens_control;
 
 
-
 void SCREENS_Init(){
 
 
@@ -32,7 +31,6 @@ void SCREENS_Init(){
 	SCREENS_dialog_load(SCREEN_DIALOG_ID_INTRO,SCREEN_DIALOG_INITIAL_STATE);
 	
 }//SCREENS_Init	
-
 
 
 void SCREENS_print_up_down_symbols(int16_t i16_bottom_index, int16_t i16_top_index, int16_t i16_max_options ){
@@ -63,7 +61,6 @@ void SCREENS_print_up_down_symbols(int16_t i16_bottom_index, int16_t i16_top_ind
 }//SCREENS_print_up_down_symbols
 
 
-
 void SCREENS_print_title(uint8_t * pui8_title, uint8_t ui8_line_idx ){
     uint8_t ui8_line_content[AUX_FUNCS_F_P_MAX_STR_SIZE_32];
 
@@ -85,7 +82,6 @@ void SCREENS_print_title(uint8_t * pui8_title, uint8_t ui8_line_idx ){
 	}//switch
 	
 }//SCREENS_print_title
-
 
 
 void SCREENS_print_help(uint8_t * pui8_help, uint8_t ui8_line_idx){
@@ -116,7 +112,6 @@ void SCREENS_print_help(uint8_t * pui8_help, uint8_t ui8_line_idx){
 	}//switch
 	
 }//SCREENS_print_help
-
 
 
 void SCREENS_ev_manager(int16_t * pi16_encoders_var_value, uint8_t * pui8_buttons_state){

@@ -78,112 +78,92 @@
 #define LCD_SH1106_WHITE                 0x0000
 #define LCD_SH1106_BLACK                 0x0001
 
-// Description:
-// Receives:
-// Returns:
-//   By value:
-// Note:
+/*********************************************************************************************
+* @brief initializes the SH1106 compatible graphic display hardware
+*********************************************************************************************/
 void LCD_SH1106_init(uint8_t ui8_address);
 
-// Description:
-//   Sends the data frame through the I2C and returns if that frame
-//  has been accepted or not by the destination.
-// Receives:
-//   ui8_read_write: R/!W 1 if it corresponds to a read command, 0 if it
-//  corresponds to a write command.
-// Returns:
-//   By value:
-//   >=0 the data frame has been received and acknowledged by the destination
-//   <0 the data frame has not been acknowledged by the destination
-// Note:
-int16_t LCD_SH1106_write_data_frame(uint8_t ui8_data_to_send);
+/*********************************************************************************************
+* @brief sends the data frame through the I2C and returns if that frame
+* has been accepted or not by the destination.
+* @param[in] ui8_read_write R/!W 1 if it corresponds to a read command, 0 if it
+*  corresponds to a write command.
+* @reutrn >=0 the data frame has been received and acknowledged by the destination
+* <0 the data frame has not been acknowledged by the destination
+*********************************************************************************************/
+int16_t LCD_SH1106_write_I2C_data_frame(uint8_t ui8_data_to_send);
 
-// Description:
-//   Sends the address frame through the I2C and returns if that address 
-//  has been accepted or not. The right address must have been properly
-//  configured in the init function before calling this function.
-// Receives:
-//   ui8_read_write: R/!W 1 if it corresponds to a read command, 0 if it 
-//  corresponds to a write command.
-// Returns:
-//   By value:
-//   >=0 the address has been received and acknowledged by the destination
-//   <0 the address has not been acknowledged by any destination
-// Note:
-int16_t LCD_SH1106_write_address_frame(uint8_t ui8_read_write);
+/*********************************************************************************************
+* @brief sends the address frame through the I2C to the the SH1106 compatible graphic display 
+* and returns if that address has been accepted or not. The right address must have been properly
+* configured in the init function before calling this function.
+* @param[in] ui8_read_write: R/!W 1 if it corresponds to a read command, 0 if it 
+* corresponds to a write command.
+* @return >=0 the address has been received and acknowledged by the destination
+* <0 the address has not been acknowledged by any destination
+*********************************************************************************************/
+int16_t LCD_SH1106_write_I2C_address_frame(uint8_t ui8_read_write);
 
-// Description:
-// Receives:
-//   ui8_command:
-// Returns:
-//   By value:
-//   >=0 the address has been received and acknowledged by the destination
-//   <0 the address has not been acknowledged by any destination
-// Note:
+/*********************************************************************************************
+* @brief Sends an LCD COMMAND message to the SH1106 compatible graphic display. The LCD COMMAND message
+* is sent by sending the following SPI frames:
+*   write_SPI_address_frame(LCD_SH1106_WRITE);
+*   write_SPI_data_frame(0x00);
+*   write_SPI_data_frame(ui8_command);
+* @param[in] ui8_command the command to send to the SH1106 compatible graphic display
+* @return 
+*********************************************************************************************/
 int16_t LCD_SH1106_write_command( uint8_t ui8_command);
 
-// Description:
-// Receives:
-//   ui8_command:
-// Returns:
-//   By value:
-//   >=0 the address has been received and acknowledged by the destination
-//   <0 the address has not been acknowledged by any destination
-// Note:
+/*********************************************************************************************
+* @brief Sends an LCD DATA message to the SH1106 compatible graphic display. The LCD DATA message
+* is sent by sending the following SPI frames:
+*   write_SPI_address_frame(LCD_SH1106_WRITE);
+*   write_SPI_data_frame(0x40);
+*   write_SPI_data_frame(ui8_data);
+* @param[in] ui8_data the data to send to the SH1106 compatible graphic display
+* @return
+*********************************************************************************************/
 int16_t LCD_SH1106_write_data(uint8_t ui8_data);
 
-// Description:
-// Receives:
-//   ui8_command:
-// Returns:
-//   By value:
-//   >=0 the address has been received and acknowledged by the destination
-//   <0 the address has not been acknowledged by any destination
-// Note
+/*********************************************************************************************
+* @brief fills the SH1106 display ( not the buffer ) with the received ui8_page_pattern.
+* @param[in] ui8_page_pattern the bit pattern used to fill the SH1106 compatible display.
+*********************************************************************************************/
 void LCD_SH1106_clear(uint8_t ui8_page_pattern);
 
-// Description:
-// Receives:
-//   ui8_command:
-// Returns:
-//   By value:
-//   >=0 the address has been received and acknowledged by the destination
-//   <0 the address has not been acknowledged by any destination
-// Note
-void LCD_SH1106_buffer_refresh();
-
-// Description:
-// Receives:
-//   ui8_address:
-//   ui8_command:
-// Returns:
-//   By value:
-//   >=0 the address has been received and acknowledged by the destination
-//   <0 the address has not been acknowledged by any destination
-// Note
-void LCD_SH1106_buffer_set_pixel(uint8_t ui8_x, uint8_t ui8_y, uint8_t ui8_bw);
-
-// Description:
-// Receives:
-//   ui8_address:
-//   ui8_command:
-// Returns:
-//   By value:
-//   >=0 the address has been received and acknowledged by the destination
-//   <0 the address has not been acknowledged by any destination
-// Note
+/*********************************************************************************************
+* @brief fills the internal buffer ( not the SH1106 display  ) with the received ui8_page_pattern.
+* To see the result in the display screen the buffer must be refreshed.
+* @param[in] ui8_page_pattern the bit pattern used to fill the internal buffer
+*********************************************************************************************/
 void LCD_SH1106_buffer_fill(uint8_t ui8_page_pattern);
 
-// Description:
-// Receives:
-//   ui8_address:
-//   ui8_command:
-// Returns:
-//   By value:
-//   >=0 the address has been received and acknowledged by the destination
-//   <0 the address has not been acknowledged by any destination
-// Note
-void LCD_SH1106_buffer_fast_fill(uint16_t ui16_pattern, uint16_t ui16_x1, uint16_t ui16_y1, uint16_t ui16_x2, uint16_t ui16_y2);
+/*********************************************************************************************
+* @brief repaints the content of the internal graphic buffer in the SH1106 display.
+*********************************************************************************************/
+void LCD_SH1106_buffer_refresh();
+
+/*********************************************************************************************
+* @brief sets the pixel at the received x,y coordinates in the internal buffer at the received
+* color ( 0 or 1 ). To see the result in the display screen the buffer must be refreshed.
+* @param[in] ui8_x x coordinate of the pixel to paint
+* @param[in] ui8_y y coordinate of the pixel to paint
+* @param[in] ui8_bw desired color for the pixel ( 0 or 1 ).
+*********************************************************************************************/
+void LCD_SH1106_buffer_set_pixel(uint8_t ui8_x, uint8_t ui8_y, uint8_t ui8_bw);
+
+/*********************************************************************************************
+* @brief fills the rectangular area defined by the x1,y1 and x2,y2 in the internal buffer used
+* to update  the SH1106 display with the received bit pattern. To see the result in the display 
+* screen the buffer must be refreshed.
+* @param[in] ui16_pattern pattern applied into the display buffer.
+* @param[in] ui16_x1 X coordinate of the top left corner of the rectangular area to fill
+* @param[in] ui16_y1 Y coordinate of the top left corner of the rectangular area to fill
+* @param[in] ui16_x2 X coordinate of the bottom right corner of the rectangular area to fill
+* @param[in] ui16_y2 Y coordinate of the bottom right corner of the rectangular area to fill
+*********************************************************************************************/
+void LCD_SH1106_buffer_area_fast_fill(uint16_t ui16_pattern, uint16_t ui16_x1, uint16_t ui16_y1, uint16_t ui16_x2, uint16_t ui16_y2);
 
 #endif /* LCD_SH1106_H_ */
 

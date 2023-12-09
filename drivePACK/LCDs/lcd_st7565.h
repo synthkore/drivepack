@@ -78,78 +78,74 @@
 #define LCD_ST7565_BLACK                        0x0001
 
 
-// Description:
-//  Sends the initialization commands sequence to the LCD 
-// Receives:
-// Returns:
-//   By value:
-// Note:
+/*********************************************************************************************
+* @brief initializes the ST7565 compatible graphic display hardware
+*********************************************************************************************/
 void LCD_ST7565_init();
 
-// Description:
-// Sends a data byte to the LCD through the SPI
-// Receives:
-// Returns:
-//   By value:
-// Note:
-uint8_t LCD_ST7565_write_data(uint8_t ui8_data_to_send);
+/*********************************************************************************************
+* @brief sends a data byte to the ST7565 compatible graphic display through the SPI applying
+* the right SEND DATA byte signals sequence:
+*   clear LCD_ST7565_CS to '0'
+*   set LCD_ST7565_RS to '1'
+*   send received command byte through SPI
+*   wait for command byte transmission to complete
+*   set LCD_ST7565_CS to '1'
+* @param[in] ui8_data_to_send with the data value to send
+* @return
+*********************************************************************************************/
+uint8_t LCD_ST7565_write_SPI_data(uint8_t ui8_data_to_send);
 
-// Description:
-// Sends a command byte to the LCD through the SPI
-// Receives:
-// Returns:
-//   By value:
-// Note:
-uint8_t LCD_ST7565_write_command(uint8_t ui8_command_to_send);
+/*********************************************************************************************
+* @brief sends a command byte to the ST7565 compatible graphic display through the SPI applying
+* the right SEND COMMAND byte signals sequence:
+*   clear LCD_ST7565_CS to '0'
+*   clear LCD_ST7565_RS to '0'
+*   send received command byte through SPI
+*   wait for command byte transmission to complete
+*   set LCD_ST7565_CS to '1'
+* @param[in] ui8_command_to_send with the command value to send
+* @return 
+*********************************************************************************************/
+uint8_t LCD_ST7565_write_SPI_command(uint8_t ui8_command_to_send);
 
-// Description:
-// Fills the frame buffer pages with the specified ui8_page_pattern
-// Receives:
-// Returns:
-//   By value:
-// Note:
+/*********************************************************************************************
+* @brief fills the internal buffer ( not the ST7565 display  ) with the received ui8_page_pattern.
+* To see the result in the display screen the buffer must be refreshed.
+* @param[in] ui8_page_pattern the bit pattern used to fill the internal buffer
+*********************************************************************************************/
 void LCD_ST7565_buffer_fill(uint8_t ui8_page_pattern);
 
-// Description:
-// Fills the frame buffer pages with the specified ui8_page_pattern
-// Receives:
-// Returns:
-//   By value:
-// Note:
-void LCD_ST7565_buffer_fast_fill(uint16_t ui16_pattern, uint16_t ui16_x1, uint16_t ui16_y1, uint16_t ui16_x2, uint16_t ui16_y2);
+/*********************************************************************************************
+* @brief fills the rectangular area defined by the x1,y1 and x2,y2 in the internal graphic 
+* buffer used to update  the ST7565 display with the received bit pattern. To see the result in
+* the display screen the buffer must be refreshed.
+* @param[in] ui16_pattern pattern applied into the display buffer.
+* @param[in] ui16_x1 X coordinate of the top left corner of the rectangular area to fill
+* @param[in] ui16_y1 Y coordinate of the top left corner of the rectangular area to fill
+* @param[in] ui16_x2 X coordinate of the bottom right corner of the rectangular area to fill
+* @param[in] ui16_y2 Y coordinate of the bottom right corner of the rectangular area to fill
+*********************************************************************************************/
+void LCD_ST7565_buffer_area_fast_fill(uint16_t ui16_pattern, uint16_t ui16_x1, uint16_t ui16_y1, uint16_t ui16_x2, uint16_t ui16_y2);
 
-// Description:
-// Sets the specified pixel in the frame buffer and then in the LCD with 
-// the specified color ( 1=black, 0=white). Updates the 8 bits of the pixel
-// page and then rewrites them in the LCD to update the screen.
-// Receives:
-// Returns:
-//   By value:
-// Note:
-void LCD_ST7565_set_pixel(uint8_t ui8_x, uint8_t ui8_y, uint8_t ui8_bw);
-
-// Description:
-// Sets the specified pixel in the frame buffer with the specified color ( 1=black
-// 0=white ).
-// Receives:
-// Returns:
-//   By value:
-// Note:
+/*********************************************************************************************
+* @brief Sets the specified pixel in the internal graphic buffer to the specified color ( 1=black,
+* 0=white). To see the result in the display screen the buffer must be refreshed.
+* @param[in] ui8_x coordinate of the pixel to paint
+* @param[in] ui8_y coordinate of the pixel to paint
+* @param[in] ui8_bw desired color for the specified pixel ( 0 or 1 ).
+*********************************************************************************************/
 void LCD_ST7565_buffer_set_pixel(uint8_t ui8_x, uint8_t ui8_y, uint8_t ui8_bw);
 
-// Description:
-// Updates the the LCD with the content of the frame buffer.
-// Receives:
-// Returns:
-//   By value:
-// Note:
+/*********************************************************************************************
+* @brief repaints the content of the internal graphic buffer in the ST7565 display.
+*********************************************************************************************/
 void LCD_ST7565_buffer_refresh();
 
-// Description:
-// Receives:
-// Returns:
-//   By value:
-// Note:
+/*********************************************************************************************
+* @brief fills the ST7565 compatible display ( not the buffer ) with the received ui8_page_pattern.
+* @param[in] ui8_page_pattern the bit pattern used to fill the display.
+*********************************************************************************************/
 void LCD_ST7565_clear(uint8_t ui8_page_pattern);
 
 #endif /* LCD_ST7565_H_ */

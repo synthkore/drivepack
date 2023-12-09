@@ -34,20 +34,20 @@ void LCD_ST7565_init(){
 	LCD_ST7565_RST_SET;
 	LCD_ST7565_PAUSE_TICKS(2000);
 
-	LCD_ST7565_write_command(0xaf);//DISPLAY_ON          = 0xaf;
-	LCD_ST7565_write_command(0x2c | 0x2a | 0x29); //  PCTRL_BOOSTER_ON    = 0x2c,  PCTRL_REGULATOR_ON  = 0x2a, PCTRL_VFOLLOWER_ON  = 0x29
-	LCD_ST7565_write_command(0x20 | 0x7 );// V0_INTERNAL_R_0     = 0x20; V0_INTERNAL_R_0 + (v0 & 0x07));
-	LCD_ST7565_write_command(0x81);// ELECTRONIC_VOL_MODE = 0x81;
+	LCD_ST7565_write_SPI_command(0xaf);//DISPLAY_ON          = 0xaf;
+	LCD_ST7565_write_SPI_command(0x2c | 0x2a | 0x29); //  PCTRL_BOOSTER_ON    = 0x2c,  PCTRL_REGULATOR_ON  = 0x2a, PCTRL_VFOLLOWER_ON  = 0x29
+	LCD_ST7565_write_SPI_command(0x20 | 0x7 );// V0_INTERNAL_R_0     = 0x20; V0_INTERNAL_R_0 + (v0 & 0x07));
+	LCD_ST7565_write_SPI_command(0x81);// ELECTRONIC_VOL_MODE = 0x81;
 			
-	LCD_ST7565_write_command(0x01 - 1 + (1 & 0x3f)); //ELECTRONIC_VOL_1    = 0x01;
+	LCD_ST7565_write_SPI_command(0x01 - 1 + (1 & 0x3f)); //ELECTRONIC_VOL_1    = 0x01;
 	
-	LCD_ST7565_write_command(0xa3); //BIAS_1_7 = 0xa3;
+	LCD_ST7565_write_SPI_command(0xa3); //BIAS_1_7 = 0xa3;
 	
-    LCD_ST7565_write_command(0xc0|8);// COMMON OUTPUT MODE SELECT = COMMON_ASCENDING    = 0xc0
-    LCD_ST7565_write_command(0xa0); // SEGMENT_ASCENDING   = 0xa0;
-    LCD_ST7565_write_command(0xa4); // ENTIRE_DISPLAY_OFF  = 0xa4;
-    LCD_ST7565_write_command(0xa6); // INVERT_DISPLAY_OFF  = 0xa6;
-    LCD_ST7565_write_command(0x40); // COMMON_OFFSET       = 0x40;
+    LCD_ST7565_write_SPI_command(0xc0|8);// COMMON OUTPUT MODE SELECT = COMMON_ASCENDING    = 0xc0
+    LCD_ST7565_write_SPI_command(0xa0); // SEGMENT_ASCENDING   = 0xa0;
+    LCD_ST7565_write_SPI_command(0xa4); // ENTIRE_DISPLAY_OFF  = 0xa4;
+    LCD_ST7565_write_SPI_command(0xa6); // INVERT_DISPLAY_OFF  = 0xa6;
+    LCD_ST7565_write_SPI_command(0x40); // COMMON_OFFSET       = 0x40;
 	// LCD_ST7565_write_command(0xA2); // LCD_BIAS_SET        = 0x42;
 
 	LCD_ST7565_buffer_fill(0x00);
@@ -57,7 +57,7 @@ void LCD_ST7565_init(){
 
 
 
-uint8_t LCD_ST7565_write_command(uint8_t ui8_command_to_send){
+uint8_t LCD_ST7565_write_SPI_command(uint8_t ui8_command_to_send){
 
 	LCD_ST7565_CS_CLR;
 	LCD_ST7565_PAUSE_NOPS(1);
@@ -88,11 +88,11 @@ uint8_t LCD_ST7565_write_command(uint8_t ui8_command_to_send){
 	
 	return ui8_command_to_send; // return the value read during transmission
 	
-}// LCD_ST7565_write_command
+}// LCD_ST7565_write_SPI_command
 
 
 
-uint8_t LCD_ST7565_write_data(uint8_t ui8_data_to_send){
+uint8_t LCD_ST7565_write_SPI_data(uint8_t ui8_data_to_send){
 
 	LCD_ST7565_CS_CLR;
 	LCD_ST7565_PAUSE_NOPS(1);
@@ -124,11 +124,11 @@ uint8_t LCD_ST7565_write_data(uint8_t ui8_data_to_send){
 	
 	return ui8_data_to_send; // return the value read during transmission
 	
-}// LCD_ST7565_write_data
+}// LCD_ST7565_write_SPI_data
 
 
 
-void LCD_ST7565_buffer_fast_fill(uint16_t ui16_pattern, uint16_t ui16_x1, uint16_t ui16_y1, uint16_t ui16_x2, uint16_t ui16_y2){
+void LCD_ST7565_buffer_area_fast_fill(uint16_t ui16_pattern, uint16_t ui16_x1, uint16_t ui16_y1, uint16_t ui16_x2, uint16_t ui16_y2){
 	uint8_t ui8_column_start = 0;
 	uint8_t ui8_column_end = 0;
 	uint8_t ui8_column = 0;
@@ -215,14 +215,12 @@ void LCD_ST7565_buffer_fast_fill(uint16_t ui16_pattern, uint16_t ui16_x1, uint16
 		
 	}//for
 	
-}//LCD_ST7565_buffer_fast_fill
-
+}//LCD_ST7565_buffer_area_fast_fill
 
 
 void LCD_ST7565_buffer_fill(uint8_t ui8_page_pattern){
 	uint8_t ui8_column = 0;
 	uint8_t ui8_page = 0;
-
 
 	for (ui8_page=0;ui8_page<LCD_ST7565_PAGES_Y;ui8_page++){
 		
@@ -236,6 +234,24 @@ void LCD_ST7565_buffer_fill(uint8_t ui8_page_pattern){
 	
 }//LCD_ST7565_buffer_fill
 
+
+void LCD_ST7565_clear(uint8_t ui8_page_pattern){
+	uint8_t ui8_column = 0;
+	uint8_t ui8_page = 0;
+
+	for (ui8_page=0;ui8_page<8;ui8_page++){
+		
+		LCD_ST7565_write_SPI_command(LCD_ST7565_CMD_SET_PAGE|ui8_page);
+		LCD_ST7565_write_SPI_command(LCD_ST7565_CMD_SET_COL_LSB | 0x00);
+		LCD_ST7565_write_SPI_command(LCD_ST7565_CMD_SET_COL_MSB | 0x00);
+		
+		for (ui8_column=0;ui8_column<128;ui8_column++){
+			LCD_ST7565_write_SPI_data((uint8_t)ui8_page_pattern);
+		}//for
+		
+	}//for
+
+}//LCD_ST7565_clear
 
 
 void LCD_ST7565_buffer_set_pixel(uint8_t ui8_x, uint8_t ui8_y, uint8_t ui8_bw){
@@ -265,7 +281,6 @@ void LCD_ST7565_buffer_set_pixel(uint8_t ui8_x, uint8_t ui8_y, uint8_t ui8_bw){
 }//LCD_ST7565_buffer_set_pixel
 
 
-
 void LCD_ST7565_buffer_refresh(){
 	uint8_t ui8_column = 0;
 	uint8_t ui8_page = 0;
@@ -273,34 +288,17 @@ void LCD_ST7565_buffer_refresh(){
 
 	for (ui8_page=0;ui8_page<LCD_ST7565_PAGES_Y;ui8_page++){
 		
-		LCD_ST7565_write_command(LCD_ST7565_CMD_SET_PAGE|ui8_page);
-		LCD_ST7565_write_command(LCD_ST7565_CMD_SET_COL_LSB | 0x00);
-		LCD_ST7565_write_command(LCD_ST7565_CMD_SET_COL_MSB | 0x00);	
+		LCD_ST7565_write_SPI_command(LCD_ST7565_CMD_SET_PAGE|ui8_page);
+		LCD_ST7565_write_SPI_command(LCD_ST7565_CMD_SET_COL_LSB | 0x00);
+		LCD_ST7565_write_SPI_command(LCD_ST7565_CMD_SET_COL_MSB | 0x00);	
 		
 		for (ui8_column=0;ui8_column<LCD_ST7565_COLS_X;ui8_column++){
-			LCD_ST7565_write_data(LCD_ST7565_frame_buffer.ui8_frame_buffer[ui8_column][ui8_page]);
+			LCD_ST7565_write_SPI_data(LCD_ST7565_frame_buffer.ui8_frame_buffer[ui8_column][ui8_page]);
 		}//for
 		
 	}//for
 	
 }//LCD_ST7565_buffer_refresh
-
-
-
-void LCD_ST7565_clear(uint8_t ui8_page_pattern){
-	uint8_t ui8_column = 0;
-	uint8_t ui8_page = 0;
-
-	for (ui8_page=0;ui8_page<8;ui8_page++){
-		LCD_ST7565_write_command(LCD_ST7565_CMD_SET_PAGE|ui8_page);
-	    LCD_ST7565_write_command(LCD_ST7565_CMD_SET_COL_LSB | 0x00);
-	    LCD_ST7565_write_command(LCD_ST7565_CMD_SET_COL_MSB | 0x00);
-		for (ui8_column=0;ui8_column<128;ui8_column++){
-			LCD_ST7565_write_data((uint8_t)ui8_page_pattern);
-		}//for
-	}//for
-
-}//LCD_ST7565_clear
 
 #endif //#ifdef LCD_IS_ST7565
 

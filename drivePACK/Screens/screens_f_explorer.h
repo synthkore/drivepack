@@ -68,45 +68,44 @@ struct ref_screens_f_explorer{
 };
 
 
-// Synthkore  18-02-2022  Tolaemon
-// Receives:
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief clears the variables and pointers ( to NULL ) used to manage the current configured
+* FILE EXPLORER SCREEN.
+* @note Synthkore 18-02-2022  Tolaemon
+*********************************************************************************************/
 void SCREENS_f_explorer_clear();
 
-// Synthkore  27-04-2022  Tolaemon
-// Initializes the module variables on program start.
-// Receives:
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief initializes the variables and structures used for the FILE EXPLORER SCREEN to its 
+* default values. It may be used to initialize the module variables on program start.
+* @note Synthkore  27-04-2022 Tolaemon
+*********************************************************************************************/
 void SCREENS_f_explorer_init();
 
-// Synthkore  18-02-2022  Tolaemon
-// Loads the file explorer structure and configures the file explorer screen according to 
-// the id received in i16_f_explorer_id.
-// Receives:
-//   i16_f_explorer_id: indicates the type of file explorer to load
-//   i16_f_explorer_state: indicates the substate of the specified file explorer screen
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief Loads and initializes the FILE EXPLORER SCREEN variables, structures and pointers with
+* the values that corresponds to the received i16_f_explorer_id.
+* @param[in] i16_f_explorer_id indicates the file explorer screen to load
+* @param[in] i16_f_explorer_state indicates the substate of the specified FILE EXPLORER SCREEN 
+* to load.
+* @return >=0 the specified FILE EXPLORER SCREEN has been succesfully loaded
+* <0 the specified screen could not be loaded.
+* @note Synthkore 18-02-2022  Tolaemon
+*********************************************************************************************/
 int8_t SCREENS_f_explorer_load(int16_t i16_f_explorer_id,int16_t i16_f_explorer_state);
 
-// Synthkore  18-02-2022  Tolaemon
-// Shows the file explorer state in the configured screen.
-// Receives:
-//   i16_f_explorer_id: indicates the type of fire explorer to load
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief shows the current configured FILE EXPLORER SCREEN.
+* @note Synthkore 18-02-2022  Tolaemon
+*********************************************************************************************/
 void SCREENS_f_explorer_show();
 
-// Synthkore  18-02-2022  Tolaemon
-// Manages the file explorer keys and knobs while in the file explorer screens.
-// Receives:
-//   * pi16_encoders_var_value: pointing to the array with the encoders values.
-//   * pui8_pushbutton_values:  pointing to the array with the push button states.
-// Receives:
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief Manages the keys and knobs of the current configured FILE EXPLORER SCREEN.
+* @param[in] pi16_encoders_var_value pointing to the array with the variation of value of the encoders.
+* @param[in] pui8_pushbutton_values pointing to the array with the push button states.
+* @note Synthkore 18-02-2022  Tolaemon
+*********************************************************************************************/
 void SCREENS_f_explorer_ev_manager(int16_t * pi16_encoders_var_value, uint8_t * pui8_pushbutton_values);
 
 // LOAD_ROM_FILE file selection screen

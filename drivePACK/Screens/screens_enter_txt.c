@@ -90,7 +90,6 @@ int8_t SCREENS_enter_txt_load(int16_t i16_enter_text_id,int16_t i16_enter_text_s
 }//SCREENS_enter_txt_load
 
 
-
 void SCREENS_enter_txt_show(){
 
 	

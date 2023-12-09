@@ -67,6 +67,4 @@ typedef struct {
 }t_command;
 
 
-
-
 #endif /* COMMANDS_DEFS_H_ */

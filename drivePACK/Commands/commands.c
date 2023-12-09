@@ -13,13 +13,7 @@
 #include "commands.h"
 
 
-// Clears the content ( all the tokens ) and variables of the received command
-// Receives:
-//		command: pointing to the command to clear
-// Returns:
-//	By value:
-//		1 the command has been cleared
-//		0 it has not been possible to clear the command
+
 int16_t COMMANDS_clear_command(t_command * command){
 	uint16_t ui16_aux1;
 	uint16_t ui16_aux2;
@@ -50,15 +44,6 @@ int16_t COMMANDS_clear_command(t_command * command){
 }//COMMANDS_insert_token_in_command
 
 
-
-// Inserts a token into a command structure
-// Recives:
-//		token_string: a string with the token to insert into the command structure
-//		command: the command structure to insert the token in
-// Returns:
-//		By value:
-//			1 if the token is inserted to the command
-//			0 if the token can't be inserted to the command
 int16_t COMMANDS_insert_token_in_command(t_command * command,uint8_t * token_string){
 	uint16_t i;
 
@@ -100,13 +85,6 @@ int16_t COMMANDS_insert_token_in_command(t_command * command,uint8_t * token_str
 }//COMMANDS_insert_token_in_command
 
 
-
-// Prints all the tokens contained in the received command structure
-// Recives:
-//		command: the command with the tokens to print 
-// Returns:
-//		by reference:
-//		by value:
 void COMMANDS_print_tokens(t_command command){
 	uint16_t ui16_com_list=0;
 	uint8_t aux_string[MAX_TOKEN_STR_SIZE];
@@ -137,22 +115,6 @@ void COMMANDS_print_tokens(t_command command){
 }//COMMANDS_insert_token_in_command
 
 
-
-// Procedure which takes each of the tokens contained in the received command string and inserts 
-// them into a command structure. Then the command structure is stored into the commands Lifo
-// Receives:
-//		command_string: with the buffer of pressed keys
-//		command_string_index: the first free position in the buffer
-//      ush_MAX_LEN: the maximum allowed length of the command string.
-// Returns:
-//		by reference:
-//        command: struct with the command tokens of the processed command string
-//		by value:
-//          1 if the tokens contained in the buffer have been inserted succesfully
-//          into the command structure
-//         -1 the buffer is empty.
-//         -2 if the buffer contains an invalid token sequence
-//         -3 there is no space for new commands
 int16_t COMMANDS_parse_command_string(uint8_t * command_string,  uint16_t ush_MAX_LEN, t_command * command){
 	int16_t parsing_mode; // used to distinguish if we are parsing a normal token, a string token ...
 	int16_t i,j,k,l;
@@ -295,20 +257,6 @@ int16_t COMMANDS_parse_command_string(uint8_t * command_string,  uint16_t ush_MA
 }//COMMANDS_parse_command_string
 
 
-
-// Receives a command, and executes it
-// Receives:
-//		By reference:
-//			the command structure with all the parameters
-// Returns:
-//		By value:
-//		 2 a command cycle has been executed but not completed yet
-//		 1 the command execution has been completed
-//       0 there is nothing to execute
-//		-1 empty command to execute has been received
-//		-2 the command has not been identified
-//		-3 if any error in the command has ocurred
-//		-4 quit application
 int16_t COMMANDS_execute(t_command * p_command){
 	int16_t ret_val = 0;
 	int16_t i16_command_ret_val = 1;

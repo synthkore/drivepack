@@ -56,8 +56,7 @@ void LCD_SH1106_init(uint8_t ui8_address){
 }//LCD_SH1106_init
 
 
-
-int16_t LCD_SH1106_write_data_frame(uint8_t ui8_data_to_send){
+int16_t LCD_SH1106_write_I2C_data_frame(uint8_t ui8_data_to_send){
 	int16_t ret_val = 0;
 
 
@@ -81,11 +80,10 @@ int16_t LCD_SH1106_write_data_frame(uint8_t ui8_data_to_send){
 
 	return ret_val;
 	
-}// LCD_SH1106_write_data_frame
+}// LCD_SH1106_write_I2C_data_frame
 
 
-
-int16_t LCD_SH1106_write_address_frame(uint8_t ui8_read_write){
+int16_t LCD_SH1106_write_I2C_address_frame(uint8_t ui8_read_write){
 	int16_t ret_val = 0;
 
 
@@ -109,8 +107,7 @@ int16_t LCD_SH1106_write_address_frame(uint8_t ui8_read_write){
 
     return ret_val;
 
-}// LCD_SH1106_write_address_frame
-
+}// LCD_SH1106_write_I2C_address_frame
 
 
 int16_t LCD_SH1106_write_command(uint8_t ui8_command){
@@ -118,16 +115,16 @@ int16_t LCD_SH1106_write_command(uint8_t ui8_command){
 
 
 	// after the I2C master has been enabled, the Bus state is UNKNOWN (0b00). From
-	// the UNKNOWN state, the bus will transition to IDLE (0b01) by either forcing 
+	// the UNKNOWN state, the bus will transition to IDLE (0b01) by either forcing
 	// by writing 0b01 to STATUS.BUSSTATE
 	SERCOM4->I2CM.STATUS.bit.BUSSTATE=1;
 
-    // begin transmitting
-	LCD_SH1106_write_address_frame(LCD_SH1106_WRITE);
+	// begin transmitting
+	LCD_SH1106_write_I2C_address_frame(LCD_SH1106_WRITE);
 	
 	// send command mode and then command
-	LCD_SH1106_write_data_frame(0x00); 
-	LCD_SH1106_write_data_frame(ui8_command);
+	LCD_SH1106_write_I2C_data_frame(0x00);
+	LCD_SH1106_write_I2C_data_frame(ui8_command);
 
 	// stop transmitting
 	SERCOM4->I2CM.CTRLB.bit.CMD = 0x3 ;
@@ -136,7 +133,6 @@ int16_t LCD_SH1106_write_command(uint8_t ui8_command){
 	return ret_val;
 
 }// LCD_SH1106_write_command
-
 
 
 int16_t LCD_SH1106_write_data( uint8_t ui8_data){
@@ -149,11 +145,11 @@ int16_t LCD_SH1106_write_data( uint8_t ui8_data){
 	SERCOM4->I2CM.STATUS.bit.BUSSTATE=1;
 
 	// begin transmitting
-	LCD_SH1106_write_address_frame(LCD_SH1106_WRITE);
+	LCD_SH1106_write_I2C_address_frame(LCD_SH1106_WRITE);
 	
 	// send command mode and then command
-	LCD_SH1106_write_data_frame(0x40);
-	LCD_SH1106_write_data_frame(ui8_data);
+	LCD_SH1106_write_I2C_data_frame(0x40);
+	LCD_SH1106_write_I2C_data_frame(ui8_data);
 
 	// stop transmiting
 	SERCOM4->I2CM.CTRLB.bit.CMD = 0x3 ;
@@ -164,8 +160,7 @@ int16_t LCD_SH1106_write_data( uint8_t ui8_data){
 }// LCD_SH1106_write_data
 
 
-
-void LCD_SH1106_buffer_fast_fill(uint16_t ui16_pattern, uint16_t ui16_x1, uint16_t ui16_y1, uint16_t ui16_x2, uint16_t ui16_y2){
+void LCD_SH1106_buffer_area_fast_fill(uint16_t ui16_pattern, uint16_t ui16_x1, uint16_t ui16_y1, uint16_t ui16_x2, uint16_t ui16_y2){
 	uint8_t ui8_column_start = 0;
 	uint8_t ui8_column_end = 0;
 	uint8_t ui8_column = 0;
@@ -252,8 +247,7 @@ void LCD_SH1106_buffer_fast_fill(uint16_t ui16_pattern, uint16_t ui16_x1, uint16
 		
 	}//for
 	
-}//LCD_SH1106_buffer_fast_fill
-
+}//LCD_SH1106_buffer_area_fast_fill
 
 
 void LCD_SH1106_buffer_fill(uint8_t ui8_page_pattern){
@@ -273,6 +267,24 @@ void LCD_SH1106_buffer_fill(uint8_t ui8_page_pattern){
 	
 }//LCD_SH1106_buffer_fill
 
+
+void LCD_SH1106_clear(uint8_t ui8_page_pattern){
+	uint8_t ui8_column = 0;
+	uint8_t ui8_page = 0;
+
+	for (ui8_page=0;ui8_page<8;ui8_page++){
+		
+		LCD_SH1106_write_command(LCD_SH1106_CMD_PAGESTARTADDRESS|ui8_page);
+		LCD_SH1106_write_command(LCD_SH1106_CMD_SETLOWCOLUMN | 0x00);
+		LCD_SH1106_write_command(LCD_SH1106_CMD_SETHIGHCOLUMN | 0x00);
+		
+		for (ui8_column=0;ui8_column<128;ui8_column++){
+			LCD_SH1106_write_data((uint8_t)ui8_page_pattern);
+		}//for
+		
+	}//for
+
+}//LCD_SH1106_clear
 
 
 void LCD_SH1106_buffer_set_pixel(uint8_t ui8_x, uint8_t ui8_y, uint8_t ui8_bw){
@@ -302,7 +314,6 @@ void LCD_SH1106_buffer_set_pixel(uint8_t ui8_x, uint8_t ui8_y, uint8_t ui8_bw){
 }//LCD_SH1106_buffer_set_pixel
 
 
-
 void LCD_SH1106_buffer_refresh(){
 	uint8_t ui8_column = 0;
 	uint8_t ui8_page = 0;
@@ -321,26 +332,5 @@ void LCD_SH1106_buffer_refresh(){
 	}//for
 	
 }//LCD_SH1106_buffer_refresh
-
-
-
-void LCD_SH1106_clear(uint8_t ui8_page_pattern){
-	uint8_t ui8_column = 0;
-	uint8_t ui8_page = 0;
-
-
-	for (ui8_page=0;ui8_page<8;ui8_page++){
-		
-		LCD_SH1106_write_command(LCD_SH1106_CMD_PAGESTARTADDRESS|ui8_page);
-		LCD_SH1106_write_command(LCD_SH1106_CMD_SETLOWCOLUMN | 0x00);
-		LCD_SH1106_write_command(LCD_SH1106_CMD_SETHIGHCOLUMN | 0x00);
-		
-		for (ui8_column=0;ui8_column<128;ui8_column++){
-			LCD_SH1106_write_data((uint8_t)ui8_page_pattern);
-		}//for
-		
-	}//for
-
-}//LCD_SH1106_clear
 
 #endif //#ifdef LCD_IS_SH1106

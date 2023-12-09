@@ -85,7 +85,6 @@
 #define PARAM_EDIT_A_PARAM_TOTAL	17
 
 
-
 // with all the information of a parameter available on the param edition screen
 typedef struct{
 	uint8_t * pui8_description;// pointing to the name of the parameter ( parameter label )
@@ -108,58 +107,63 @@ struct ref_screens_params_edition{
 	int16_t i16_params_cols_width; // the number of chars occupied per column on that screen	
 };
 
-// Synthkore  11-10-2014  Tolaemon
-// Clears all the information of the current parameters edition screen
-// Receives:
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief clears the variables and pointers ( to NULL ) used to manage the current configured
+* PARAMS EDITION SCREEN.
+* @note Synthkore 11-10-2014  Tolaemon
+*********************************************************************************************/
 void SCREENS_params_edition_clear();
 
-// Synthkore  27-04-2022  Tolaemon
-// Initializes the module variables on program start.
-// Receives:
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief initializes the variables and structures used for thePARAMS EDITION SCREEN to its default
+* values. It may be used to initialize the module variables on program start.
+* @note Synthkore  27-04-2022 Tolaemon
+*********************************************************************************************/
 void SCREENS_params_edition_init();
 
-// Synthkore  26-10-2014  Tolaemon
-// Receives:
-// Returns:
+/*********************************************************************************************
+* @brief Loads and initializes the PARAMS EDITION SCREEN variables, structures and pointers with
+* the values that corresponds to the received i16_params_edition_id.
+* @param[in] i16_params_edition_id indicates the PARAMS EDITION SCREEN to load
+* @return >=0 the specified PARAMS EDITION SCREEN has been succesfully loaded
+* <0 the specified screen could not be loaded.
+* @note Synthkore 26-10-2014 Tolaemon
+*********************************************************************************************/
 int8_t SCREENS_params_edition_load(int16_t i16_params_edition_id);
 
-// Synthkore  26-10-2014  Tolaemon
-// Standard call back routine that shows most part of param edition screens. It reads the screen_edition parameters structure
-// and shows all the parameter names and values organized on the LCD screen with the specified rows and columns.
-// Receives:
-// Returns:
+/*********************************************************************************************
+* @brief call back routine that shows most part of PARAMS EDITION SCREEN. It reads the screen_edition 
+* parameters structure and shows all the parameter names and values organized on the LCD screen
+* with the specified rows and columns.
+* @note Synthkore 26-10-2014   Tolaemon
+*********************************************************************************************/
 void SCREENS_params_edition_show();
 
-// Synthkore  09-11-2014  Tolaemon
-// Standard call back routine that processes the keys pressed by the user on the current screen
-// Receives:
-//    int16_t * encoders_var_value: pointing to the array with the variation of value of the encoders
-//    uint8_t * pushbutton_values: pointing to the array with the state of all the push buttons
-// Returns:
+/*********************************************************************************************
+* @brief Manages the keys and knobs of the current configured  PARAMS EDITION SCREEN.
+* @param[in] pi16_encoders_var_value pointing to the array with the variation of value of the encoders
+* @param[in] pui8_pushbutton_values pointing to the array with the push button states.
+* @note Synthkore  09-11-2014  Tolaemon
+*********************************************************************************************/
 void SCREENS_params_edition_ev_manager(int16_t * pi16_encoders_var_value, uint8_t * pui8_pushbutton_values);
 
-// Synthkore  03-03-2015  Tolaemon
-// Function that adds or sustracts the received variation to the received value, checking that the new value is between the min and max value. It also applies
-// the adjustable amount of variation ( modification speed ) depending on the time that any of the pushbuttons or the encoder has been continuously pressed.
-// Receives:
-//	 encoders_var_value: pointing to the array with the last variation of the encoders since last read
-//   pushbutton_values: pointing to the array with the pushbutton values
-//   value: pointing to the current value to modify
-//   step_variation: the value to add or subtract to the current value when the buttons is pressed or with each encoder step
-//   min_value: the lower allowed limit for the new value
-//   max_value: the upper allowed limit for the new value
-// Returns:
-//  By ref:
-//    value: pointing to the new value of the modified value
-//  By value:
-//    TRUE: if the received value has been modified
-//    FALSE: if the received value has not been modified
-// NOTE:
-//    This function should only be called when detected a change in the state of the pushbutton or the encoders.
+/*********************************************************************************************
+* @brief function that adds or sustracts the received variation to the received value, checking 
+* that the new value is between the min and max value. It also applies the adjustable amount of 
+* variation ( modification speed ) depending on the time that any of the pushbuttons or the 
+* encoder has been continuously pressed.
+* @param[in] encoders_var_value pointing to the array with the last variation of the encoders since last read
+* @param[in] pushbutton_values pointing to the array with the pushbutton values
+* @param[in] value pointing to the current value to modify
+* @param[in] step_variation the value to add or subtract to the current value when the buttons is pressed or with each encoder step
+* @param[in] min_value the lower allowed limit for the new value
+* @param[in] max_value the upper allowed limit for the new value
+* @param[out] value pointing to the new value of the modified value
+* @return TRUE: if the received value has been modified
+* FALSE: if the received value has not been modified
+* @note Synthkore  03-03-2015  Tolaemon
+*********************************************************************************************/
+
 uint8_t SCREENS_params_edition_ev_manager_update_param_val(int16_t * pi16_encoders_var_value, uint8_t * pui8_pushbutton_values, int16_t * pi16_value, int16_t pi16_step_variation, int16_t min_value, int16_t max_value);
 
 // Param Edition specific callback functions

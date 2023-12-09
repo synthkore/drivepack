@@ -148,43 +148,42 @@ struct ref_screens_dialog{
 	TIMING_TICKS timer;
 };
 
-
-// Synthkore  11-10-2014  Tolaemon
-// Clears all the information of the current parameters edition screen
-// Receives:
-// Returns:
-//  By value:
-void SCREENS_dialog_clear();
-
-// Synthkore  27-04-2022  Tolaemon
-// Initializes the module variables on program start.
-// Receives:
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief initializes the variables and structures used for the DIALOG SCREENs.
+* @note Synthkore  27-04-2022  Tolaemon
+*********************************************************************************************/
 void SCREENS_dialog_init();
 
-// Synthkore  11-10-2022  Tolaemon
-// Receives:
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief clears (initializes to NULL) the value of the pointers screens_dialog.load_cur_function, 
+* screens_dialog.show_cur_function and screens_dialog.ev_process_cur_function that point to 
+* the functions that manage the current DIALOG SCREEN.
+* @note Synthkore  11-10-2014  Tolaemon
+*********************************************************************************************/
+void SCREENS_dialog_clear();
+
+/*********************************************************************************************
+* @brief it receives a DIALOG IDENTIFIER and initializes the value of the pointers 
+* screens_dialog.load_cur_function, screens_dialog.show_cur_function and screens_dialog.ev_process_cur_function 
+* with the functions that correspond to that received DIALOG IDENTIFIER. It also initializes
+* the state of the configured DIALOG ( a DIALOG may have different states ).
+* param[in] i16_received_dialog_id the identifier of the DIALOG SCREEN whose information we want
+* to load ( SCREEN_DIALOG_ID_LOAD_ROM_FILE, SCREEN_DIALOG_ID_LOAD_RUN_ROM_FILE, SCREEN_DIALOG_ID_RUN_RAM ...)
+* param[in] i16_dialog_state the state ID code at whith the DIALOG will be started.
+* @note Synthkore  11-10-2022  Tolaemon
+*********************************************************************************************/
 int8_t SCREENS_dialog_load(int16_t i16_received_dialog_id,int16_t i16_dialog_state);
 
-// Synthkore  24-10-2014  Tolaemon
-// Receives:
-//    portSHORT * encoders_var_value: pointing to the array with the variation of value of the encoders
-//    portCHAR * pushbutton_values: pointing to the array with the state of all the push buttons
-// Returns:
-//  By value:
+/*********************************************************************************************
+* @brief procedure that calls the function (creens_dialog.ev_process_cur_function) that processes 
+* the events for the current configured DIALOG screen.
+* param[in] pi16_encoders_var_value current value of the rotary encoder
+* param[in] pui8_buttons_state current state of the push buttons
+* @note Synthkore  24-10-2014  Tolaemon
+*********************************************************************************************/
 void SCREENS_dialog_ev_manager(int16_t * pi16_encoders_var_value, uint8_t * pui8_pushbutton_values);
 
-// Synthkore  31-10-2022  Tolaemon
-// Prints in the screen the information of the file that is loaded in RAM buffer
-// Receives:
-// Returns:
-//  By value:
-void SCREENS_print_current_rom_file_info();
-
-// Dialog screen specific callback functions
+// Dialog screen specific callback functions:
 
 // LOAD_FILE dialog
 int8_t SCREENS_dialog_load_LOAD_ROM_FILE();

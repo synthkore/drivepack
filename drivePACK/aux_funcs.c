@@ -238,7 +238,6 @@ void AUX_FUNCS_remove_from_end_to_char(uint8_t * pui8_string, uint8_t ui8_char){
 }//AUX_FUNCS_remove_from_end_to_char
 
 
-
 void AUX_FUNCS_strjoin(uint8_t * pui8_dest,uint8_t * pui8_first,uint8_t * pui8_second,uint16_t ui16_MAX_STR_ARRAY){
 	int16_t i16_aux,i16_aux2;
 	
