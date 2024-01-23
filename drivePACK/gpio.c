@@ -8,6 +8,8 @@
 // **** IMPORTANT:                                              ****
 // **** Using this code or any part of it means accepting all   ****
 // **** conditions exposed in: http://www.tolaemon.com/dpack    ****
+// **** This code is part of the bareSAM platform. All info at: ****
+// **** http://www.tolaemon.com/baresam                         ****
 // *****************************************************************
 
 #include "gpio.h"
@@ -293,7 +295,7 @@ void GPIO_Init(){
 	// - SERCOM0 PAD0 SD_MOSI OUTPUT
 	// - SERCOM0 PAD1 SD_SCK OUTPUT
 	// - SD_CS as OUTPUT
-	PORT->Group[0].DIRSET.reg = (P0_DIR_CTRL_DATA_MASK|P0_USART_TX_MASK|P0_SPI_SD_MOSI_MASK|P0_SPI_SD_SCK_MASK|P0_SPI_SD_nCS_MASK|P0_ROM_CON_GPIO01|P0_ROM_CON_GPIO02|P0_ROM_CON_GPIO03);
+	PORT->Group[0].DIRSET.reg = (P0_DIR_CTRL_DATA_MASK|P0_TEST_PIN_MASK|P0_USART_TX_MASK|P0_SPI_SD_MOSI_MASK|P0_SPI_SD_SCK_MASK|P0_SPI_SD_nCS_MASK|P0_ROM_CON_GPIO01|P0_ROM_CON_GPIO02|P0_ROM_CON_GPIO03);
 
 	// configuration of input lines:
 	// - UNKNN_CTRL_BIT as INPUT

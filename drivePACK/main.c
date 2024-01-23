@@ -25,6 +25,8 @@
 
 
 // TODO:
+// Hacer que en la opcion Load and Run, al cargar la ROM y hacer RUN pulsando back se pueda regresar directamente a la carpeta en que estabamos, o si pulsamos a la derecha volver al menu.
+// Al navegar en el file explorer hacia adelante y hacia atrás en ocasiones no deja entrar dentro de determinadas carpetas. Quizás el contador de profunidad este gestionandose mal.
 // Cuando se está reproduciendo una ROM debería aparecer el titulo de la ROM, y no el "Run fil in RAM".
 // La opcion "Save as" es una chusta... no se entiende nada como guardar el fichero, debería ser mucho más sencillo.
 // Reemplazar en el código todas las referencias a dpack_ por dpack_

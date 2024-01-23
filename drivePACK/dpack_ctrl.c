@@ -54,9 +54,10 @@ uint8_t  ui8_write_data_req_by_keyb_state            = 0;
 uint8_t  ui8_clck_cycle                              = 0;
 
 uint8_t  ui8_read_add_nibble_numb                    = 0; // when an address nibble is read from the bus then it must be shifted to its corresponding position in the final address, this variable is used to control the number of nibbles ( x4 bits ) to shift on each nibble
-uint32_t ui32_read_nibble_address                    = 0; // variable used to store address
-uint8_t  ui8_read_nibble_val                         = 0; // variable used to store address nibble value read on last read cycle
-uint8_t  ui8_write_nibble_val                        = 0; // variable used to store the nibble to write into the bus into the next nibble write cycle
+uint32_t ui32_read_nibble_address                    = 0; // last read address
+uint8_t  ui8_read_device_code                        = 0; // the device code of the last read address
+uint8_t  ui8_read_nibble_val                         = 0; // address nibble value read on last read cycle
+uint8_t  ui8_write_nibble_val                        = 0; // the nibble to write into the bus into the next nibble write cycle
 
 void DPACK_CTRL_Init(){
 	

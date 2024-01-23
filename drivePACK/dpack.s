@@ -135,6 +135,7 @@
 
 // Other VARIABLES
 .equ VAR_NUM_NIBBLES_ADDR,                       0x05
+.equ VAR_ROMPACK_DEVICE_CODE,                    0x03
 
 // DPACK DUMPER state machine states:
 .equ DPACK_DUMPER_STATE_IDLE_CFG,                 0
@@ -225,8 +226,8 @@
 //###################################################################################################### 
 // EIC_1_Handler ( connected to CLCK2 line )
 //   Interrupt handler for the Event Interrupt Controller 1 used to detect changes on the GPIO line PB17
-//   connected to the ROM Pack CLCK2 line. The interrupt also sets the IEC_FLAG_R interrupt flag indicating
-//   that the clock changed its state when the R/!W was '1'
+//   which is connected to the ROM Pack CLCK2 line. The interrupt also sets the IEC_FLAG_R interrupt flag 
+//   indicating that the clock changed its state when the R/!W was '1'
 //######################################################################################################
 // PRE: before calling this function these conditions must be fulfilled:
 //     interrupts for EIC controller 1 on PB17 must have been configured
@@ -248,35 +249,42 @@ EIC_1_Handler:
 	ldr  r5,[r4]                              // load in r5 the content of REG_PORT_IN1 and apply ( P1_RnW_BIT_MASK | P1_nCS_BIT_MASK ) on it
 	and  r3,r5                                // keep the value of the ( P1_RnW_BIT_MASK | P1_nCS_BIT_MASK ) bit in r3
 	lsr  r5,r3,#10                            // move the read R/!W and !CS bit values ( P1_RnW_BIT_MASK | P1_nCS_BIT_MASK ) to the position it will have in the ui8_ctrl_bits variable
-	orr  r0,r5                                // once in their position, store the bits in r2
+	orr  r0,r5                                // once in their position, store the bits in r0
 	
-	// JBR 2023-07-10 Commented as an optimization because CLCK1 and CLCK2 are no more needed in the ctrl_bits ( CLCK is detected in the ingrrupt ).
+	// JBR 2023-07-10 Commented as an optimization because CLCK1 and CLCK2 are no longer needed in the ctrl_bits ( CLCK changes are detected by the ingrrupt ).
 	// get CLCK1 and CLCK2 lines  bits state and store them into r2
 	// movw r3,#:lower16:(P1_nCLCK1_BIT_MASK|P1_nCLCK2_BIT_MASK) // set r3 to current ( P1_nCLCK1_BIT_MASK | P1_nCLCK2_BIT_MASK ) bits mask value
 	// movt r3,#:upper16:(P1_nCLCK1_BIT_MASK|P1_nCLCK2_BIT_MASK)
 	// movw r5,#:lower16:REG_PORT_IN1         // set r5 to REG_PORT_IN1 register address
 	// movt r5,#:upper16:REG_PORT_IN1 
-	// ldr  r5,[r4]                              // set in r5 currrent REG_PORT_IN1 register value
-	// and  r3,r5                                // store the value of the ( P1_nCLCK1_BIT_MASK | P1_nCLCK2_BIT_MASK ) bit in r3
-	// lsr  r5,r3,#14                            // move the ( P1_nCLCK1_BIT_MASK | P1_nCLCK2_BIT_MASK ) bit to the position it will have in the ui8_ctrl_bits variable
-	// orr  r0,r5                                // once on its position, update the bits in the r2 register used to store into the ctrl bits 
-		                                        // at this point r2 contains the new state of the ctrl bits ( UNKNWN_CTRL, !CS, R!W, CLCK1, CLCK2 ... )  
+	// ldr  r5,[r4]                           // set in r5 currrent REG_PORT_IN1 register value
+	// and  r3,r5                             // store the value of the ( P1_nCLCK1_BIT_MASK | P1_nCLCK2_BIT_MASK ) bit in r3
+	// lsr  r5,r3,#14                         // move the ( P1_nCLCK1_BIT_MASK | P1_nCLCK2_BIT_MASK ) bit to the position it will have in the ui8_ctrl_bits variable
+	// orr  r0,r5                             // once on its position, update the bits in the r2 register used to store into the ctrl bits 
+		                                      // at this point r2 contains the new state of the ctrl bits ( UNKNWN_CTRL, !CS, R!W, CLCK1, CLCK2 ... )  
 
-	// check the state of the !CS and the R/!W signals. If the !CS is 1 then directly abandon the interrupt, if the !CS 
-	// is 0 and the R/!W signal is '0', then the keyboard is writting the address nibbles in the address/data bus. If 
-	// R/!W is '1' then keyboard is reading the the data nibbles published by the ROM in the address/data bus.
-	and r3,r0,#VAR_CTRL_nCS_MASK
+	// check the state of the !CS, the R/!W signals and the value of the last read address device code nibble. If the !CS is 1 then go to HIGH_IMPEDANCE_STATE, 
+	// if the !CS is 0 and the R/!W signal is '0', then the keyboard is writting the address nibbles in the address/data bus so jump to the READ_ADDR_WRITEN_BY_KEYB
+	// state if R/!W is '1' and the last read address device code nibble is 0x3 then keyboard is reading the the data from the ROM PACK so jump to WRITE_DATA_REQ_BY_KEYB, 
+	// but if it is not 0x3 then it is readding that data from other device so keep in HIGH IMPEDANCE STATE state
+	and r3,r0,#VAR_CTRL_nCS_MASK               
 	cmp r3,#0	
-	bne EIC_1_Handler_nCS_1
+	bne EIC_1_Handler_nCS_1                   // if nCS==1 jump to EIC_1_Handler_nCS_1 ( HIGH_IMPEDANCE_STATE )             
 	and r3,r0,#VAR_CTRL_RnW_MASK
 	cmp r3,#0
-	bne EIC_1_Handler_RnW_1
-	    
+	beq EIC_1_Handler_RnW_0                   // if RnW==0 jump to EIC_1_Handler_RnW_0 ( READ_ADDR_WRITEN_BY_KEYB )
+	movw r2,#:lower16:ui8_read_device_code
+	movt r2,#:upper16:ui8_read_device_code
+	ldrb r3,[r2]
+	cmp r3,#3                                 
+	bne EIC_1_Handler_nCS_1                   // if RnW==1 and ui8_read_device_code!=3 jump to EIC_1_Handler_nCS_1 ( HIGH_IMPEDANCE_STATE )  
+	b EIC_1_Handler_RnW_1                     // if RnW==1 and ui8_read_device_code==3 jump to EIC_1_Handler_RnW_1 ( WRITE_DATA_REQ_BY_KEYB )
+
 		// ##################### RnW = 0 READ ADDRESS WRITTEN BY KEYBOARD ##########################################
 		.thumb_func
         EIC_1_Handler_RnW_0:
 
-			movw r2,#:lower16:ui8_bus_state                        // check if bus is already configured in HIGH IMPEDANCE mode or not and if bus is already configured in HIGH IMPEDANCE then go to end
+			movw r2,#:lower16:ui8_bus_state                              // check if bus is already configured in HIGH IMPEDANCE mode or not and if bus is already configured in HIGH IMPEDANCE then go to end
 			movt r2,#:upper16:ui8_bus_state
 			ldrb r3,[r2]
 			cmp  r3,#VAR_BUS_STATE_READ_ADDR_WRITEN_BY_KEYB                 
@@ -288,7 +296,8 @@ EIC_1_Handler:
 				movt r3,#:upper16:VAR_BUS_STATE_READ_ADDR_WRITEN_BY_KEYB		  
 				strb r3,[r2]
 
-				// JBR 2023-07-10 Optimization: as we always arrive to READ ADDRESS WRITTEN BY KEYBOARD  state from the BUS_STATE_HIGH_IMPEDANCE and in that state the DATA lines are configured as input there is no need to configure them as input again
+				// JBR 2023-07-10 Optimization: as we always arrive/enter into READ ADDRESS WRITTEN BY KEYBOARD  state from the BUS_STATE_HIGH_IMPEDANCE and in that state the 
+				// DATA lines are configured as input there is no need to configure them as input again
 				//// Configure DATA lines as INPUT:
 				//// ########## PORT B
                 //// configure INPUT DIRECTION of uC I/O pins used for 'DATA' signals: DIR bit = 1 OUTPUT , DIR bit = 0 INPUT
@@ -354,6 +363,10 @@ EIC_1_Handler:
 				movw r2,#:lower16:ui8_read_add_nibble_numb          // initialize to #0 the variable used to count the number of address nibbles written by the keyboard and read from the bus
 				movt r2,#:upper16:ui8_read_add_nibble_numb	  	   					  
 				strb r3,[r2]									     
+
+				movw r2,#:lower16:ui8_read_device_code             // initialize to #0 the variable used to store the read address device code
+				movt r2,#:upper16:ui8_read_device_code	  	   					  
+				strb r3,[r2]									     
 														       
 				movw r2,#:lower16:ui32_read_nibble_address          // initialize to 0 the variable used to store the address requested by the keyboard
 				movt r2,#:upper16:ui32_read_nibble_address	       
@@ -361,6 +374,18 @@ EIC_1_Handler:
 
 			.thumb_func
 			EIC_1_Handler_RnW_0_check_cycle:
+
+				// if the CPU is writting the address nibble in the bus, first thing to do is read it from the bus as soon as possible 
+				// to avoid being to late get the address nibble and loosing it. Once it has been read it is temporary stored in 
+				// ui8_read_nibble_val to process it later.
+				movw r3,#:lower16:REG_PORT_IN1
+				movt r3,#:upper16:REG_PORT_IN1
+				ldr  r2,[r3]
+				and  r2,#P1_DATA_MASK
+	            movw r3,#:lower16:ui8_read_nibble_val                 // take the read address nibble stored ui8_read_nibble_val
+				movt r3,#:upper16:ui8_read_nibble_val					
+				lsr  r2,#12                                           // r2 lowest 4 bits temporary store the read address nibble from the bus
+				strb r2,[r3]
 
 				// check if ui8_clck_cycle is #1 or #2
 				movw r3,#:lower16:ui8_clck_cycle           
@@ -392,74 +417,67 @@ EIC_1_Handler:
 				.thumb_func
 				 EIC_1_Handler_RnW_0_clck_cycle_2:
 
-					// get the address nibble from the bus
-					movw r4,#:lower16:REG_PORT_IN1
-					movt r4,#:upper16:REG_PORT_IN1
-					ldr  r2,[r4]
-					and  r2,#P1_DATA_MASK
-
-					movw r4,#:lower16:ui8_read_nibble_val                    // temporary store in ui8_read_nibble_val the last read nibble value read from the bus
-					movt r4,#:upper16:ui8_read_nibble_val			
-					lsr  r2,#12
-					strb r2,[r4]
-
-					// if ui8_clck_cycle is #2 update it to #1 for the next interrupt
-					// movw r3,#:lower16:ui8_clck_cycle           
-				    // movt r3,#:upper16:ui8_clck_cycle
+					// as ui8_clck_cycle is #2 then update it to #1 for the next interrupt
+					movw r3,#:lower16:ui8_clck_cycle                       
+					movt r3,#:upper16:ui8_clck_cycle
 					mov r2,#1
 					strb r2,[r3]
 
-					// set the read nibble bits in the right position inside the whole address
+					// before processing the current read nibble check if all the VAR_NUM_NIBBLES_ADDR nibbles have been already read
 					movw r3,#:lower16:ui8_read_add_nibble_numb                // calculate the number of bits to shift the read nibble to place it in the right position in the ui32_read_nibble_address according to the current number of read address nibbles till the moment.
 					movt r3,#:upper16:ui8_read_add_nibble_numb
-					ldrb r2,[r3]
-					cmp  r2,#VAR_NUM_NIBBLES_ADDR                             // check if all the address nibbles have been read and continue if not or leave if affirmative
-					beq  EIC_1_Handler_cancel_int													
-																			  // TODO: JBR 2023-07-06 si el valor de ui8_read_nibble_val ya lo teniamos arriba, quizas no haga falta ni esa variable y baste con un registro temporal
-						movw r3,#:lower16:ui8_read_nibble_val                 //take the nibble read in the previous 'ui8_read_add_writ_by_keyb_state_0' state
-						movt r3,#:upper16:ui8_read_nibble_val
-						ldrb r4,[r3]
-				
+					ldrb r4,[r3]
+					cmp  r4,#VAR_NUM_NIBBLES_ADDR                             // check if all the address nibbles have been read and continue if not or leave if affirmative
+					beq  EIC_1_Handler_cancel_int
+                        
+	                    movw r3,#:lower16:ui8_read_nibble_val                 // take the read address nibble stored ui8_read_nibble_val
+						movt r3,#:upper16:ui8_read_nibble_val					
+						ldrb r2,[r3]
+																		       
+					    // set the read adress nibble bits in the right position inside the whole address					   					
 						movw r5,#:lower16:ui32_read_nibble_address            // take the address with the nibbles that have been stored in the previous cycles
 						movt r5,#:upper16:ui32_read_nibble_address
 						ldr  r6,[r5]
+						                                          
+						lsl  r4,#2                                            // shift 2 bits to the left the number of nibbles ( mutliply by 4 ) to get the number of bits to shift ( 1 nibble to shift are 4 bits to shift ): niblle 0 shift 0 bits, nibble 1 shift 1x4 bits, nibble 2 shift 2x4=8 bits, nibble 3 shift 3x4=12 bits ...
 
-						lsl  r2,#2                                            // shift 2 bits to left to multipy by 4 the number of nibbles to get the number of bits to shift: niblle 0 shift 0 bits, nibble 1 shift 1x4 bits, nibble 2 shift 2x4=8 bits, nibble 3 shift 3x4=12 bits ...
-
-						movw r5,#:lower16:0x0000000F                          // prepare the mask used to modify only the bits corresponding to the current processed address nibble position
+						movw r5,#:lower16:0x0000000F                          // prepare the mask used to modify only the 4 bits of the whole address that correspond to the current processed nibble position
 						movt r5,#:upper16:0x0000000F
-						lsl  r5,r2                                            // shift the mask used to modify only the bits corresponding to the current processed address nibble position
-						lsl  r4,r2                                            // shift the the nibble read on previous 'ui8_read_add_writ_by_keyb_state_0' state to place it in the bits corresponding to the current processed address nibble position
+						lsl  r5,r4                                            // shift the mask used to modify only the bits that correspond to the current processed address nibble position
+						lsl  r2,r4                                            // shift the the read nibble value to place it in the bits corresponding to the current processed address nibble position
 
-						bic  r6,r5                                            // clean the bits of the bits of the 'ui32_read_nibble_address' that we are going to initialize: bic r6,r5 is an 'and' with r5 complements 0x0000000F > 0xFFFFFFF0 & r6
-						orr  r6,r4                                            // place the the nibble read on previous 'ui8_read_add_writ_by_keyb_state_0' state in the bits corresponding to the current processed address nibble position
+						bic  r6,r5                                            // clean the bits of the 'ui32_read_nibble_address' that are going to be updated: bic r6,r5 is an 'and' with r5 complements 0x0000000F > 0xFFFFFFF0 & r6
+						orr  r6,r2                                            // place the the read nibble in the bits corresponding to the current processed address nibble position
 
-						movw r4,#:lower16:ui32_read_nibble_address            // store the address nibbbles that have been stored into 'ui32_read_nibble_address' till the moment
+						movw r4,#:lower16:ui32_read_nibble_address            // store in memory the address nibbbles read till the moment
 						movt r4,#:upper16:ui32_read_nibble_address
 						str  r6,[r4]
 
 						// increase the number of read nibbles counter
 						movw r3,#:lower16:ui8_read_add_nibble_numb		      // take the current number of address nibbles that have been written by the keyboard
 						movt r3,#:upper16:ui8_read_add_nibble_numb		    
-						ldrb r2,[r3]									    
-						cmp  r2,#VAR_NUM_NIBBLES_ADDR                         // check if all address nibbles written by the keyboard have been read, and continue if not
-						beq EIC_1_Handler_cancel_int					    
-																		    
-							add  r2,#1									      // if there are still nibbles to read increase the read address nibbles counter 
-							strb r2,[r3]								    
-							cmp  r2,#VAR_NUM_NIBBLES_ADDR                     // last nibble of the address requested by the keyboard is always a '0xC' but it ¿ does not contain information ?
-							bne EIC_1_Handler_cancel_int
-			
-								movw r3,#:lower16:ui32_read_nibble_address		// all address nibbles have been received so it is time to process them to get the complete final ROM address value
-								movt r3,#:upper16:ui32_read_nibble_address
-								ldr  r2,[r3]			  
-								movw r4,#:lower16:0x0000FFFF
-								movt r4,#:upper16:0x0000FFFF
-								and  r2, r4										// take only the 4 lowest nibbles and discard 5th ( 5th nibble corresponds to the 0xC )
-								eor  r2, r4										// all bits are read from the bus in inverse logic, so they must be reversed to get the right value
-								str  r2,[r3]                                    // store the address once processed
+						ldrb r2,[r3]									    											    
+						add  r2,#1									          // if there are still nibbles to read increase the read address nibbles counter 
+						strb r2,[r3]								    
+						cmp  r2,#VAR_NUM_NIBBLES_ADDR                         // on access to ROM PACKs last nibble of the address requested by the keyboard should be '0xC' and it corresponds to the device ID
+						bne EIC_1_Handler_cancel_int
+			  							
+							// all address nibbles have been received so it is time to process them to get the device code and the complete final ROM address value and					
+							movw r3,#:lower16:0x00FF0000                     // get the address device code nibble
+							movt r3,#:upper16:0x00FF0000
+							and  r3,r6                                       // AND the value of the device code mask and the address nibbles to get the device code nibble
+							lsr  r3,#16                                    
+							movw r5,#:lower16:ui8_read_device_code           // storte in memory the read device code nibble
+					        movt r5,#:upper16:ui8_read_device_code
+							strb r3,[r5]
 
-					b EIC_1_Handler_cancel_int // cancel and leave the interrupt
+							movw r3,#:lower16:0x0000FFFF                    // get the 4 address nibbles
+							movt r3,#:upper16:0x0000FFFF
+							and  r6, r3										// take only the 4 lowest nibbles and discard 5th ( 5th nibble corresponds to the  device code)
+							eor  r6, r3										// all bits are read from the bus in inverse logic, so they must be reversed to get the right value
+							str  r6,[r4]                                    // store in memory the 4 address nibbles once processed
+
+				b EIC_1_Handler_cancel_int // cancel and leave the interrupt
 
 		// ##################### RnW = 1 WRITE DATA REQUESTED BY KEYBOARD STATE ##########################################
 		.thumb_func
@@ -479,6 +497,7 @@ EIC_1_Handler:
 				strb r3,[r2] 
 
 				// Configure DATA lines as output
+				// bl clear_test_pin// JBR 2024-01-16 para depurar estado de alta impedancia
 				// ########## PORT B
 				// configure DIRECTION of I/O pins used for 'DATA'  signals: DIR bit = 1 OUTPUT , DIR bit = 0 INPUT
 				movw r2,#:lower16:P1_DATA_MASK       
@@ -645,6 +664,7 @@ EIC_1_Handler:
 			EIC_1_Handler_nCS_1_init:
 			   
 				// Configure DATA lines as INPUT
+				// bl set_test_pin// JBR 2024-01-16 para depurar estado de alta impedancia
 				// ########## PORT B	 
 				// configure INPUT DIRECTION of uC I/O pins used for 'DATA' signals: DIR bit = 1 OUTPUT , DIR bit = 0 INPUT
 				movw r2,#:lower16:P1_DATA_MASK             
