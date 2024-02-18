@@ -497,7 +497,6 @@ EIC_1_Handler:
 				strb r3,[r2] 
 
 				// Configure DATA lines as output
-				// bl clear_test_pin// JBR 2024-01-16 para depurar estado de alta impedancia
 				// ########## PORT B
 				// configure DIRECTION of I/O pins used for 'DATA'  signals: DIR bit = 1 OUTPUT , DIR bit = 0 INPUT
 				movw r2,#:lower16:P1_DATA_MASK       
@@ -664,7 +663,6 @@ EIC_1_Handler:
 			EIC_1_Handler_nCS_1_init:
 			   
 				// Configure DATA lines as INPUT
-				// bl set_test_pin// JBR 2024-01-16 para depurar estado de alta impedancia
 				// ########## PORT B	 
 				// configure INPUT DIRECTION of uC I/O pins used for 'DATA' signals: DIR bit = 1 OUTPUT , DIR bit = 0 INPUT
 				movw r2,#:lower16:P1_DATA_MASK             

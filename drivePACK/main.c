@@ -25,11 +25,10 @@
 
 
 // TODO:
-// Hacer que en la opcion Load and Run, al cargar la ROM y hacer RUN pulsando back se pueda regresar directamente a la carpeta en que estabamos, o si pulsamos a la derecha volver al menu.
-// Al navegar en el file explorer hacia adelante y hacia atrás en ocasiones no deja entrar dentro de determinadas carpetas. Quizás el contador de profunidad este gestionandose mal.
+// Dar soporte a nombres largos
+// Reducir tiempo de mensaje al Recivir cancion desde el PC o tras hace el LOAD etc
 // Cuando se está reproduciendo una ROM debería aparecer el titulo de la ROM, y no el "Run fil in RAM".
 // La opcion "Save as" es una chusta... no se entiende nada como guardar el fichero, debería ser mucho más sencillo.
-// Reemplazar en el código todas las referencias a dpack_ por dpack_
 // Revisar la carga de los ficheros .DRP, a ver si los campos son opcionales o no, y ¿que hace el software si el fichero no tien datos binarios de la ROM, o de titulo o de las canciones ?
 // En las pantallas de carga o de escritura de un fichero indicar el nombre del fichero cargado o guardado al mostrar el mensaje de confirmación.
 // Las funciones load_ ( p.ej. SCREENS_dialog_load_SAVE_RAM_FILE ) se podrían quitar y utilizar el evento LOAD==TRUE para todas las inicializaciones en cada subestado ¿ O quizas mejor quitar el LOAD==TRUE y dejar las funciones load para que quede to más organziado ?
@@ -94,6 +93,9 @@
 // Añadir el '.' y el '..' al navegador File Explorer.
 // Se estan metiendo muchos buffers y variables de los modelos de los LCDs que no se estan utilizando ( mirar en el .map ). Habría que deshabilitarlos con algun define.
 // Mover el comando "coms rx1k" a "rom rx1k" y quitar todas las rutinas COMS
+// Hacer que en la opcion Load and Run, al cargar la ROM y hacer RUN pulsando back se pueda regresar directamente a la carpeta en que estabamos, o si pulsamos a la derecha volver al menu.
+// Al navegar en el file explorer hacia adelante y hacia atrás en ocasiones no deja entrar dentro de determinadas carpetas. Quizás el contador de profunidad este gestionandose mal.
+// Reemplazar en el código todas las referencias a romulus_ por dpack_
 
 int main(void)
 {

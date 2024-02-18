@@ -52,10 +52,48 @@ void SCREENS_f_explorer_init(){
 }//SCREENS_f_explorer_init
 
 
+int8_t SCREENS_f_explorer_init_indexes(uint8_t ui8_consider_folders_files){
+	int8_t  i8_ret_value= 1;	
+	uint8_t ui8_depth = 0;
+
+	// initialize the menu navigation general parameters
+    screens_f_explorer.ui8_consider_folders_files = ui8_consider_folders_files;
+	ui8_depth = screens_f_explorer.ui8_depth;
+	screens_f_explorer.stack[ui8_depth].i16_elements_number = FILE_SYS_dir_file_count(SCREENS_F_EXPLORER_FILE_EXT_ROM_FILE,screens_f_explorer.ui8_consider_folders_files);
+		
+	if (screens_f_explorer.stack[ui8_depth].i16_elements_number<0){
+		
+		// ERROR: unit access error
+		i8_ret_value = -1;
+		
+	}else if (screens_f_explorer.stack[ui8_depth].i16_elements_number==0){
+			
+		// no elements in the directory
+		// OK: initialize the indexes used to show the patches in the LCD
+		screens_f_explorer.stack[ui8_depth].i16_selected_index=0;
+		screens_f_explorer.stack[ui8_depth].i16_bottom_index=0;
+		screens_f_explorer.stack[ui8_depth].i16_top_index=0;
+
+	}else{
+
+		// OK: initialize the indexes used to show the patches in the LCD
+		screens_f_explorer.stack[ui8_depth].i16_selected_index=0;
+		screens_f_explorer.stack[ui8_depth].i16_bottom_index=0;
+		if (screens_f_explorer.stack[ui8_depth].i16_elements_number<SCREENS_F_EXPLORER_VISIBLE_OPTIONS){
+			screens_f_explorer.stack[ui8_depth].i16_top_index=screens_f_explorer.stack[ui8_depth].i16_elements_number-1;
+		}else{
+			screens_f_explorer.stack[ui8_depth].i16_top_index=SCREENS_F_EXPLORER_VISIBLE_OPTIONS-1;
+		}//if
+			
+	}//if
+
+
+}//SCREENS_f_explorer_init_indexes
+
+
 
 int8_t SCREENS_f_explorer_load(int16_t i16_f_explorer_id,int16_t i16_f_explorer_state){
 	int i8_ret_val = 1;
-	uint8_t ui8_depth = 0;
 
 
 	switch (i16_f_explorer_id){
@@ -65,21 +103,18 @@ int8_t SCREENS_f_explorer_load(int16_t i16_f_explorer_id,int16_t i16_f_explorer_
 			screens_f_explorer.load_cur_function = SCREENS_f_explorer_load_LOAD_ROM_FILE;
 			screens_f_explorer.show_cur_function =  SCREENS_f_explorer_show_LOAD_ROM_FILE;
 			screens_f_explorer.ev_process_cur_function = SCREENS_f_explorer_ev_manager_LOAD_ROM_FILE;
-			screens_f_explorer.ui8_consider_folders_files = FILE_SYS_FLAG_FILE|FILE_SYS_FLAG_FOLDER;
 			break;
 		
 		case SCREEN_F_EXPLORER_LOAD_RUN_ROM_FILE:
 			screens_f_explorer.load_cur_function = SCREENS_f_explorer_load_LOAD_RUN_ROM_FILE;
 			screens_f_explorer.show_cur_function = SCREENS_f_explorer_show_LOAD_RUN_ROM_FILE;
 			screens_f_explorer.ev_process_cur_function = SCREENS_f_explorer_ev_manager_LOAD_RUN_ROM_FILE;
-			screens_f_explorer.ui8_consider_folders_files = FILE_SYS_FLAG_FILE|FILE_SYS_FLAG_FOLDER;
 			break;
 			
 		case SCREEN_F_EXPLORER_SAVE_RAM:
 			screens_f_explorer.load_cur_function = SCREENS_f_explorer_load_SAVE_RAM;
 			screens_f_explorer.show_cur_function = SCREENS_f_explorer_show_SAVE_RAM;
 			screens_f_explorer.ev_process_cur_function = SCREENS_f_explorer_ev_manager_SAVE_RAM;
-			screens_f_explorer.ui8_consider_folders_files = FILE_SYS_FLAG_FOLDER;
 			break;
 							
 		default:
@@ -101,34 +136,6 @@ int8_t SCREENS_f_explorer_load(int16_t i16_f_explorer_id,int16_t i16_f_explorer_
 		screens_control.i16_current_ID=i16_f_explorer_id;
 		// set the OnLoad event to show the screen content
 		screens_control.ui8_on_load_event = TRUE;
-							
-		// initialize the menu navigation general parameters
-		ui8_depth = screens_f_explorer.ui8_depth;
-		screens_f_explorer.stack[ui8_depth].i16_elements_number = FILE_SYS_dir_file_count(SCREENS_F_EXPLORER_FILE_EXT_ROM_FILE,screens_f_explorer.ui8_consider_folders_files);			
-												                                    
-		if (screens_f_explorer.stack[ui8_depth].i16_elements_number<0){
-			// ERROR: unit access error
-						
-		}else if (screens_f_explorer.stack[ui8_depth].i16_elements_number==0){
-				
-			// no elements in the directory
-			// OK: initialize the indexes used to show the patches in the LCD
-			screens_f_explorer.stack[ui8_depth].i16_selected_index=0;
-			screens_f_explorer.stack[ui8_depth].i16_bottom_index=0;
-			screens_f_explorer.stack[ui8_depth].i16_top_index=0;
-
-		}else{
-
-			// OK: initialize the indexes used to show the patches in the LCD
-			screens_f_explorer.stack[ui8_depth].i16_selected_index=0;
-			screens_f_explorer.stack[ui8_depth].i16_bottom_index=0;
-			if (screens_f_explorer.stack[ui8_depth].i16_elements_number<SCREENS_F_EXPLORER_VISIBLE_OPTIONS){
-				screens_f_explorer.stack[ui8_depth].i16_top_index=screens_f_explorer.stack[ui8_depth].i16_elements_number-1;
-			}else{
-				screens_f_explorer.stack[ui8_depth].i16_top_index=SCREENS_F_EXPLORER_VISIBLE_OPTIONS-1;
-			}//if						
-				
-		}//if
 		
 	}//if
 
@@ -281,10 +288,9 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_ROM_FILE(int16_t * pi16_encoders_var_v
 		// reset the OnLoad event flag
 		screens_control.ui8_on_load_event = FALSE;
 
-		// as the new folder has been loaded then clear the text buffer with the specified SCREENS_F_EXPLORER_BACKGROUND_CHAR
+		// clear the text buffer with the specified SCREENS_F_EXPLORER_BACKGROUND_CHAR before showing the information of the last open folder
 		GRAPHIX_text_buffer_fill(SCREENS_F_EXPLORER_BACKGROUND_CHAR,ATTR_NO_ATTRIBS,GRAPHIX_TEXT_COL_IDX_DARK_GREY,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
-
-		// show the file explorer screen
+		// show the file explorer screen with the information of the last open folder
 		SCREENS_f_explorer_show();
 
 	}//if (screens_f_explorer.ui8_on_load_event==TRUE)
@@ -455,15 +461,11 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_ROM_FILE(int16_t * pi16_encoders_var_v
 			i16_error_code = -1;
 			
 		}else{
-			
+						
 			screens_f_explorer.ui8_depth--;
-			
-			// as the previous folder has been loaded clear the screen before showing all the folder items
-			GRAPHIX_text_buffer_fill(SCREENS_F_EXPLORER_BACKGROUND_CHAR,ATTR_NO_ATTRIBS,GRAPHIX_TEXT_COL_IDX_DARK_GREY,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
-
-			// show the new file explorer screen
-			SCREENS_f_explorer_show();
-			
+			// reload the file explorer on the new selected folder
+			SCREENS_f_explorer_load(screens_control.i16_current_ID, SCREEN_F_EXPLORER_INITIAL_STATE);
+								
 		}//if
 		
 	}//if (ui8_go_back_directory
@@ -479,13 +481,15 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_ROM_FILE(int16_t * pi16_encoders_var_v
 			
 		}else{
 
-			// load and show the new file explorer screen
 			screens_f_explorer.ui8_depth++;
+			// once the new selected folder has been open, update the file explorer navigation indexes
+			SCREENS_f_explorer_init_indexes(FILE_SYS_FLAG_FILE|FILE_SYS_FLAG_FOLDER);
+			// reload the file explorer on the new selected folder
 			SCREENS_f_explorer_load(screens_control.i16_current_ID, SCREEN_F_EXPLORER_INITIAL_STATE);
-			
+
 		}//if
 				
-	}
+	}//if (ui8_enter_dir==TRUE)
 	
 	// if the flag is set then load the specified file directory 
 	if (ui8_load_file==TRUE){
@@ -703,10 +707,10 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_RUN_ROM_FILE(int16_t * pi16_encoders_v
 					 // check if the current item is the '..' ( parent dir ) or '.' ( curr dir ) entries
 					 if ( (ui8_aux_string[0]=='.') && (ui8_aux_string[1]=='.') && (ui8_aux_string[2]=='\0') ){ ui8_is_parent_dir = TRUE;}
 					 else if ( (ui8_aux_string[0]=='.') && (ui8_aux_string[1]=='\0') ){ ui8_is_curr_dir = TRUE;}
-					
+										
 					 if ( ((ui8_file_folder&FILE_SYS_FLAG_FOLDER)!=0) && ((screens_f_explorer.ui8_depth<(SCREENS_F_EXPLORER_MAX_FOLDERS_DEPTH-1)) || ui8_is_parent_dir ) ){
                         // selected item in the file explorer is a FOLDER and the current navigation depth is lower than 
-						// SCREENS_F_EXPLORER_MAX_FOLDERS_DEPTH or the selected item is '..' to go bakc to previous dir
+						// SCREENS_F_EXPLORER_MAX_FOLDERS_DEPTH or the selected item is '..' to go back to previous dir
 
 						// selected item in the file explorer is a FOLDER
 						if (ui8_is_parent_dir){
@@ -746,12 +750,8 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_RUN_ROM_FILE(int16_t * pi16_encoders_v
 		}else{
 			
 			screens_f_explorer.ui8_depth--;
-			
-			// as the previous folder has been loaded clear the screen before showing all the folder items
-			GRAPHIX_text_buffer_fill(SCREENS_F_EXPLORER_BACKGROUND_CHAR,ATTR_NO_ATTRIBS,GRAPHIX_TEXT_COL_IDX_DARK_GREY,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
-
-			// show the new file explorer screen
-			SCREENS_f_explorer_show();
+			// reload the file explorer on the previous selected folder
+			SCREENS_f_explorer_load(screens_control.i16_current_ID, SCREEN_F_EXPLORER_INITIAL_STATE);
 			
 		}//if
 		
@@ -768,8 +768,10 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_RUN_ROM_FILE(int16_t * pi16_encoders_v
 			
 		}else{
 
-			// load and show the new file explorer screen
 			screens_f_explorer.ui8_depth++;
+			// once the new selected folder has been open, update the file explorer navigation indexes
+			SCREENS_f_explorer_init_indexes(FILE_SYS_FLAG_FILE|FILE_SYS_FLAG_FOLDER);
+			// reload the file explorer on the new selected folder
 			SCREENS_f_explorer_load(screens_control.i16_current_ID, SCREEN_F_EXPLORER_INITIAL_STATE);
 			
 		}//if
@@ -858,10 +860,9 @@ int8_t SCREENS_f_explorer_ev_manager_SAVE_RAM(int16_t * pi16_encoders_var_value,
 		// reset the OnLoad event flag
 		screens_control.ui8_on_load_event = FALSE;
 
-		// as the new folder has been loaded then clear the text buffer with the specified SCREENS_F_EXPLORER_BACKGROUND_CHAR
+		// clear the text buffer with the specified SCREENS_F_EXPLORER_BACKGROUND_CHAR before showing the information of the last open folder
 		GRAPHIX_text_buffer_fill(SCREENS_F_EXPLORER_BACKGROUND_CHAR,ATTR_NO_ATTRIBS,GRAPHIX_TEXT_COL_IDX_DARK_GREY,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
-
-		// show the file explorer screen
+		// show the file explorer screen with the information of the last open folder
 		SCREENS_f_explorer_show();
 		
 	}//if (screens_f_explorer.ui8_on_load_event==TRUE)
@@ -1098,12 +1099,8 @@ int8_t SCREENS_f_explorer_ev_manager_SAVE_RAM(int16_t * pi16_encoders_var_value,
 		}else{
 			
 			screens_f_explorer.ui8_depth--;
-			
-			// as the previous folder has been loaded clear the screen before showing all the folder items
-			GRAPHIX_text_buffer_fill(SCREENS_F_EXPLORER_BACKGROUND_CHAR,ATTR_NO_ATTRIBS,GRAPHIX_TEXT_COL_IDX_DARK_GREY,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
-
-			// show the new file explorer screen
-			SCREENS_f_explorer_show();
+			// reload the file explorer on the previous selected folder
+			SCREENS_f_explorer_load(screens_control.i16_current_ID, SCREEN_F_EXPLORER_INITIAL_STATE);
 			
 		}//if
 		
@@ -1120,9 +1117,11 @@ int8_t SCREENS_f_explorer_ev_manager_SAVE_RAM(int16_t * pi16_encoders_var_value,
 			
 		}else{
 
-			// load and show the new file explorer screen
 			screens_f_explorer.ui8_depth++;
-			SCREENS_f_explorer_load(screens_control.i16_current_ID, SCREEN_F_EXPLORER_INITIAL_STATE);
+			// once the new selected folder has been open, update the file explorer navigation indexes
+			SCREENS_f_explorer_init_indexes(FILE_SYS_FLAG_FOLDER);
+			// reload the file explorer on the new selected folder
+			SCREENS_f_explorer_load(screens_control.i16_current_ID, SCREEN_F_EXPLORER_INITIAL_STATE);			
 			
 		}//if
 				

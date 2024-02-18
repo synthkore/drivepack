@@ -557,16 +557,14 @@ int8_t SCREENS_dialog_ev_manager_LOAD_ROM_FILE(int16_t * pi16_encoders_var_value
 				 }else{
 
 					i16_aux = FILE_SYS_dir_open("");
-					if (i16_aux<0){
-						
+					if (i16_aux<0){						
 						// load dialog that shows the open directory error 
-						SCREENS_dialog_load(SCREEN_DIALOG_ID_LOAD_ROM_FILE,SCREEN_DIALOG_LOAD_ROM_FILE_ACCESS_ERROR);
-					
-					}else{
-						
-						// load the file explorer screen
-						SCREENS_f_explorer_load(SCREEN_F_EXPLORER_LOAD_ROM_FILE, SCREEN_F_EXPLORER_INITIAL_STATE);
-						
+						SCREENS_dialog_load(SCREEN_DIALOG_ID_LOAD_ROM_FILE,SCREEN_DIALOG_LOAD_ROM_FILE_ACCESS_ERROR);				
+					}else{					
+						// load the file explorer screen but first update the file explorer navigation indexes 
+						SCREENS_f_explorer_clear();
+						SCREENS_f_explorer_init_indexes(FILE_SYS_FLAG_FILE|FILE_SYS_FLAG_FOLDER);
+						SCREENS_f_explorer_load(SCREEN_F_EXPLORER_LOAD_ROM_FILE, SCREEN_F_EXPLORER_INITIAL_STATE);					
 					}//if				 
 
 				 }//if
@@ -796,6 +794,7 @@ int8_t SCREENS_dialog_show_LOAD_RUN_ROM_FILE(uint8_t * ui8_message){
 int8_t SCREENS_dialog_ev_manager_LOAD_RUN_ROM_FILE(int16_t * pi16_encoders_var_value, uint8_t * pui8_pushbutton_values){
 	int8_t i8_ret_val = 1;	
 	int16_t i16_aux=0;	
+	uint32_t ui32_aux=0;	
 
 
 	switch (screens_dialog.i8_state){
@@ -838,16 +837,14 @@ int8_t SCREENS_dialog_ev_manager_LOAD_RUN_ROM_FILE(int16_t * pi16_encoders_var_v
 				 }else{
 
 					i16_aux = FILE_SYS_dir_open("");
-					if (i16_aux<0){
-						
+					if (i16_aux<0){					
 						// load dialog that shows the open directory error
-						SCREENS_dialog_load(SCREEN_DIALOG_ID_LOAD_RUN_ROM_FILE,SCREEN_DIALOG_LOAD_RUN_ROM_FILE_ACCESS_ERROR);
-					
-					}else{
-						
-						// load the file explorer screen
-						SCREENS_f_explorer_load(SCREEN_F_EXPLORER_LOAD_RUN_ROM_FILE, SCREEN_F_EXPLORER_INITIAL_STATE);
-						
+						SCREENS_dialog_load(SCREEN_DIALOG_ID_LOAD_RUN_ROM_FILE,SCREEN_DIALOG_LOAD_RUN_ROM_FILE_ACCESS_ERROR);					
+					}else{					
+						// load the file explorer screen but first update the file explorer navigation indexes 
+						SCREENS_f_explorer_clear();
+						SCREENS_f_explorer_init_indexes(FILE_SYS_FLAG_FILE|FILE_SYS_FLAG_FOLDER);
+						SCREENS_f_explorer_load(SCREEN_F_EXPLORER_LOAD_RUN_ROM_FILE, SCREEN_F_EXPLORER_INITIAL_STATE);						
 					}//if				 
 
 				 }//if
@@ -924,9 +921,10 @@ int8_t SCREENS_dialog_ev_manager_LOAD_RUN_ROM_FILE(int16_t * pi16_encoders_var_v
 			config_data_lines_as_input();	  // call function to set DATA lines to INPUT
              
 			// ################ begin: call assembly routine that emulates ROM PACK until any key is pressed
-			while ((PORT->Group[0].IN.reg&P0_USER_IFACE_PUSHB_ANY)==P0_USER_IFACE_PUSHB_ANY){
+			do {
 				dpack_int_main();
-			}//while
+				ui32_aux = PORT->Group[0].IN.reg;
+			}while ((ui32_aux&P0_USER_IFACE_PUSHB_ANY)==P0_USER_IFACE_PUSHB_ANY);//while
 			// ################ end: call assembly routine that emulates ROM PACK
 
 			// once the ROM Pack has been emulated then restore interrupts, and disable the interrupts used to 
@@ -936,9 +934,15 @@ int8_t SCREENS_dialog_ev_manager_LOAD_RUN_ROM_FILE(int16_t * pi16_encoders_var_v
 			// switch off the YELLOW LED and others used to indicate that the system has stopped emulating the cart
 			GPIO_SetCtrlLinesOutput(0x00);
 
-			// load the structure of the menu pointed by menu_to_jump
-			SCREENS_menus_load(SCREEN_MENU_CURRENT);
-					
+            // depending on the pressed key go back to the MENU o to the FILE EXPLORER to continue navigating
+            if ((ui32_aux&(P0_USER_IFACE_PUSHB_4|P0_USER_IFACE_PUSHB_ENC1))==(P0_USER_IFACE_PUSHB_4|P0_USER_IFACE_PUSHB_ENC1)){
+				// if the user presses any other key go back to the file explorer to continue in the LOAD and RUN FILE EXPLORER navigating and testing new ROMs
+				// SCREENS_f_explorer_clear(); Do not clear in order to keep the navigation in the same folder depth and in the same item index
+				SCREENS_f_explorer_load(SCREEN_F_EXPLORER_LOAD_RUN_ROM_FILE, SCREEN_F_EXPLORER_LOAD_ROM_FILE_NAVIGATING);
+			}else{
+				// if the user has pressed button 4 (right) or the encoder button then leave the LOAD and RUN FILE and go back to the main menu.
+		   	    SCREENS_menus_load(SCREEN_MENU_CURRENT);
+			}
 			break;
 		
 		case SCREEN_DIALOG_LOAD_RUN_ROM_FILE_ACCESS_ERROR:
@@ -1238,8 +1242,8 @@ int8_t SCREENS_dialog_ev_manager_RUN_RAM(int16_t * pi16_encoders_var_value, uint
 				// print in screen the title of the new loaded menu
 				// SCREENS_print_title(ui8_dpack_title_buffer,0);		
 				// update the help content lines in screen according to new loaded menu
-				SCREENS_print_help("RAM running. Press song",0);
-				SCREENS_print_help("stop and then any key.",1);
+				SCREENS_print_help("RAM running. Press",0);
+				SCREENS_print_help("any key to leave.",1);
 		
 				// reset the OnLoad event flag
 				screens_control.ui8_on_load_event = FALSE;
@@ -2202,16 +2206,14 @@ int8_t SCREENS_dialog_ev_manager_SAVE_RAM_AS_FILE(int16_t * pi16_encoders_var_va
 				 }else{
 
 					i16_aux = FILE_SYS_dir_open("");
-					if (i16_aux<0){
-						
+					if (i16_aux<0){						
 						// load dialog that shows the open directory error 
-						SCREENS_dialog_load(SCREEN_DIALOG_ID_SAVE_RAM_AS_FILE,SCREEN_DIALOG_SAVE_RAM_AS_FILE_ACCESS_ERROR);
-					
-					}else{
-						
-						// load the file explorer screen
-						SCREENS_f_explorer_load(SCREEN_F_EXPLORER_SAVE_RAM,SCREEN_F_EXPLORER_INITIAL_STATE);
-						
+						SCREENS_dialog_load(SCREEN_DIALOG_ID_SAVE_RAM_AS_FILE,SCREEN_DIALOG_SAVE_RAM_AS_FILE_ACCESS_ERROR);					
+					}else{						
+						// load the file explorer screen but first update the file explorer navigation indexes 
+						SCREENS_f_explorer_clear();
+						SCREENS_f_explorer_init_indexes(FILE_SYS_FLAG_FOLDER);
+						SCREENS_f_explorer_load(SCREEN_F_EXPLORER_SAVE_RAM,SCREEN_F_EXPLORER_INITIAL_STATE);						
 					}//if				 
 
 				 }//if
@@ -2921,7 +2923,7 @@ int8_t SCREENS_dialog_show_RECEIVE_RUN_RAM(uint8_t * ui8_message){
 
 int8_t SCREENS_dialog_ev_manager_RECEIVE_RUN_RAM(int16_t * pi16_encoders_var_value, uint8_t * pui8_pushbutton_values){
 	int8_t i8_ret_val = 1;
-
+	uint32_t ui32_aux=0;
 
 	switch (screens_dialog.i8_state){
 		
@@ -3143,9 +3145,10 @@ int8_t SCREENS_dialog_ev_manager_RECEIVE_RUN_RAM(int16_t * pi16_encoders_var_val
 			config_data_lines_as_input();	  // call function to set DATA lines to INPUT
 			
 			// ################ begin: call assembly routine that emulates ROM PACK until any key is pressed
-			while ((PORT->Group[0].IN.reg&P0_USER_IFACE_PUSHB_ANY)==P0_USER_IFACE_PUSHB_ANY){
+			do {
 				dpack_int_main();
-			}//while
+				ui32_aux = PORT->Group[0].IN.reg;
+			}while ((ui32_aux&P0_USER_IFACE_PUSHB_ANY)==P0_USER_IFACE_PUSHB_ANY);//while
 			// ################ end: call assembly routine that emulates ROM PACK
 
 			// once the ROM Pack has been emulated then restore interrupts, and disable the interrupts used to
@@ -3154,10 +3157,15 @@ int8_t SCREENS_dialog_ev_manager_RECEIVE_RUN_RAM(int16_t * pi16_encoders_var_val
 			
 			// switch off the YELLOW LED and others used to indicate that the system has stopped emulating the cart
 			GPIO_SetCtrlLinesOutput(0x00);
-					
-			// load the structure of the menu pointed by menu_to_jump
-			SCREENS_menus_load(SCREEN_MENU_CURRENT);
-					
+
+            // depending on the pressed key, go back to the MENU or to the previous DIALOG SCREEN to wait to receive new ROM PACK cartridge content
+            if ((ui32_aux&(P0_USER_IFACE_PUSHB_4|P0_USER_IFACE_PUSHB_ENC1))==(P0_USER_IFACE_PUSHB_4|P0_USER_IFACE_PUSHB_ENC1)){
+	            // if the user presses any other key go back to the previous DIALOG SCREEN to wait to receive new RAM buffer content
+				SCREENS_dialog_load(SCREEN_DIALOG_ID_RECEIVE_RUN_RAM,SCREEN_DIALOG_RECEIVE_RUN_RAM_WAITING);				
+	        }else{
+	            // if the user has pressed button 4 (right) or the encoder button then leave the RECEIVE_RUN_RAM and go back to the main menu.
+	            SCREENS_menus_load(SCREEN_MENU_CURRENT);
+            }										
 			break;
 					
 		default:

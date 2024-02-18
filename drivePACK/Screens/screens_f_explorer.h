@@ -83,6 +83,17 @@ void SCREENS_f_explorer_clear();
 void SCREENS_f_explorer_init();
 
 /*********************************************************************************************
+* @brief initializes the value of all the file explorer navigation indexes according to the 
+* number of elements in the root folder of the current mounted unit.
+* @param[in] ui8_consider_folders_files with the flags that specify the type of elements to
+* consider on initialization and when navigating through the file system ( FILES, FOLDERS ...)
+* @return >=0 the indexes could be initialized according to the elements in the root folder
+* <0 if it was not possible to initialize the file explorer navigation indexes
+* @note Synthkore  14-02-2024 Tolaemon
+*********************************************************************************************/
+int8_t SCREENS_f_explorer_init_indexes(uint8_t ui8_consider_folders_files);
+
+/*********************************************************************************************
 * @brief Loads and initializes the FILE EXPLORER SCREEN variables, structures and pointers with
 * the values that corresponds to the received i16_f_explorer_id.
 * @param[in] i16_f_explorer_id indicates the file explorer screen to load
