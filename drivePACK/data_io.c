@@ -17,6 +17,7 @@
 // declare extern structures
 extern uint8_t ui8_dpack_dumper_nibbles_buffer[MAX_ROM_NIBBLES_BUFFER];
 extern uint8_t ui8_dpack_dumper_buffer_initialized;
+extern int32_t i32_dpack_dumper_rom_size;
 extern uint8_t ui8_dpack_title_buffer[MAX_ROM_TITLE_BUFFER];
 extern uint8_t ui8_dpack_songs_info_buffer[MAX_ROM_SONGS_INFO_BUFFER];
 extern uint8_t ui8_dpack_file_name[MAX_ROM_FILE_NAME];
@@ -196,7 +197,9 @@ int16_t DATA_IO_file_rom_load(uint8_t * pui8_file_name ){
 		// Close file
 		FILE_SYS_file_close();
 			
-		ui8_dpack_dumper_buffer_initialized = TRUE;// set the flag that indicates that the ui8_dpack_dumper_buffer contains valid ROM data
+		ui8_dpack_dumper_buffer_initialized = TRUE;// set the flag that indicates that the ui8_dpack_dumper_buffer contains valid ROM data		
+		i32_dpack_dumper_rom_size = DPACK_CTRL_get_size_rom_in_buffer();
+		
 		i16_ret_val = 0;
 
 	}//(ret_val>=0)
@@ -262,7 +265,8 @@ int16_t DATA_IO_file_rom_write(uint8_t * pui8_file_name ){
 		// write a default SONGS ROM METADATA block
         ui8_file_bytes[0]=FILE_DATA_BLOCK_SONGS_ROM;
         i16_ret_val = FILE_SYS_file_write(ui8_file_bytes, sizeof(uint8_t), &ui32_written_bytes );// Write the type of the metadata block
-		ui32_bytes_to_write = sizeof(ui8_dpack_dumper_nibbles_buffer);
+		ui32_bytes_to_write = i32_dpack_dumper_rom_size;
+		if ( ui32_bytes_to_write>=MAX_ROM_NIBBLES_BUFFER) ui32_bytes_to_write = MAX_ROM_NIBBLES_BUFFER;
         i16_ret_val = FILE_SYS_file_write(&ui32_bytes_to_write, sizeof(uint32_t), &ui32_written_bytes);// Write the size of the metadata block
 
 		// write ROM data in the ROM METADATA block. Write the content of the ROM memory buffer in RAM ( ui8_dpack_dumper_nibbles_buffer ) to file
@@ -275,7 +279,7 @@ int16_t DATA_IO_file_rom_write(uint8_t * pui8_file_name ){
 				
 			ui32_total_written_bytes = ui32_total_written_bytes + ui32_written_bytes;
 			
-		}while ( (i16_ret_val>=0) && (ui32_total_written_bytes<ui32_bytes_to_write)  && (ui32_total_written_bytes<MAX_ROM_NIBBLES_BUFFER) );
+		}while ( (i16_ret_val>=0) && (ui32_total_written_bytes<ui32_bytes_to_write) );
 
 		// when no error occurs, FILE_SYS_file_write returns the number of written bytes(>0) instead of the error code(<0), so if 
 		// i16_ret_val contains the number of written bytes then reset the variable to '0'
@@ -439,6 +443,7 @@ int16_t DATA_IO_1KXmodem_rom_receive(){
 		ui8_dpack_dumper_buffer_initialized = FALSE; // clear the flag that indicates if the ui8_dpack_dumper_buffer contains valid ROM data
 	}else{	
 		ui8_dpack_dumper_buffer_initialized = TRUE;// set the flag that indicates that the ui8_dpack_dumper_buffer contains valid ROM data
+		i32_dpack_dumper_rom_size = DPACK_CTRL_get_size_rom_in_buffer();
 	}//(ret_val<=0)
 
 	return i16_ret_val;
@@ -491,7 +496,9 @@ int16_t DATA_IO_1KXmodem_rom_send(){
 	  // write a default SONGS ROM METADATA block
 	  ui8_file_bytes[0]=FILE_DATA_BLOCK_SONGS_ROM;
 	  i16_ret_val =  USART_1KXmodem_write(ui8_file_bytes, sizeof(uint8_t), &ui32_written_bytes);//  Write the type of the metadata block	
-	  ui32_bytes_to_write = sizeof(ui8_dpack_dumper_nibbles_buffer);
+	  ui32_bytes_to_write = i32_dpack_dumper_rom_size;
+	  if ( ui32_bytes_to_write>=MAX_ROM_NIBBLES_BUFFER) ui32_bytes_to_write = MAX_ROM_NIBBLES_BUFFER;	  
+	  
 	  i16_ret_val = USART_1KXmodem_write(&ui32_bytes_to_write, sizeof(uint32_t), &ui32_written_bytes);// Write the size of the metadata block
 
 	  // write ROM data in the ROM METADATA block. Write the content of the ROM memory buffer in RAM ( ui8_dpack_dumper_nibbles_buffer ) to remote computer
@@ -504,7 +511,7 @@ int16_t DATA_IO_1KXmodem_rom_send(){
   
 		  ui32_total_written_bytes = ui32_total_written_bytes + ui32_written_bytes;
 		  
-	  }while ( (i16_ret_val>=0) && (ui32_total_written_bytes<ui32_bytes_to_write)  && (ui32_total_written_bytes<MAX_ROM_NIBBLES_BUFFER) );
+	  }while ( (i16_ret_val>=0) && (ui32_total_written_bytes<ui32_bytes_to_write) );
 
 	  // when no error occurs, USART_1KXmodem_write returns the number of successfully sent bytes(>0) instead of the error code(<0), 
 	  // so if i16_ret_val contains the number of written bytes then reset the variable to '0'

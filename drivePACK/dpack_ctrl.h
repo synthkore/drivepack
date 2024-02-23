@@ -47,4 +47,20 @@ void DPACK_CTRL_Init();
 *********************************************************************************************/
 int8_t DPACK_CTRL_check_buffer();
 
+/*********************************************************************************************
+* @brief calculates and returns the size of the ROM PACK cartridge currently stored in the 
+* drivePACK RAM buffer. A ROM PACK cartridge may not occupy all the RAM buffer, it depends
+* on the size and the number of sotred themes. To calculate that size it looks for the bytes 
+* sequence:
+*    0xFF 0xFF 0xFF 0xFF 0x00 0x00 0x00 0x00
+* because all the ROM PACKS finish wit the sequence: 
+*     0x23 0x83 0x93 0x06 0x47 0x83 0xAB 0x02 0x63 0x27 0x4B 0x27 0x47 0x93 0x2B 0x83 0xFF 
+*  0xFF 0xFF 0xFF 0x00 0x00 0x00 0x00
+* @return  the size in bytes ( to get nibbles multiply bytes * 2 ) of the ROM PACK cartridge  
+* stored in the buffer. <0 if there is no valid data stored in the memory buffer. If the buffer
+* is initialized but the end mark is not found then return the whole RAM buffer size.
+* @note 22-02-2024 Tolaemon
+*********************************************************************************************/
+int32_t DPACK_CTRL_get_size_rom_in_buffer();
+
 #endif // _DPACK_CTRL_H_

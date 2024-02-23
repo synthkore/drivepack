@@ -21,7 +21,7 @@ uint8_t ui8_ctrl_bits        = 0x00;// variable ctrl bits: 7:x 6:x 5:x 4:'?' 3:C
 // 3 write data requested by keyboard   - ctrl bits:INPUT  data bits:OUTPUT - ROM EMULATION MODE
 // 4 write address requested to ROMPACK - ctrl bits:OUTPUT data bits:OUTPUT - KEYBOARD EMULATION MODE
 // 5 read data requested to ROMPACK     - ctrl bits:OUTPUT data bits:INPUT  - KEYBOARD EMULATION MODE
-uint8_t  ui8_bus_state                               = 0;
+uint8_t  ui8_bus_state                             = 0;
 
 uint8_t  ui8_dpack_dumper_state                    = 0;
 uint8_t  ui8_dpack_dumper_idle_clck_wait_cycles    = 0;
@@ -33,8 +33,9 @@ uint32_t ui32_dpack_dumper_address_to_write        = 0x0000000;
 uint8_t  ui8_dpack_dumper_last_data_nibble_read    = 0;          // stores the value of last read nibble
 
 // read data nibbles Tx buffer control variables
-uint8_t ui8_dpack_dumper_buffer_initialized = FALSE; // FALSE if the ui8_dpack_dumper_nibbles_buffer does NOT contain valid ROM data, TRUE if ui8_dpack_dumper_nibbles_buffer contains valid ROM data
 uint8_t ui8_dpack_dumper_nibbles_buffer[MAX_ROM_NIBBLES_BUFFER];
+uint8_t ui8_dpack_dumper_buffer_initialized = FALSE; // FALSE if the ui8_dpack_dumper_nibbles_buffer does NOT contain valid ROM data, TRUE if ui8_dpack_dumper_nibbles_buffer contains valid ROM data
+int32_t i32_dpack_dumper_rom_size;// size in bytes of the ROM PACK loaded into the nibbles buffer. ROM PACK cartridges may have different sizes, and the size of a ROM PACK cartridge is determined by searching the end sequence: 0x23 0x83 0x93 0x06 0x47 0x83 0xAB 0x02 0x63 0x27 0x4B 0x27 0x47 0x93 0x2B 0x83 0xFF 0xFF 0xFF 0xFF 0x00 0x00 0x00 0x00
 uint8_t ui8_dpack_title_buffer[MAX_ROM_TITLE_BUFFER];
 uint8_t ui8_dpack_songs_info_buffer[MAX_ROM_SONGS_INFO_BUFFER];
 uint8_t ui8_dpack_file_name[MAX_ROM_FILE_NAME];
@@ -80,6 +81,7 @@ void DPACK_CTRL_Init(){
 }//DPACK_CTRL_Init
 
 
+
 int8_t DPACK_CTRL_check_buffer(){
     int8_t i8_ret_val = 0;
 	int16_t i16_ret_val=0;
@@ -101,8 +103,47 @@ int8_t DPACK_CTRL_check_buffer(){
 		if (ui8_dpack_dumper_nibbles_buffer[i32_aux]!=ui8_expected_header[i32_aux]) i8_ret_val = -1;
 		i32_aux++;
 		
-	}//for
+	}//while
 		
 	return i8_ret_val;
 
 }//DPACK_CTRL_check_buffer
+
+
+
+int32_t DPACK_CTRL_get_size_rom_in_buffer(){
+	int32_t i32_ret_val=0;
+    uint8_t ui8_found_end = FALSE;
+    int32_t i32_aux = 0;
+
+    if (ui8_dpack_dumper_buffer_initialized==FALSE){
+		
+		i32_ret_val = -1;
+		
+	}else{
+
+		i32_aux = 0;
+		while ( (ui8_found_end==FALSE) && (i32_aux<MAX_ROM_NIBBLES_BUFFER-8) ){
+	
+		   // despite all the ROM PACKs should end with the byte sequence "0x23 0x83 0x93 0x06 0x47 0x83 0xAB 0x02 0x63 0x27 
+		   // 0x4B 0x27 0x47 0x93 0x2B 0x83 0xFF 0xFF 0xFF 0xFF 0x00 0x00 0x00 0x00", there is no need to search for all them
+		   // and only search for "0xFF 0xFF 0xFF 0xFF 0x00 0x00 0x00 0x00" to detect the end of the ROM PACK cartridge
+	
+		   if ( (ui8_dpack_dumper_nibbles_buffer[i32_aux]  ==0xFF) && (ui8_dpack_dumper_nibbles_buffer[i32_aux+1]==0xFF) &&
+				(ui8_dpack_dumper_nibbles_buffer[i32_aux+2]==0xFF) && (ui8_dpack_dumper_nibbles_buffer[i32_aux+3]==0xFF)  &&
+				(ui8_dpack_dumper_nibbles_buffer[i32_aux+4]==0x00) && (ui8_dpack_dumper_nibbles_buffer[i32_aux+5]==0x00)  &&
+				(ui8_dpack_dumper_nibbles_buffer[i32_aux+6]==0x00) && (ui8_dpack_dumper_nibbles_buffer[i32_aux+7]==0x00) ){
+		     
+				 ui8_found_end = TRUE;
+				 i32_ret_val = i32_aux + 8; // 8 is the number of the bytes "0xFF 0xFF 0xFF 0xFF 0x00 0x00 0x00 0x00"
+			 
+			}else{
+				i32_aux++;
+			}
+		}//while
+    
+	}//if
+	
+	return i32_ret_val;
+
+}//DPACK_CTRL_get_size_rom_in_buffer

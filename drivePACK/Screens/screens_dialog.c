@@ -21,6 +21,7 @@ struct ref_screens_dialog screens_dialog;
 // declare extern structures
 extern uint8_t ui8_dpack_dumper_nibbles_buffer[MAX_ROM_NIBBLES_BUFFER];
 extern uint8_t ui8_dpack_dumper_buffer_initialized;
+extern int32_t i32_dpack_dumper_rom_size;
 extern uint8_t ui8_dpack_title_buffer[MAX_ROM_TITLE_BUFFER];
 extern uint8_t ui8_dpack_songs_info_buffer[MAX_ROM_SONGS_INFO_BUFFER];
 extern uint8_t ui8_dpack_file_name[MAX_ROM_FILE_NAME];
@@ -1342,6 +1343,7 @@ int8_t SCREENS_dialog_load_SHOW_RAM_INFO(){
 			
 	    case SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_1:
 		case SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_2:
+		case SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_3:
 			break;
 
 		case SCREEN_DIALOG_SHOW_RAM_INFO_NO_LOADED_ERROR:
@@ -1364,7 +1366,7 @@ int8_t SCREENS_dialog_load_SHOW_RAM_INFO(){
 int8_t SCREENS_dialog_show_SHOW_RAM_INFO(uint8_t * ui8_message){
 	int8_t i8_ret_val = 1;
 	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
-	
+	uint8_t ui8_aux_string2[AUX_FUNCS_F_P_MAX_STR_SIZE_16];	
 
 	switch (screens_dialog.i8_state){
 		
@@ -1390,7 +1392,23 @@ int8_t SCREENS_dialog_show_SHOW_RAM_INFO(uint8_t * ui8_message){
 			GRAPHIX_text_buffer_refresh();
 			break;
 
-		case SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_2:				
+	   case SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_2:
+			// clear the screen buffer content by filling it with the SCREENS_DIALOG_BACKGROUND_CHAR char
+			GRAPHIX_text_buffer_fill(SCREENS_DIALOG_BACKGROUND_CHAR,ATTR_NO_ATTRIBS,GRAPHIX_TEXT_COL_IDX_DARK_GREY,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+			// set the message in the screen buffer
+			GRAPHIX_text_buffer_set_string(0,4,(uint8_t*)" Size of the ROM PACK ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+			GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)"   in RAM buffer is   ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+			// set the number of bytes of the dumped ROM PACK
+			AUX_FUNCS_itoa((int32_t)i32_dpack_dumper_rom_size,ui8_aux_string2,10,AUX_FUNCS_F_P_MAX_STR_SIZE_16);
+			AUX_FUNCS_strcat(ui8_aux_string2, " bytes.", AUX_FUNCS_F_P_MAX_STR_SIZE_16);
+			AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			AUX_FUNCS_center_into_string(ui8_aux_string,ui8_aux_string2,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			GRAPHIX_text_buffer_set_string(0,6,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);	   
+			// refresh the content of the buffer to screen
+			GRAPHIX_text_buffer_refresh();
+			break;
+
+		case SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_3:
 			// clear the screen buffer content by filling it with the SCREENS_DIALOG_BACKGROUND_CHAR char
 			GRAPHIX_text_buffer_fill(SCREENS_DIALOG_BACKGROUND_CHAR,ATTR_NO_ATTRIBS,GRAPHIX_TEXT_COL_IDX_DARK_GREY,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			// set the message in the screen buffer
@@ -1408,7 +1426,6 @@ int8_t SCREENS_dialog_show_SHOW_RAM_INFO(uint8_t * ui8_message){
 			GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			// refresh the content of the buffer to screen
 			GRAPHIX_text_buffer_refresh();
-
 			break;
 
 		case SCREEN_DIALOG_SHOW_RAM_INFO_NO_LOADED_ERROR:
@@ -1488,90 +1505,140 @@ int8_t SCREENS_dialog_ev_manager_SHOW_RAM_INFO(int16_t * pi16_encoders_var_value
 			break;
 				
 		case SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_1:
-	
+		
 			// in the on-load event show screen for first time
 			if (screens_control.ui8_on_load_event==TRUE){
 			
 				// print in screen the title of the new loaded menu
-				SCREENS_print_title(ui8_dpack_title_buffer,0);		
+				SCREENS_print_title(ui8_dpack_title_buffer,0);
 				// update the help content lines in screen according to new loaded menu
 				SCREENS_print_help("Press any key to show  ",0);
 				SCREENS_print_help("next info screen.",1);
-		
+			
 				// reset the OnLoad event flag
 				screens_control.ui8_on_load_event = FALSE;
 			
 				// show current dialog screen
-			    SCREENS_dialog_show();
+				SCREENS_dialog_show();
 			
 			}//if
 
 			// check if the user has pressed the key to leave current screen
 			if ( pui8_pushbutton_values[USER_IFACE_PUSHBT_1]==USER_IFACE_PRESSED ){
-				
+			
 				// load the structure of the menu pointed by menu_to_jump
-				SCREENS_menus_load(SCREEN_MENU_CURRENT);			
-				
+				SCREENS_menus_load(SCREEN_MENU_CURRENT);
+			
 			}//if
 
 			// check if the user has pressed any of the following keys
 			if ( pui8_pushbutton_values[USER_IFACE_PUSHBT_2]==USER_IFACE_PRESSED  ||
-				 pui8_pushbutton_values[USER_IFACE_PUSHBT_3]==USER_IFACE_PRESSED  ||
-				 pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
-				 pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
+				pui8_pushbutton_values[USER_IFACE_PUSHBT_3]==USER_IFACE_PRESSED  ||
+				pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
+				pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
 			
-			    // check if the file information of the current RAM buffer content has been set
-				if (AUX_FUNCS_lstrlen(ui8_dpack_file_name,MAX_ROM_FILE_NAME)<=0){
+				// check the flag that indicates if there is valid data in the memory buffer and show the corresponding message
+				if (ui8_dpack_dumper_buffer_initialized == FALSE){
 
 					// if a file name has not been set then show the corresponding error message
 					SCREENS_dialog_load(SCREEN_DIALOG_ID_SHOW_RAM_INFO,SCREEN_DIALOG_SHOW_RAM_INFO_NO_FILE_ERROR);
-								
+				
 				}else{
-					
+				
 					// load the dialog that shows the next screen with current RAM content songs information
 					SCREENS_dialog_load(SCREEN_DIALOG_ID_SHOW_RAM_INFO,SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_2);
-					
-				}//if
-										
-			}//if					
-			break;				
 				
+				}//if
+			
+			}//if
+			break;
+		
 		case SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_2:
-	
+		
 			// in the on-load event show screen for first time
 			if (screens_control.ui8_on_load_event==TRUE){
 			
 				// print in screen the title of the new loaded menu
-				SCREENS_print_title(ui8_dpack_title_buffer,0);		
+				SCREENS_print_title(ui8_dpack_title_buffer,0);
 				// update the help content lines in screen according to new loaded menu
 				SCREENS_print_help("Press left key to show ",0);
 				SCREENS_print_help("previous info screen.",1);
-		
+			
 				// reset the OnLoad event flag
 				screens_control.ui8_on_load_event = FALSE;
 			
 				// show current dialog screen
-			    SCREENS_dialog_show();
+				SCREENS_dialog_show();
 			
 			}//if
 
 			// check if the user has pressed any of the left key to go to previous screen
 			if ( pui8_pushbutton_values[USER_IFACE_PUSHBT_1]==USER_IFACE_PRESSED ){
-	
+			
 				// load the dialog that shows the next screen with current RAM content songs information
 				SCREENS_dialog_load(SCREEN_DIALOG_ID_SHOW_RAM_INFO,SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_1);
-	
+			
 			}//if
 
 			// check if the user has pressed any of the following keys
 			if ( pui8_pushbutton_values[USER_IFACE_PUSHBT_2]==USER_IFACE_PRESSED  ||
-				 pui8_pushbutton_values[USER_IFACE_PUSHBT_3]==USER_IFACE_PRESSED  ||
-				 pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
-				 pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
+				pui8_pushbutton_values[USER_IFACE_PUSHBT_3]==USER_IFACE_PRESSED  ||
+				pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
+				pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
+			
+				// check if the file information of the current RAM buffer content has been set
+				if (AUX_FUNCS_lstrlen(ui8_dpack_file_name,MAX_ROM_FILE_NAME)<=0){
+
+					// if a file name has not been set then show the corresponding error message
+					SCREENS_dialog_load(SCREEN_DIALOG_ID_SHOW_RAM_INFO,SCREEN_DIALOG_SHOW_RAM_INFO_NO_FILE_ERROR);
+					
+				}else{
+					
+					// load the dialog that shows the next screen with current RAM content songs information
+					SCREENS_dialog_load(SCREEN_DIALOG_ID_SHOW_RAM_INFO,SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_3);
+					
+				}//if			
 				
-				      // load the structure of the menu pointed by menu_to_jump
-				      SCREENS_menus_load(SCREEN_MENU_CURRENT);			
-			}//if					
+			}//if
+			break;
+
+		case SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_3:
+		
+			// in the on-load event show screen for first time
+			if (screens_control.ui8_on_load_event==TRUE){
+			
+				// print in screen the title of the new loaded menu
+				SCREENS_print_title(ui8_dpack_title_buffer,0);
+				// update the help content lines in screen according to new loaded menu
+				SCREENS_print_help("Press left key to show ",0);
+				SCREENS_print_help("previous info screen.",1);
+			
+				// reset the OnLoad event flag
+				screens_control.ui8_on_load_event = FALSE;
+			
+				// show current dialog screen
+				SCREENS_dialog_show();
+			
+			}//if
+
+			// check if the user has pressed any of the left key to go to previous screen
+			if ( pui8_pushbutton_values[USER_IFACE_PUSHBT_1]==USER_IFACE_PRESSED ){
+			
+				// load the dialog that shows the next screen with current RAM content songs information
+				SCREENS_dialog_load(SCREEN_DIALOG_ID_SHOW_RAM_INFO,SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_2);
+			
+			}//if
+
+			// check if the user has pressed any of the following keys
+			if ( pui8_pushbutton_values[USER_IFACE_PUSHBT_2]==USER_IFACE_PRESSED  ||
+				pui8_pushbutton_values[USER_IFACE_PUSHBT_3]==USER_IFACE_PRESSED  ||
+				pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
+				pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
+			
+				// load the structure of the menu pointed by menu_to_jump to return to the main menu
+				SCREENS_menus_load(SCREEN_MENU_CURRENT);
+				
+			}//if
 			break;
 	
 		case SCREEN_DIALOG_SHOW_RAM_INFO_NO_LOADED_ERROR:
@@ -1605,7 +1672,7 @@ int8_t SCREENS_dialog_ev_manager_SHOW_RAM_INFO(int16_t * pi16_encoders_var_value
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
 					
-					// load the structure of the menu pointed by menu_to_jump
+					// load the structure of the menu pointed by menu_to_jump to return to the main menu
 					SCREENS_menus_load(SCREEN_MENU_CURRENT);	
 			}//if
 			break;
@@ -1662,7 +1729,8 @@ int8_t SCREENS_dialog_load_DUMP_ROM(){
 
 int8_t SCREENS_dialog_show_DUMP_ROM(uint8_t * ui8_message){
 	int8_t i8_ret_val = 1;
-
+	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string2[AUX_FUNCS_F_P_MAX_STR_SIZE_16];
 
 	switch (screens_dialog.i8_state){
 		
@@ -1696,11 +1764,17 @@ int8_t SCREENS_dialog_show_DUMP_ROM(uint8_t * ui8_message){
 			// clear the screen buffer content by filling it with the SCREENS_DIALOG_BACKGROUND_CHAR char
 			GRAPHIX_text_buffer_fill(SCREENS_DIALOG_BACKGROUND_CHAR,ATTR_NO_ATTRIBS,GRAPHIX_TEXT_COL_IDX_DARK_GREY,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			// set the message in the screen buffer
-			GRAPHIX_text_buffer_set_string(0,3,(uint8_t*)"   The  content of  ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
-			GRAPHIX_text_buffer_set_string(0,4,(uint8_t*)"  ROM cart has been ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
-			GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)"  successfully read ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
-			GRAPHIX_text_buffer_set_string(0,6,(uint8_t*)"  and stored in RAM ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
-			GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)"        buffer.     ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
+			GRAPHIX_text_buffer_set_string(0,2,(uint8_t*)"   The  content of  ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
+			GRAPHIX_text_buffer_set_string(0,3,(uint8_t*)"  ROM cart has been ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
+			GRAPHIX_text_buffer_set_string(0,4,(uint8_t*)"  successfully read ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
+			GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)"  and stored in RAM ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
+			GRAPHIX_text_buffer_set_string(0,6,(uint8_t*)" buffer. ROM size is     ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
+			// set the number of bytes of the dumped ROM PACK
+			AUX_FUNCS_itoa((int32_t)i32_dpack_dumper_rom_size,ui8_aux_string2,10,AUX_FUNCS_F_P_MAX_STR_SIZE_16);			
+			AUX_FUNCS_strcat(ui8_aux_string2, " bytes.", AUX_FUNCS_F_P_MAX_STR_SIZE_16);			
+			AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			AUX_FUNCS_center_into_string(ui8_aux_string,ui8_aux_string2,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			// refresh the content of the buffer to screen
 			GRAPHIX_text_buffer_refresh();		
 			break;
@@ -1834,6 +1908,8 @@ int8_t SCREENS_dialog_ev_manager_DUMP_ROM(int16_t * pi16_encoders_var_value, uin
 			if (DPACK_CTRL_check_buffer()>=0){
 				
 			   ui8_dpack_dumper_buffer_initialized = TRUE;
+						
+			   i32_dpack_dumper_rom_size = DPACK_CTRL_get_size_rom_in_buffer();
 			
 			   AUX_FUNCS_lstrcpy(ui8_dpack_title_buffer,"RO-??? Title?",MAX_ROM_TITLE_BUFFER);
 			   AUX_FUNCS_lstrcpy(ui8_dpack_songs_info_buffer,"ROM songs information has not been initialized yet.\r\nUse drivePackEd software to enter the ROM songs and other information in the file.",MAX_ROM_SONGS_INFO_BUFFER);
@@ -1880,7 +1956,7 @@ int8_t SCREENS_dialog_ev_manager_DUMP_ROM(int16_t * pi16_encoders_var_value, uin
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
 					
-					// load the structure of the menu pointed by menu_to_jump
+					// load the structure of the menu pointed by menu_to_jump to return to the main menu
 					SCREENS_menus_load(SCREEN_MENU_CURRENT);	
 			}//if
 			break;
@@ -1915,7 +1991,7 @@ int8_t SCREENS_dialog_ev_manager_DUMP_ROM(int16_t * pi16_encoders_var_value, uin
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
 					
-					// load the structure of the menu pointed by menu_to_jump
+					// load the structure of the menu pointed by menu_to_jump to return to the main menu
 					SCREENS_menus_load(SCREEN_MENU_CURRENT);	
 			}//if			
 			break;
@@ -1950,7 +2026,7 @@ int8_t SCREENS_dialog_ev_manager_DUMP_ROM(int16_t * pi16_encoders_var_value, uin
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
 					
-					// load the structure of the menu pointed by menu_to_jump
+					// load the structure of the menu pointed by menu_to_jump to return to the main menu
 					SCREENS_menus_load(SCREEN_MENU_CURRENT);	
 			}//if				
 			break;
@@ -2300,7 +2376,7 @@ int8_t SCREENS_dialog_ev_manager_SAVE_RAM_AS_FILE(int16_t * pi16_encoders_var_va
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
 				
-					// load the structure of the menu pointed by menu_to_jump
+					// load the structure of the menu pointed by menu_to_jump to return to the main menu
 					SCREENS_menus_load(SCREEN_MENU_CURRENT);
 				
 			}//if
@@ -2339,7 +2415,7 @@ int8_t SCREENS_dialog_ev_manager_SAVE_RAM_AS_FILE(int16_t * pi16_encoders_var_va
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
 				
-					// load the structure of the menu pointed by menu_to_jump
+					// load the structure of the menu pointed by menu_to_jump to return to the main menu
 					SCREENS_menus_load(SCREEN_MENU_CURRENT);
 				
 			}//if						
@@ -2714,7 +2790,7 @@ int8_t SCREENS_dialog_ev_manager_SAVE_RAM_FILE(int16_t * pi16_encoders_var_value
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
 				
-					// load the structure of the menu pointed by menu_to_jump
+					// load the structure of the menu pointed by menu_to_jump to return to the main menu
 					SCREENS_menus_load(SCREEN_MENU_CURRENT);
 				
 			}//if
@@ -2754,7 +2830,7 @@ int8_t SCREENS_dialog_ev_manager_SAVE_RAM_FILE(int16_t * pi16_encoders_var_value
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
 				
-					// load the structure of the menu pointed by menu_to_jump
+					// load the structure of the menu pointed by menu_to_jump to return to the main menu
 					SCREENS_menus_load(SCREEN_MENU_CURRENT);
 				
 			}//if						
@@ -3105,7 +3181,7 @@ int8_t SCREENS_dialog_ev_manager_RECEIVE_RUN_RAM(int16_t * pi16_encoders_var_val
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
 					pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
 				
-					// load the structure of the menu pointed by menu_to_jump
+					// load the structure of the menu pointed by menu_to_jump to return to the main menu
 					SCREENS_menus_load(SCREEN_MENU_CURRENT);
 				
 			}//if	

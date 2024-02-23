@@ -55,12 +55,13 @@
 #define SCREEN_DIALOG_RUN_RAM_RUNNING                     2
 #define SCREEN_DIALOG_RUN_RAM_NO_LOADED_ERROR             3
 
-// Dialog Screen SHOW_RAM states
+// Dialog Screen SHOW_RAM INFO states
 #define SCREEN_DIALOG_SHOW_RAM_INFO_CHECK                 1
 #define SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_1             2
 #define SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_2             3
-#define SCREEN_DIALOG_SHOW_RAM_INFO_NO_LOADED_ERROR       4
-#define SCREEN_DIALOG_SHOW_RAM_INFO_NO_FILE_ERROR               5
+#define SCREEN_DIALOG_SHOW_RAM_INFO_SHOWING_3             4
+#define SCREEN_DIALOG_SHOW_RAM_INFO_NO_LOADED_ERROR       5
+#define SCREEN_DIALOG_SHOW_RAM_INFO_NO_FILE_ERROR         6
 
 // Dialog Screen DUMP ROM states
 #define SCREEN_DIALOG_DUMP_ROM_PREPARE                    1

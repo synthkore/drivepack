@@ -25,6 +25,8 @@
 
 
 // TODO:
+// Actualizar el nombre de los botones en los mensajes de usuario a '1' '2' '3' '4' etc.
+// Comprobar que el DrivePACK Editor pone bien la marca de final de fichero 23 83 93 06 47 83 AB 02 63 27 4B 27 47 93 2B 83 FF FF FF FF 00 00 00 00 
 // Dar soporte a nombres largos
 // Reducir tiempo de mensaje al Recivir cancion desde el PC o tras hace el LOAD etc
 // Cuando se está reproduciendo una ROM debería aparecer el titulo de la ROM, y no el "Run fil in RAM".
@@ -96,6 +98,7 @@
 // Hacer que en la opcion Load and Run, al cargar la ROM y hacer RUN pulsando back se pueda regresar directamente a la carpeta en que estabamos, o si pulsamos a la derecha volver al menu.
 // Al navegar en el file explorer hacia adelante y hacia atrás en ocasiones no deja entrar dentro de determinadas carpetas. Quizás el contador de profunidad este gestionandose mal.
 // Reemplazar en el código todas las referencias a romulus_ por dpack_
+// Al volcar una RAM Y calcular su tamaño real ( se determina buscando los caracteres finales 23 83 93 06 47 83 AB 02 63 27 4B 27 47 93 2B 83 FF FF FF FF 00 00 00 00 ) mostrar un mensaje en pantañlla con el tamaño del cartucho.
 
 int main(void)
 {
