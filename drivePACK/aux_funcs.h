@@ -58,7 +58,7 @@ void AUX_FUNCS_center_into_string(uint8_t * destination_string,uint8_t * string_
 
 /*********************************************************************************************
 * @brief Checks if the specified end_string is contained at the end of source_string and removes
-* if it is found and remove is TRUE.
+* if it is found and remove flag is TRUE.
 * @param[in] pui8_src the string where the end_string is going to be searched and removed from.
 * @param[in] pui8_end the string that is going to be searched and removed from the end of the
 * source_string

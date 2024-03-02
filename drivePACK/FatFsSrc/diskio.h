@@ -1,7 +1,6 @@
 /*-----------------------------------------------------------------------/
-/*  Low level disk interface modlue include file   (C)ChaN, 2019        */
-/*              http://elm-chan.org/fsw/ff/00index_e.html               */
-/*-----------------------------------------------------------------------*/
+/  Low level disk interface modlue include file   (C)ChaN, 2019          /
+/-----------------------------------------------------------------------*/
 
 #ifndef _DISKIO_DEFINED
 #define _DISKIO_DEFINED

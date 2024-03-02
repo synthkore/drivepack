@@ -48,7 +48,7 @@ int16_t FILE_SYS_dir_file_count(uint8_t * pui8_file_extension, uint8_t ui8_consi
 		// count directories and/or files that match to received parameters
 		ui16_AccFiles = 0;
 		ui16_AccDirs = 0;
-		while (((funcResult = f_readdir(&dir_obj, &filinfo_finfo)) == FR_OK) && filinfo_finfo.fname[0]) {
+		while (((funcResult = f_readdir(&dir_obj, &filinfo_finfo)) == FR_OK) && filinfo_finfo.fname[0]!=0) {
 
 			// check if folders must be counted, and count them if necessary
 			if ( ((ui8_consider_file_folders&FILE_SYS_FLAG_FOLDER)!=0) && (filinfo_finfo.fattrib & AM_DIR)  ){

@@ -750,7 +750,7 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_RUN_ROM_FILE(int16_t * pi16_encoders_v
 		}else{
 			
 			screens_f_explorer.ui8_depth--;
-			// reload the file explorer on the previous selected folder
+			// reload the file explorer on the previous selected folder with the same indexes
 			SCREENS_f_explorer_load(screens_control.i16_current_ID, SCREEN_F_EXPLORER_INITIAL_STATE);
 			
 		}//if
@@ -1099,7 +1099,7 @@ int8_t SCREENS_f_explorer_ev_manager_SAVE_RAM(int16_t * pi16_encoders_var_value,
 		}else{
 			
 			screens_f_explorer.ui8_depth--;
-			// reload the file explorer on the previous selected folder
+			// reload the file explorer on the previous selected folder with the same indexes
 			SCREENS_f_explorer_load(screens_control.i16_current_ID, SCREEN_F_EXPLORER_INITIAL_STATE);
 			
 		}//if

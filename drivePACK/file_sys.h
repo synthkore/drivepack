@@ -88,12 +88,15 @@ int16_t FILE_SYS_dir_file_goto_index(int16_t i16_index, uint8_t * pui8_file_exte
 /*********************************************************************************************
 * @brief Returns most important information of the element ( file or folder ) where the directory 
 * access pointer is currently open. That includes: name, size, and type ( file or folder ).
-* @param[out] pui8_file_folder_name with the name of the file or folder where the the directory access pointer is
-* currently pointing to.
-* @param[out] pui64_size size of the file where the the directory access pointer is currently pointing to ( in case
-* currently pointed element it is a file ).
-* @param[out] pui8_flag_folder_files: flags with the kind of element the directory access pointer is currently pointing
-* to: file or folder.
+* @param[out] pui8_file_folder_name with the name of the file or folder where the the directory 
+* access pointer is currently pointing to.
+* @param[in] ui16_max_name_len the size of the buffer used to store and get the name of the current 
+* folder or file. It must be properly set to avoid writting file name characters outside the space
+* reserved for them.
+* @param[out] pui64_size size of the file where the the directory access pointer is currently 
+* pointing to ( in case currently pointed element it is a file ).
+* @param[out] pui8_flag_folder_files: flags with the kind of element the directory access pointer 
+* is currently pointing to: file or folder.
 * @return >=0 no errors occurred, <0 some error occurred.
 * @note Tolaemon 19-02-2022
 *********************************************************************************************/

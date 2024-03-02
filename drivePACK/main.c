@@ -27,9 +27,9 @@
 // TODO:
 // Actualizar el nombre de los botones en los mensajes de usuario a '1' '2' '3' '4' etc.
 // Comprobar que el DrivePACK Editor pone bien la marca de final de fichero 23 83 93 06 47 83 AB 02 63 27 4B 27 47 93 2B 83 FF FF FF FF 00 00 00 00 
-// Dar soporte a nombres largos
+// Al hacer el Dump deberia usarse un metodo que avise de cuando el cartucho está bien situado con los LEDs, y una vez lo esté avisar al usuario para que comience el Dump.
 // Reducir tiempo de mensaje al Recivir cancion desde el PC o tras hace el LOAD etc
-// Cuando se está reproduciendo una ROM debería aparecer el titulo de la ROM, y no el "Run fil in RAM".
+// Cuando se está reproduciendo una ROM debería aparecer el titulo de la ROM, y no el "Run file in RAM".
 // La opcion "Save as" es una chusta... no se entiende nada como guardar el fichero, debería ser mucho más sencillo.
 // Revisar la carga de los ficheros .DRP, a ver si los campos son opcionales o no, y ¿que hace el software si el fichero no tien datos binarios de la ROM, o de titulo o de las canciones ?
 // En las pantallas de carga o de escritura de un fichero indicar el nombre del fichero cargado o guardado al mostrar el mensaje de confirmación.
@@ -39,7 +39,7 @@
 // Falta actualizar los títulos de las pantallas de File Explorer
 // Revisar asunto del SCREEN_DIALOG_INITIAL_STATE de todos los Dialog: se va a usar realmente ? se está usando bien ?
 // Al hacer SCREEN_DIALOG_DEFAULT_STATE desde screens_menus ( SCREENS_dialog_load(screens_menus.option[i16_aux].i16_screen_item_id,SCREEN_DIALOG_DEFAULT_STATE); ) siempre se pone SCREEN_DIALOG_DEFAULT_STATE ¿ no habria que indicar también el subestado ? o quizas en lugar de ser SCREEN_DIALOG_DEFAULT_STATE podriamos poner SCREEN_DIALOG_INITIAL_STATE ??????
-// Revisar Title y 2 lineas Help de Dialog, porque parece que hay muchas que no tienen pero deberían tenerlos/las.
+// Revisar Title y 2 lineas Help de Dialog, porque parece que hay muchas que no tienen pero deberían tenerlos/las, y otros no están muy bien puestos o no son claros.
 // Corregir traza JBR 2022-09-19 Corregir la napa y poner orden en el file explorer y actualizar gestión de las teclas, habría que anadir otro pulsador ....
 // ¿¿ Mover el timer TIMING_TICKS timer; de las estructuras screen_dialog, screens_f_explorer, screens_param_edition etc. a la estructura screens_control ?? ... no se si vale la pena
 // Unificar la nomenclatura / nombre de los diferentes elementos en la interfaz y en los comentarios: ¿ usamos memory buffer, RAM buffer, nibbles buffer ?... siempre lo mismo para no confundir
@@ -99,6 +99,7 @@
 // Al navegar en el file explorer hacia adelante y hacia atrás en ocasiones no deja entrar dentro de determinadas carpetas. Quizás el contador de profunidad este gestionandose mal.
 // Reemplazar en el código todas las referencias a romulus_ por dpack_
 // Al volcar una RAM Y calcular su tamaño real ( se determina buscando los caracteres finales 23 83 93 06 47 83 AB 02 63 27 4B 27 47 93 2B 83 FF FF FF FF 00 00 00 00 ) mostrar un mensaje en pantañlla con el tamaño del cartucho.
+// Dar soporte a nombres largos
 
 int main(void)
 {
