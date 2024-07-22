@@ -22,12 +22,12 @@ extern void config_ctrl_lines_as_input(void);
 extern void config_data_lines_as_input(void);
 
 // reference to external structures
-extern uint8_t ui8_dpack_dumper_nibbles_buffer[MAX_ROM_NIBBLES_BUFFER];
-extern uint8_t ui8_dpack_dumper_buffer_initialized;
-extern uint8_t ui8_dpack_title_buffer[MAX_ROM_TITLE_BUFFER];
-extern uint8_t ui8_dpack_songs_info_buffer[MAX_ROM_SONGS_INFO_BUFFER];
-extern uint8_t ui8_dpack_file_name[MAX_ROM_FILE_NAME];
-extern uint8_t ui8_dpack_file_path[MAX_ROM_FILE_PATH];
+extern uint8_t ui8_nibbles_buffer[MAX_ROM_NIBBLES_BUFFER]; // JBR 2024-07-16 Cambiar el nombre a ui8_ROM_nibbles_buffer
+extern uint8_t ui8_nibbles_buffer_initialized;
+extern uint8_t ui8_rom_title[MAX_ROM_TITLE_BUFFER];
+extern uint8_t ui8_themes_titles_arr[MAX_THEME_TITLES_ARRAY][MAX_THEME_TITLE_BUFFER];
+extern uint8_t ui8_file_name[MAX_ROM_FILE_NAME];
+extern uint8_t ui8_file_path[MAX_ROM_FILE_PATH];
 
 
 int16_t COMMANDS_IMPL_execute_help(t_command * p_command){
@@ -226,7 +226,7 @@ int16_t COMMANDS_IMPL_execute_help(t_command * p_command){
 
 
 int16_t COMMANDS_IMPL_execute_gpio(t_command * p_command){
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
 	int32_t i32_aux = 0;
 	uint8_t ui8_aux = 0;
 	int16_t ret_val=0;
@@ -265,8 +265,8 @@ int16_t COMMANDS_IMPL_execute_gpio(t_command * p_command){
 				ui8_aux=GPIO_GetDataLinesInput();
 				// show the state of read bits
 				_USART_SEND_STRING("\r\nGPIO DATA lines read: ");
-				AUX_FUNCS_itoa(ui8_aux,ui8_aux_string,10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-				USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				AUX_FUNCS_itoa(ui8_aux,ui8_aux_string1_64,10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 				_USART_SEND_STRING("\r\nD3:");if ((ui8_aux&0x08)!=0) USART_send_string("1",2); else USART_send_string("0",2);
 				_USART_SEND_STRING(" D2:");   if ((ui8_aux&0x04)!=0) USART_send_string("1",2); else USART_send_string("0",2);
 				_USART_SEND_STRING(" D1:");   if ((ui8_aux&0x02)!=0) USART_send_string("1",2); else USART_send_string("0",2);
@@ -278,8 +278,8 @@ int16_t COMMANDS_IMPL_execute_gpio(t_command * p_command){
 				ui8_aux=GPIO_GetCtrlLinesInput();
 				// show the state of the read bits
 				_USART_SEND_STRING("\r\nGPIO CTRL lines read:");
-				AUX_FUNCS_itoa(ui8_aux,ui8_aux_string,10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-				USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				AUX_FUNCS_itoa(ui8_aux,ui8_aux_string1_64,10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 				_USART_SEND_STRING(" \r\nIO3:"); if ((ui8_aux&VAR_CTRL_GPIO03)!=0)        _USART_SEND_STRING("1"); else _USART_SEND_STRING("0");
 				_USART_SEND_STRING(" IO2:");     if ((ui8_aux&VAR_CTRL_GPIO02)!=0)        _USART_SEND_STRING("1"); else _USART_SEND_STRING("0");
 				_USART_SEND_STRING(" IO1:");     if ((ui8_aux&VAR_CTRL_GPIO01)!=0)        _USART_SEND_STRING("1"); else _USART_SEND_STRING("0");
@@ -318,8 +318,8 @@ int16_t COMMANDS_IMPL_execute_gpio(t_command * p_command){
 						
 						// show the state of the written bits
 						_USART_SEND_STRING("\r\nGPIO DATA lines write:");
-						AUX_FUNCS_itoa(ui8_aux,ui8_aux_string,10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-						USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+						AUX_FUNCS_itoa(ui8_aux,ui8_aux_string1_64,10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+						USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 						_USART_SEND_STRING("\r\nD3:");if ((ui8_aux&0x08)!=0) USART_send_string("1",2); else USART_send_string("0",2);
 						_USART_SEND_STRING(" D2:");   if ((ui8_aux&0x04)!=0) USART_send_string("1",2); else USART_send_string("0",2);
 						_USART_SEND_STRING(" D1:");   if ((ui8_aux&0x02)!=0) USART_send_string("1",2); else USART_send_string("0",2);
@@ -350,8 +350,8 @@ int16_t COMMANDS_IMPL_execute_gpio(t_command * p_command){
 						
 						// show the state of the written bits
 						_USART_SEND_STRING("\r\nGPIO CTRL lines write:");
-						AUX_FUNCS_itoa(ui8_aux,ui8_aux_string,10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-						_USART_SEND_STRING(ui8_aux_string);
+						AUX_FUNCS_itoa(ui8_aux,ui8_aux_string1_64,10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+						_USART_SEND_STRING(ui8_aux_string1_64);
 						_USART_SEND_STRING(" \r\nIO3:");  if ((ui8_aux&VAR_CTRL_GPIO03)!=0)        USART_send_string("1",2); else USART_send_string("0",2);
 						_USART_SEND_STRING(" IO2:");      if ((ui8_aux&VAR_CTRL_GPIO02)!=0)        USART_send_string("1",2); else USART_send_string("0",2);
 						_USART_SEND_STRING(" IO1:");      if ((ui8_aux&VAR_CTRL_GPIO01)!=0)        USART_send_string("1",2); else USART_send_string("0",2);
@@ -390,19 +390,18 @@ int16_t COMMANDS_IMPL_execute_gpio(t_command * p_command){
 
 
 int16_t COMMANDS_IMPL_execute_info(t_command * p_command){
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
 	int16_t i16_ret_val=0;
-
 
 	_USART_SEND_STRING("\r\n");
 	
-	AUX_FUNCS_lstrcpy(ui8_aux_string,(uint8_t*)SW_NAME,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-	USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+	AUX_FUNCS_lstrcpy(ui8_aux_string1_64,(uint8_t*)SW_NAME,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+	USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 	
 	_USART_SEND_STRING("-");
 	
-	AUX_FUNCS_lstrcpy(ui8_aux_string,(uint8_t*)SW_VERSION,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-	USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+	AUX_FUNCS_lstrcpy(ui8_aux_string1_64,(uint8_t*)SW_VERSION,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+	USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
     
 	_USART_SEND_STRING("\r\nVT-100 - ANSI terminal");
 
@@ -422,7 +421,7 @@ int16_t COMMANDS_IMPL_execute_command_rom_write(t_command * p_command){
 	uint64_t ui64_rompack_cnt_start_offset = 0;
 
 
-    if (ui8_dpack_dumper_buffer_initialized==FALSE){
+    if (ui8_nibbles_buffer_initialized==FALSE){
 		
 		_USART_SEND_STRING("\r\nThere is no valid data in memory buffer to write to disk.");
 	    _USART_SEND_STRING("\r\nLoad or dump to memory buffer the content of a ROM first.");
@@ -571,12 +570,12 @@ int16_t COMMANDS_IMPL_execute_command_rom_load(t_command * p_command){
 int16_t COMMANDS_IMPL_execute_command_rom_type(t_command * p_command){
 	int16_t i16_ret_val=0;
     int32_t i32_read_bytes;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];	
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];	
     // uint16_t ui16_aux = 0;
 	int32_t  i32_aux = 0;
 
 
-    if (ui8_dpack_dumper_buffer_initialized==FALSE){
+    if (ui8_nibbles_buffer_initialized==FALSE){
 		
 		_USART_SEND_STRING("\r\nThere is no valid data to type in memory buffer. Load");
 	    _USART_SEND_STRING("\r\nor dump to memory buffer the content of a ROM first.");
@@ -594,19 +593,19 @@ int16_t COMMANDS_IMPL_execute_command_rom_type(t_command * p_command){
 			
 				//  print the file position at the beginning of the line
 				_USART_SEND_STRING("\r\n0x");
-				AUX_FUNCS_itoa(i32_read_bytes, ui8_aux_string, 16,AUX_FUNCS_F_P_MAX_STR_SIZE_64); // print each char in hex (16 ) format
-				AUX_FUNCS_pad_begin_with_char(ui8_aux_string,'0',4,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// pad the number with '0's at the beginning
-				USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				AUX_FUNCS_itoa(i32_read_bytes, ui8_aux_string1_64, 16,AUX_FUNCS_F_P_MAX_STR_SIZE_64); // print each char in hex (16 ) format
+				AUX_FUNCS_pad_begin_with_char(ui8_aux_string1_64,'0',4,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// pad the number with '0's at the beginning
+				USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 				_USART_SEND_STRING(": ");
 			
 			}//if
 		
 			// print each ROM PACK buffer byte
 			_USART_SEND_STRING(" 0x");
-			i32_aux = (int32_t)ui8_dpack_dumper_nibbles_buffer[i32_read_bytes];
-			AUX_FUNCS_itoa(i32_aux, ui8_aux_string, 16,AUX_FUNCS_F_P_MAX_STR_SIZE_64); // print each char in hex (16) format
-			AUX_FUNCS_pad_begin_with_char(ui8_aux_string,'0',2,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// pad the number with '0's at the beginning
-			USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+			i32_aux = (int32_t)ui8_nibbles_buffer[i32_read_bytes];
+			AUX_FUNCS_itoa(i32_aux, ui8_aux_string1_64, 16,AUX_FUNCS_F_P_MAX_STR_SIZE_64); // print each char in hex (16) format
+			AUX_FUNCS_pad_begin_with_char(ui8_aux_string1_64,'0',2,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// pad the number with '0's at the beginning
+			USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 				
 			i32_read_bytes++;
 		
@@ -624,7 +623,7 @@ int16_t COMMANDS_IMPL_execute_command_rom_run(t_command * p_command){
 	uint8_t ui8_usart_char = 0;
 
 
-    if (ui8_dpack_dumper_buffer_initialized==FALSE){
+    if (ui8_nibbles_buffer_initialized==FALSE){
 		
 		_USART_SEND_STRING("\r\nThere is no valid data to run in memory buffer. Load");
 	    _USART_SEND_STRING("\r\nor dump to memory buffer the content of a ROM first.");
@@ -671,11 +670,11 @@ int16_t COMMANDS_IMPL_execute_command_check(t_command * p_command){
 	int16_t i16_ret_val=0;
 	int32_t i32_aux = 0;
 	int32_t i32_aux2 = 0;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];	
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];	
 	uint8_t ui8_expected_header[] = ROMPACK_HEADER_NIBBLES;
 	
 
-    if (ui8_dpack_dumper_buffer_initialized==FALSE){
+    if (ui8_nibbles_buffer_initialized==FALSE){
 	    
 		_USART_SEND_STRING("\r\nThere is no valid data to check in memory buffer. Load");
 		_USART_SEND_STRING("\r\nor dump to memory buffer the content of a ROM first.");	
@@ -691,9 +690,9 @@ int16_t COMMANDS_IMPL_execute_command_check(t_command * p_command){
 			// print each ROM PACK header byte
 			_USART_SEND_STRING(" 0x");
 			i32_aux2 = (int32_t)ui8_expected_header[i32_aux];
-			AUX_FUNCS_itoa(i32_aux2, ui8_aux_string, 16,AUX_FUNCS_F_P_MAX_STR_SIZE_64); // print each char in hex (16) format
-			AUX_FUNCS_pad_begin_with_char(ui8_aux_string,'0',2,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// pad the number with '0's at the beginning
-			USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+			AUX_FUNCS_itoa(i32_aux2, ui8_aux_string1_64, 16,AUX_FUNCS_F_P_MAX_STR_SIZE_64); // print each char in hex (16) format
+			AUX_FUNCS_pad_begin_with_char(ui8_aux_string1_64,'0',2,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// pad the number with '0's at the beginning
+			USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 	
 		}//for
 	
@@ -703,10 +702,10 @@ int16_t COMMANDS_IMPL_execute_command_check(t_command * p_command){
 		
 			// print each ROM PACK buffer byte
 			_USART_SEND_STRING(" 0x");
-			i32_aux2 = (int32_t)ui8_dpack_dumper_nibbles_buffer[i32_aux];
-			AUX_FUNCS_itoa(i32_aux2, ui8_aux_string, 16,AUX_FUNCS_F_P_MAX_STR_SIZE_64); // print each char in hex (16) format
-			AUX_FUNCS_pad_begin_with_char(ui8_aux_string,'0',2,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// pad the number with '0's at the beginning
-			USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+			i32_aux2 = (int32_t)ui8_nibbles_buffer[i32_aux];
+			AUX_FUNCS_itoa(i32_aux2, ui8_aux_string1_64, 16,AUX_FUNCS_F_P_MAX_STR_SIZE_64); // print each char in hex (16) format
+			AUX_FUNCS_pad_begin_with_char(ui8_aux_string1_64,'0',2,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// pad the number with '0's at the beginning
+			USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 				
 		}//for	
 	
@@ -727,12 +726,14 @@ int16_t COMMANDS_IMPL_execute_command_check(t_command * p_command){
 int16_t COMMANDS_IMPL_execute_command_rom_info(t_command * p_command){
 	int16_t i16_ret_val=0;
 	int32_t i32_read_bytes;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
     uint8_t ui8_aux=0;
 	int32_t i32_aux = 0;
+	uint16_t ui16_row = 0;
+	uint16_t ui16_col = 0;
 
 
-    if (ui8_dpack_dumper_buffer_initialized==FALSE){
+    if (ui8_nibbles_buffer_initialized==FALSE){
 	    
 	    _USART_SEND_STRING("\r\nThere is no valid data or information in memory buffer.");
 	    _USART_SEND_STRING("\r\nLoad or dump to memory buffer the content of a ROM first.");
@@ -742,16 +743,16 @@ int16_t COMMANDS_IMPL_execute_command_rom_info(t_command * p_command){
 		_USART_SEND_STRING("\r\n");
 		
 		_USART_SEND_STRING("File name:\r\n");
-		if (AUX_FUNCS_lstrlen(ui8_dpack_file_name,MAX_ROM_FILE_NAME)>0){
-			_USART_SEND_STRING(ui8_dpack_file_name);
+		if (AUX_FUNCS_lstrlen(ui8_file_name,MAX_ROM_FILE_NAME)>0){
+			_USART_SEND_STRING(ui8_file_name);
 		}else{
 		    _USART_SEND_STRING("(no file name set)");
 		}//if	    	
 		_USART_SEND_STRING("\r\n");
 
 		_USART_SEND_STRING("File path:\r\n");
-		if (AUX_FUNCS_lstrlen(ui8_dpack_file_path,MAX_ROM_FILE_NAME)>0){
-			_USART_SEND_STRING(ui8_dpack_file_path);
+		if (AUX_FUNCS_lstrlen(ui8_file_path,MAX_ROM_FILE_NAME)>0){
+			_USART_SEND_STRING(ui8_file_path);
 		}else{
 			_USART_SEND_STRING("(no file path set)");
 		}//if		
@@ -761,7 +762,7 @@ int16_t COMMANDS_IMPL_execute_command_rom_info(t_command * p_command){
 		_USART_SEND_STRING("Title:\r\n");
 		i32_read_bytes=0;
 		do{
-            ui8_aux = ui8_dpack_title_buffer[i32_read_bytes];
+            ui8_aux = ui8_rom_title[i32_read_bytes];
             if ( ( (ui8_aux<=31) ||  (ui8_aux>=127) ) && (ui8_aux!=10) && (ui8_aux!=13)){
 				// if current char is not a printable char then send an '?'
 				ui8_aux = '?';
@@ -770,26 +771,47 @@ int16_t COMMANDS_IMPL_execute_command_rom_info(t_command * p_command){
 		
 			i32_read_bytes++;
 		
-		}while ( (ui8_dpack_title_buffer[i32_read_bytes]!='\0') && (i32_read_bytes<MAX_ROM_TITLE_BUFFER) );
+		}while ( (ui8_rom_title[i32_read_bytes]!='\0') && (i32_read_bytes<MAX_ROM_TITLE_BUFFER) );
  
  		_USART_SEND_STRING("\r\n");
+
+		// show the titles of the themes in memory
+		_USART_SEND_STRING("Themes ( first ");
+		AUX_FUNCS_itoa(MAX_THEME_TITLE_BUFFER,ui8_aux_string1_64,10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+		_USART_SEND_STRING(ui8_aux_string1_64);
+		_USART_SEND_STRING(" characters of first ");
+		AUX_FUNCS_itoa(MAX_THEME_TITLES_ARRAY,ui8_aux_string1_64,10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+		_USART_SEND_STRING(ui8_aux_string1_64);
+        _USART_SEND_STRING(" themes ):\r\n");
+		// check if the ui8_themes_titles_arr array contains valid theme titles data or not
+		// If it contains valid data then show it in the screen, and if it does not contain valid
+		// data then show a message informing that theme titles data has not been initialized yet
+		if (ui8_themes_titles_arr[0][0]=='\0'){
 	
-		// keep reading from song info buffer if there are still bytes available to print
-		_USART_SEND_STRING("Songs Info:\r\n");
-		i32_read_bytes=0;
-		do{
+			// ui8_themes_titles_arr themes titles array has not been initialized so show a message
+			_USART_SEND_STRING("There is no theme titles information in memory. Use the drivePACK application to set the theme titles.");
+
+		}else{
 	
-            ui8_aux = ui8_dpack_songs_info_buffer[i32_read_bytes];
-            if ( ( (ui8_aux<=31) ||  (ui8_aux>=127) ) && (ui8_aux!=10) && (ui8_aux!=13)){
-	            // if current char is not a printable char then send an '?'
-	            ui8_aux = '?';
-            }//if
-            USART_send_char(ui8_aux);
-			
-			i32_read_bytes++;
+			// ui8_themes_titles_arr themes titles array contains valid data so show it in the screen
+	
+			ui16_row = 0;
+			while ( (ui16_row<MAX_THEME_TITLES_ARRAY) && (ui8_themes_titles_arr[ui16_row][0]!='\0' ) ){
 		
-		}while ( (ui8_dpack_songs_info_buffer[i32_read_bytes]!='\0') && (i32_read_bytes<MAX_ROM_SONGS_INFO_BUFFER) );
-   
+				// print the theme number (idx) at the beginning of the line
+				AUX_FUNCS_itoa(ui16_row+1,ui8_aux_string1_64,10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				// print the theme name
+				_USART_SEND_STRING(ui8_aux_string1_64);
+		        _USART_SEND_STRING("-");
+		        _USART_SEND_STRING(ui8_themes_titles_arr[ui16_row]);
+				_USART_SEND_STRING("\r\n");
+						
+				ui16_row++;
+		
+			}//while
+	
+		}//if
+
 	}//if (ui8_dpack_dumper_buffer_initialized==FALSE)
 	
 	return i16_ret_val;

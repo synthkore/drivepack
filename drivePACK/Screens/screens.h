@@ -98,4 +98,13 @@ void SCREENS_print_title(uint8_t * pui8_title, uint8_t ui8_line_idx);
 *********************************************************************************************/
 void SCREENS_print_help(uint8_t * pui8_help, uint8_t ui8_line_idx);
 
+/*********************************************************************************************
+* @brief shows the loaded themes titles information in the current screen. If there is no any
+* theme title initialized then it shows an informative text telling that there is no themes data
+* loaded and it must be initialized with the drivePack utility.
+* @note Synthkore  26-03-2022  Tolaemon
+*********************************************************************************************/
+void SCREENS_print_current_rom_info();
+
+
 #endif // SCREENS_H_ 

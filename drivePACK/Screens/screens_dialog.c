@@ -19,13 +19,13 @@ extern struct ref_screens_enter_txt screens_enter_txt;
 struct ref_screens_dialog screens_dialog;
 
 // declare extern structures
-extern uint8_t ui8_dpack_dumper_nibbles_buffer[MAX_ROM_NIBBLES_BUFFER];
-extern uint8_t ui8_dpack_dumper_buffer_initialized;
-extern int32_t i32_dpack_dumper_rom_size;
-extern uint8_t ui8_dpack_title_buffer[MAX_ROM_TITLE_BUFFER];
-extern uint8_t ui8_dpack_songs_info_buffer[MAX_ROM_SONGS_INFO_BUFFER];
-extern uint8_t ui8_dpack_file_name[MAX_ROM_FILE_NAME];
-extern uint8_t ui8_dpack_file_path[MAX_ROM_FILE_PATH];
+extern uint8_t ui8_nibbles_buffer[MAX_ROM_NIBBLES_BUFFER];
+extern uint8_t ui8_nibbles_buffer_initialized;
+extern int32_t i32_dumper_rom_size;
+extern uint8_t ui8_rom_title[MAX_ROM_TITLE_BUFFER];
+extern uint8_t ui8_themes_titles_arr[MAX_THEME_TITLES_ARRAY][MAX_THEME_TITLE_BUFFER];
+extern uint8_t ui8_file_name[MAX_ROM_FILE_NAME];
+extern uint8_t ui8_file_path[MAX_ROM_FILE_PATH];
 extern uint8_t ui8_usart_1kX_retries;
 
 // declare extern assembly public functions
@@ -896,7 +896,7 @@ int8_t SCREENS_dialog_ev_manager_LOAD_RUN_ROM_FILE(int16_t * pi16_encoders_var_v
 			if (screens_control.ui8_on_load_event==TRUE){
 			
 				// print in screen the title of the new loaded menu
-				SCREENS_print_title(ui8_dpack_title_buffer,0);
+				SCREENS_print_title(ui8_rom_title,0);
 		
 				// update the help content lines in screen according to new loaded menu
 				SCREENS_print_help("ROM running. Press song",0);
@@ -1219,7 +1219,7 @@ int8_t SCREENS_dialog_ev_manager_RUN_RAM(int16_t * pi16_encoders_var_value, uint
 			}//if
 	
 			// check the flag that indicates if there is valid data in the memory buffer and show the corresponding message
-			if (ui8_dpack_dumper_buffer_initialized == FALSE){
+			if (ui8_nibbles_buffer_initialized == FALSE){
 			
 				// load dialog that shows that there is no valid data loaded into memory buffer
 				SCREENS_dialog_load(SCREEN_DIALOG_ID_RUN_RAM,SCREEN_DIALOG_RUN_RAM_NO_LOADED_ERROR);			
@@ -1365,8 +1365,8 @@ int8_t SCREENS_dialog_load_SHOW_RAM_INFO(){
 
 int8_t SCREENS_dialog_show_SHOW_RAM_INFO(uint8_t * ui8_message){
 	int8_t i8_ret_val = 1;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
-	uint8_t ui8_aux_string2[AUX_FUNCS_F_P_MAX_STR_SIZE_16];	
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string2_16[AUX_FUNCS_F_P_MAX_STR_SIZE_16];	
 
 	switch (screens_dialog.i8_state){
 		
@@ -1399,11 +1399,11 @@ int8_t SCREENS_dialog_show_SHOW_RAM_INFO(uint8_t * ui8_message){
 			GRAPHIX_text_buffer_set_string(0,4,(uint8_t*)" Size of the ROM PACK ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)"   in RAM buffer is   ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			// set the number of bytes of the dumped ROM PACK
-			AUX_FUNCS_itoa((int32_t)i32_dpack_dumper_rom_size,ui8_aux_string2,10,AUX_FUNCS_F_P_MAX_STR_SIZE_16);
-			AUX_FUNCS_strcat(ui8_aux_string2, " bytes.", AUX_FUNCS_F_P_MAX_STR_SIZE_16);
-			AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-			AUX_FUNCS_center_into_string(ui8_aux_string,ui8_aux_string2,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-			GRAPHIX_text_buffer_set_string(0,6,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);	   
+			AUX_FUNCS_itoa((int32_t)i32_dumper_rom_size,ui8_aux_string2_16,10,AUX_FUNCS_F_P_MAX_STR_SIZE_16);
+			AUX_FUNCS_strcat(ui8_aux_string2_16, " bytes.", AUX_FUNCS_F_P_MAX_STR_SIZE_16);
+			AUX_FUNCS_lstrfill(ui8_aux_string1_64,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			AUX_FUNCS_center_into_string(ui8_aux_string1_64,ui8_aux_string2_16,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			GRAPHIX_text_buffer_set_string(0,6,(uint8_t*)ui8_aux_string1_64,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);	   
 			// refresh the content of the buffer to screen
 			GRAPHIX_text_buffer_refresh();
 			break;
@@ -1415,15 +1415,15 @@ int8_t SCREENS_dialog_show_SHOW_RAM_INFO(uint8_t * ui8_message){
 			GRAPHIX_text_buffer_set_string(0,3,(uint8_t*)" Current file in  RAM ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			GRAPHIX_text_buffer_set_string(0,4,(uint8_t*)"   buffer name is ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			// center entered file name before placing it in the screen buffer
-			AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-			AUX_FUNCS_center_into_string(ui8_aux_string, ui8_dpack_file_name,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-			GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+			AUX_FUNCS_lstrfill(ui8_aux_string1_64,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			AUX_FUNCS_center_into_string(ui8_aux_string1_64, ui8_file_name,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)ui8_aux_string1_64,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			GRAPHIX_text_buffer_set_string(0,6,(uint8_t*)" and is saved in path",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			// center current file system path before printing it in the screen
-			AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-			AUX_FUNCS_center_into_string(ui8_aux_string,ui8_dpack_file_path,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			AUX_FUNCS_lstrfill(ui8_aux_string1_64,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			AUX_FUNCS_center_into_string(ui8_aux_string1_64,ui8_file_path,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
 			// place entered text in screen buffer
-			GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+			GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)ui8_aux_string1_64,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			// refresh the content of the buffer to screen
 			GRAPHIX_text_buffer_refresh();
 			break;
@@ -1491,7 +1491,7 @@ int8_t SCREENS_dialog_ev_manager_SHOW_RAM_INFO(int16_t * pi16_encoders_var_value
 			}//if
 	
 			// check the flag that indicates if there is valid data in the memory buffer and show the corresponding message
-			if (ui8_dpack_dumper_buffer_initialized == FALSE){
+			if (ui8_nibbles_buffer_initialized == FALSE){
 			
 				// load dialog that shows that there is no valid data loaded into memory buffer
 				SCREENS_dialog_load(SCREEN_DIALOG_ID_SHOW_RAM_INFO,SCREEN_DIALOG_SHOW_RAM_INFO_NO_LOADED_ERROR);			
@@ -1510,7 +1510,7 @@ int8_t SCREENS_dialog_ev_manager_SHOW_RAM_INFO(int16_t * pi16_encoders_var_value
 			if (screens_control.ui8_on_load_event==TRUE){
 			
 				// print in screen the title of the new loaded menu
-				SCREENS_print_title(ui8_dpack_title_buffer,0);
+				SCREENS_print_title(ui8_rom_title,0);
 				// update the help content lines in screen according to new loaded menu
 				SCREENS_print_help("Press any key to show  ",0);
 				SCREENS_print_help("next info screen.",1);
@@ -1538,7 +1538,7 @@ int8_t SCREENS_dialog_ev_manager_SHOW_RAM_INFO(int16_t * pi16_encoders_var_value
 				pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
 			
 				// check the flag that indicates if there is valid data in the memory buffer and show the corresponding message
-				if (ui8_dpack_dumper_buffer_initialized == FALSE){
+				if (ui8_nibbles_buffer_initialized == FALSE){
 
 					// if a file name has not been set then show the corresponding error message
 					SCREENS_dialog_load(SCREEN_DIALOG_ID_SHOW_RAM_INFO,SCREEN_DIALOG_SHOW_RAM_INFO_NO_FILE_ERROR);
@@ -1559,7 +1559,7 @@ int8_t SCREENS_dialog_ev_manager_SHOW_RAM_INFO(int16_t * pi16_encoders_var_value
 			if (screens_control.ui8_on_load_event==TRUE){
 			
 				// print in screen the title of the new loaded menu
-				SCREENS_print_title(ui8_dpack_title_buffer,0);
+				SCREENS_print_title(ui8_rom_title,0);
 				// update the help content lines in screen according to new loaded menu
 				SCREENS_print_help("Press left key to show ",0);
 				SCREENS_print_help("previous info screen.",1);
@@ -1587,7 +1587,7 @@ int8_t SCREENS_dialog_ev_manager_SHOW_RAM_INFO(int16_t * pi16_encoders_var_value
 				pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
 			
 				// check if the file information of the current RAM buffer content has been set
-				if (AUX_FUNCS_lstrlen(ui8_dpack_file_name,MAX_ROM_FILE_NAME)<=0){
+				if (AUX_FUNCS_lstrlen(ui8_file_name,MAX_ROM_FILE_NAME)<=0){
 
 					// if a file name has not been set then show the corresponding error message
 					SCREENS_dialog_load(SCREEN_DIALOG_ID_SHOW_RAM_INFO,SCREEN_DIALOG_SHOW_RAM_INFO_NO_FILE_ERROR);
@@ -1608,7 +1608,7 @@ int8_t SCREENS_dialog_ev_manager_SHOW_RAM_INFO(int16_t * pi16_encoders_var_value
 			if (screens_control.ui8_on_load_event==TRUE){
 			
 				// print in screen the title of the new loaded menu
-				SCREENS_print_title(ui8_dpack_title_buffer,0);
+				SCREENS_print_title(ui8_rom_title,0);
 				// update the help content lines in screen according to new loaded menu
 				SCREENS_print_help("Press left key to show ",0);
 				SCREENS_print_help("previous info screen.",1);
@@ -1729,8 +1729,8 @@ int8_t SCREENS_dialog_load_DUMP_ROM(){
 
 int8_t SCREENS_dialog_show_DUMP_ROM(uint8_t * ui8_message){
 	int8_t i8_ret_val = 1;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
-	uint8_t ui8_aux_string2[AUX_FUNCS_F_P_MAX_STR_SIZE_16];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string2_16[AUX_FUNCS_F_P_MAX_STR_SIZE_16];
 
 	switch (screens_dialog.i8_state){
 		
@@ -1770,11 +1770,11 @@ int8_t SCREENS_dialog_show_DUMP_ROM(uint8_t * ui8_message){
 			GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)"  and stored in RAM ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
 			GRAPHIX_text_buffer_set_string(0,6,(uint8_t*)" buffer. ROM size is     ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
 			// set the number of bytes of the dumped ROM PACK
-			AUX_FUNCS_itoa((int32_t)i32_dpack_dumper_rom_size,ui8_aux_string2,10,AUX_FUNCS_F_P_MAX_STR_SIZE_16);			
-			AUX_FUNCS_strcat(ui8_aux_string2, " bytes.", AUX_FUNCS_F_P_MAX_STR_SIZE_16);			
-			AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-			AUX_FUNCS_center_into_string(ui8_aux_string,ui8_aux_string2,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-			GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+			AUX_FUNCS_itoa((int32_t)i32_dumper_rom_size,ui8_aux_string2_16,10,AUX_FUNCS_F_P_MAX_STR_SIZE_16);			
+			AUX_FUNCS_strcat(ui8_aux_string2_16, " bytes.", AUX_FUNCS_F_P_MAX_STR_SIZE_16);			
+			AUX_FUNCS_lstrfill(ui8_aux_string1_64,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			AUX_FUNCS_center_into_string(ui8_aux_string1_64,ui8_aux_string2_16,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)ui8_aux_string1_64,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			// refresh the content of the buffer to screen
 			GRAPHIX_text_buffer_refresh();		
 			break;
@@ -1907,13 +1907,10 @@ int8_t SCREENS_dialog_ev_manager_DUMP_ROM(int16_t * pi16_encoders_var_value, uin
 			// after reading check that the data stored in the RAM buffer corresponds to a valid ROM pack 
 			if (DPACK_CTRL_check_buffer()>=0){
 				
-			   ui8_dpack_dumper_buffer_initialized = TRUE;
+			   ui8_nibbles_buffer_initialized = TRUE;
 						
-			   i32_dpack_dumper_rom_size = DPACK_CTRL_get_size_rom_in_buffer();
-			
-			   AUX_FUNCS_lstrcpy(ui8_dpack_title_buffer,"RO-??? Title?",MAX_ROM_TITLE_BUFFER);
-			   AUX_FUNCS_lstrcpy(ui8_dpack_songs_info_buffer,"ROM songs information has not been initialized yet.\r\nUse drivePackEd software to enter the ROM songs and other information in the file.",MAX_ROM_SONGS_INFO_BUFFER);
-			
+			   i32_dumper_rom_size = DPACK_CTRL_get_size_rom_in_buffer();
+		
                // load dialog that informs that data has been properly read and dumped to RAM buffer
                SCREENS_dialog_load(SCREEN_DIALOG_ID_DUMP_ROM,SCREEN_DIALOG_DUMP_ROM_DUMPED);
 			   
@@ -2083,8 +2080,8 @@ int8_t SCREENS_dialog_load_SAVE_RAM_AS_FILE(){
 
 int8_t SCREENS_dialog_show_SAVE_RAM_AS_FILE(uint8_t * ui8_message){
 	int8_t i8_ret_val = 1;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
-	uint8_t ui8_aux_string2[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string2_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
 
 
 	switch (screens_dialog.i8_state){
@@ -2119,17 +2116,17 @@ int8_t SCREENS_dialog_show_SAVE_RAM_AS_FILE(uint8_t * ui8_message){
 			GRAPHIX_text_buffer_set_string(0,3,(uint8_t*)"  Saving RAM buffer  ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
 			GRAPHIX_text_buffer_set_string(0,4,(uint8_t*)"to specified ROM file ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
 			// center entered file name before placing it in the screen buffer
-			AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE	
-			AUX_FUNCS_center_into_string(ui8_aux_string,screens_enter_txt.ui8_text,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-			GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+			AUX_FUNCS_lstrfill(ui8_aux_string1_64,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE	
+			AUX_FUNCS_center_into_string(ui8_aux_string1_64,screens_enter_txt.ui8_text,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)ui8_aux_string1_64,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 
 			GRAPHIX_text_buffer_set_string(0,6,(uint8_t*)"      in folder      ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
 			// center current file system path before printing it in the screen
-			AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE	
-			FILE_SYS_get_cur_dir(ui8_aux_string2,AUX_FUNCS_F_P_MAX_STR_SIZE_64-1);
-			AUX_FUNCS_center_into_string(ui8_aux_string,ui8_aux_string2,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			AUX_FUNCS_lstrfill(ui8_aux_string1_64,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE	
+			FILE_SYS_get_cur_dir(ui8_aux_string2_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64-1);
+			AUX_FUNCS_center_into_string(ui8_aux_string1_64,ui8_aux_string2_64,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
 			// place entered text in screen buffer
-			GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+			GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)ui8_aux_string1_64,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 	
 			GRAPHIX_text_buffer_set_string(0,8,(uint8_t*)"       Wait...       ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
 			// refresh the content of the buffer to screen
@@ -2230,7 +2227,7 @@ int8_t SCREENS_dialog_ev_manager_SAVE_RAM_AS_FILE(int16_t * pi16_encoders_var_va
 			}//if
 	
 			// check the flag that indicates if there is valid data in the memory buffer and show the corresponding message
-			if (ui8_dpack_dumper_buffer_initialized == FALSE){
+			if (ui8_nibbles_buffer_initialized == FALSE){
 				
 				// load dialog that shows that there is no valid data loaded into memory buffer
 				SCREENS_dialog_load(SCREEN_DIALOG_ID_SAVE_RAM_AS_FILE,SCREEN_DIALOG_SAVE_RAM_AS_NO_LOADED_ERROR);
@@ -2476,7 +2473,7 @@ int8_t SCREENS_dialog_load_SAVE_RAM_FILE(){
 
 int8_t SCREENS_dialog_show_SAVE_RAM_FILE(uint8_t * ui8_message){
 	int8_t i8_ret_val = 1;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
 
 
 	switch (screens_dialog.i8_state){
@@ -2511,16 +2508,16 @@ int8_t SCREENS_dialog_show_SAVE_RAM_FILE(uint8_t * ui8_message){
 			GRAPHIX_text_buffer_set_string(0,3,(uint8_t*)"  Saving RAM buffer  ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
 			GRAPHIX_text_buffer_set_string(0,4,(uint8_t*)" to current ROM file ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
 			// center entered file name before placing it in the screen buffer
-			AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE	
-			AUX_FUNCS_center_into_string(ui8_aux_string,ui8_dpack_file_name,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-			GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+			AUX_FUNCS_lstrfill(ui8_aux_string1_64,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE	
+			AUX_FUNCS_center_into_string(ui8_aux_string1_64,ui8_file_name,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)ui8_aux_string1_64,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 
 			GRAPHIX_text_buffer_set_string(0,6,(uint8_t*)"       in path      ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
 			// center current file system path before printing it in the screen
-			AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE	
-            AUX_FUNCS_center_into_string(ui8_aux_string,ui8_dpack_file_path,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			AUX_FUNCS_lstrfill(ui8_aux_string1_64,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE	
+            AUX_FUNCS_center_into_string(ui8_aux_string1_64,ui8_file_path,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
 			// place entered text in screen buffer
-			GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+			GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)ui8_aux_string1_64,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 	
 			GRAPHIX_text_buffer_set_string(0,8,(uint8_t*)"       Wait...       ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK); 
 			// refresh the content of the buffer to screen
@@ -2634,7 +2631,7 @@ int8_t SCREENS_dialog_ev_manager_SAVE_RAM_FILE(int16_t * pi16_encoders_var_value
 			}//if
 	
 			// check the flag that indicates if there is valid data in the memory buffer and show the corresponding message
-			if (ui8_dpack_dumper_buffer_initialized == FALSE){
+			if (ui8_nibbles_buffer_initialized == FALSE){
 				
 				// load dialog that shows that there is no valid data loaded into memory buffer
 				SCREENS_dialog_load(SCREEN_DIALOG_ID_SAVE_RAM_FILE,SCREEN_DIALOG_SAVE_RAM_FILE_NO_LOADED_ERROR);
@@ -2642,7 +2639,7 @@ int8_t SCREENS_dialog_ev_manager_SAVE_RAM_FILE(int16_t * pi16_encoders_var_value
 			}else{
 				
 				// get the length of the file name to check if the file information ( name, path... ) needed to save the file is initialized
-			    if (AUX_FUNCS_lstrlen(ui8_dpack_file_name,MAX_ROM_FILE_NAME)<=0){
+			    if (AUX_FUNCS_lstrlen(ui8_file_name,MAX_ROM_FILE_NAME)<=0){
 
 				    // if a file name has not been set then show the corresponding error message
 				    SCREENS_dialog_load(SCREEN_DIALOG_ID_SAVE_RAM_FILE,SCREEN_DIALOG_SAVE_RAM_FILE_NO_FILE_ERROR);
@@ -2695,7 +2692,7 @@ int8_t SCREENS_dialog_ev_manager_SAVE_RAM_FILE(int16_t * pi16_encoders_var_value
 				 
 				 }else{
 
-					i16_aux = FILE_SYS_dir_open(ui8_dpack_file_path);
+					i16_aux = FILE_SYS_dir_open(ui8_file_path);
 					if (i16_aux<0){
 						
 						// load dialog that shows the open directory error 
@@ -2744,7 +2741,7 @@ int8_t SCREENS_dialog_ev_manager_SAVE_RAM_FILE(int16_t * pi16_encoders_var_value
 				pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
 			
 					// try to save RAM buffer content to the specified file ( path should have been previously set in the right folder )
-					i8_ret_val = (int8_t)DATA_IO_file_rom_write(ui8_dpack_file_name);
+					i8_ret_val = (int8_t)DATA_IO_file_rom_write(ui8_file_name);
 					if (i8_ret_val>=0){
 										
 						// load dialog that shows the saving RAM buffer content success 
@@ -2892,8 +2889,8 @@ int8_t SCREENS_dialog_load_RECEIVE_RUN_RAM(){
 
 int8_t SCREENS_dialog_show_RECEIVE_RUN_RAM(uint8_t * ui8_message){
 	int8_t i8_ret_val = 1;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
-	uint8_t ui8_aux_string2[AUX_FUNCS_F_P_MAX_STR_SIZE_16];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string2_16[AUX_FUNCS_F_P_MAX_STR_SIZE_16];
 
 	switch (screens_dialog.i8_state){
 		
@@ -2908,10 +2905,10 @@ int8_t SCREENS_dialog_show_RECEIVE_RUN_RAM(uint8_t * ui8_message){
 			GRAPHIX_text_buffer_set_string(0,6,(uint8_t*)"    receiving  RAM   ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)"   buffer content... ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			// set the number of start transmission retries centered
-			AUX_FUNCS_itoa((int32_t)ui8_usart_1kX_retries,ui8_aux_string2,10,AUX_FUNCS_F_P_MAX_STR_SIZE_16);
-			AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-			AUX_FUNCS_center_into_string(ui8_aux_string,ui8_aux_string2,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-			GRAPHIX_text_buffer_set_string(0,9,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+			AUX_FUNCS_itoa((int32_t)ui8_usart_1kX_retries,ui8_aux_string2_16,10,AUX_FUNCS_F_P_MAX_STR_SIZE_16);
+			AUX_FUNCS_lstrfill(ui8_aux_string1_64,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			AUX_FUNCS_center_into_string(ui8_aux_string1_64,ui8_aux_string2_16,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			GRAPHIX_text_buffer_set_string(0,9,(uint8_t*)ui8_aux_string1_64,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 						
 			// refresh the content of the buffer to screen
 			GRAPHIX_text_buffer_refresh();
@@ -3296,8 +3293,8 @@ int8_t SCREENS_dialog_load_RECEIVE_RAM(){
 
 int8_t SCREENS_dialog_show_RECEIVE_RAM(uint8_t * ui8_message){
 	int8_t i8_ret_val = 1;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
-	uint8_t ui8_aux_string2[AUX_FUNCS_F_P_MAX_STR_SIZE_16];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string2_16[AUX_FUNCS_F_P_MAX_STR_SIZE_16];
 
 	switch (screens_dialog.i8_state){
 		
@@ -3312,10 +3309,10 @@ int8_t SCREENS_dialog_show_RECEIVE_RAM(uint8_t * ui8_message){
 			GRAPHIX_text_buffer_set_string(0,6,(uint8_t*)"    receiving  RAM   ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)"   buffer content... ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			// set the number of start transmission retries centered
-			AUX_FUNCS_itoa((int32_t)ui8_usart_1kX_retries,ui8_aux_string2,10,AUX_FUNCS_F_P_MAX_STR_SIZE_16);
-			AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-			AUX_FUNCS_center_into_string(ui8_aux_string,ui8_aux_string2,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-			GRAPHIX_text_buffer_set_string(0,9,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+			AUX_FUNCS_itoa((int32_t)ui8_usart_1kX_retries,ui8_aux_string2_16,10,AUX_FUNCS_F_P_MAX_STR_SIZE_16);
+			AUX_FUNCS_lstrfill(ui8_aux_string1_64,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			AUX_FUNCS_center_into_string(ui8_aux_string1_64,ui8_aux_string2_16,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			GRAPHIX_text_buffer_set_string(0,9,(uint8_t*)ui8_aux_string1_64,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 						
 			// refresh the content of the buffer to screen
 			GRAPHIX_text_buffer_refresh();
@@ -3637,8 +3634,8 @@ int8_t SCREENS_dialog_load_SEND_RAM(){
 
 int8_t SCREENS_dialog_show_SEND_RAM(uint8_t * ui8_message){
 	int8_t i8_ret_val = 1;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
-	uint8_t ui8_aux_string2[AUX_FUNCS_F_P_MAX_STR_SIZE_16];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string2_16[AUX_FUNCS_F_P_MAX_STR_SIZE_16];
 
 	switch (screens_dialog.i8_state){
 		
@@ -3665,10 +3662,10 @@ int8_t SCREENS_dialog_show_SEND_RAM(uint8_t * ui8_message){
 			GRAPHIX_text_buffer_set_string(0,6,(uint8_t*)"     sending  RAM   ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)"   buffer content...",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			// set the number of start transmission retries centered
-			AUX_FUNCS_itoa((int32_t)ui8_usart_1kX_retries,ui8_aux_string2,10,AUX_FUNCS_F_P_MAX_STR_SIZE_16);
-			AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 is lower than AUX_FUNCS_F_P_MAX_STR_SIZE
-			AUX_FUNCS_center_into_string(ui8_aux_string,ui8_aux_string2,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 is lower than AUX_FUNCS_F_P_MAX_STR_SIZE
-			GRAPHIX_text_buffer_set_string(0,9,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+			AUX_FUNCS_itoa((int32_t)ui8_usart_1kX_retries,ui8_aux_string2_16,10,AUX_FUNCS_F_P_MAX_STR_SIZE_16);
+			AUX_FUNCS_lstrfill(ui8_aux_string1_64,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 is lower than AUX_FUNCS_F_P_MAX_STR_SIZE
+			AUX_FUNCS_center_into_string(ui8_aux_string1_64,ui8_aux_string2_16,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 is lower than AUX_FUNCS_F_P_MAX_STR_SIZE
+			GRAPHIX_text_buffer_set_string(0,9,(uint8_t*)ui8_aux_string1_64,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			
 			// refresh the content of the buffer to screen
 			GRAPHIX_text_buffer_refresh();
@@ -3787,7 +3784,7 @@ int8_t SCREENS_dialog_ev_manager_SEND_RAM(int16_t * pi16_encoders_var_value, uin
 			}//if
 			
 			// check the flag that indicates if there is valid data in the memory buffer and show the corresponding message
-			if (ui8_dpack_dumper_buffer_initialized == FALSE){
+			if (ui8_nibbles_buffer_initialized == FALSE){
 					
 				// load dialog that shows that there is no valid data loaded into memory buffer
 				SCREENS_dialog_load(SCREEN_DIALOG_ID_SEND_RAM,SCREEN_DIALOG_SEND_RAM_NO_LOADED_ERROR);
@@ -4046,8 +4043,8 @@ int8_t SCREENS_dialog_load_TEST(){
 
 int8_t SCREENS_dialog_show_TEST(uint8_t * ui8_message){
 	int8_t i8_ret_val = 1;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
-	uint8_t ui8_aux_string2[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string2_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
     uint32_t ui32_aux = 0;
 
 
@@ -4127,16 +4124,16 @@ int8_t SCREENS_dialog_show_TEST(uint8_t * ui8_message){
 			
 			// get and print the label of the mounted unit
             GRAPHIX_text_buffer_set_string(0,4,(uint8_t*)"      Label is:      ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_SUCCESS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);          			
-            if (FILE_SYS_get_label(ui8_aux_string2,&ui32_aux)>=0){				
+            if (FILE_SYS_get_label(ui8_aux_string2_64,&ui32_aux)>=0){				
 				// check if the label of the mounted unit is defined ( is different of "")
-				if (AUX_FUNCS_lstrlen(ui8_aux_string2,AUX_FUNCS_F_P_MAX_STR_SIZE_64)<=0){
+				if (AUX_FUNCS_lstrlen(ui8_aux_string2_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64)<=0){
 				   // mounted label is "" so show the message informing that there is no label defined
                    GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)"     not defined     ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);				
 				}else{
 				   // show the label of the unit
-				   AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE				
-				   AUX_FUNCS_center_into_string(ui8_aux_string,ui8_aux_string2,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-				   GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+				   AUX_FUNCS_lstrfill(ui8_aux_string1_64,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE				
+				   AUX_FUNCS_center_into_string(ui8_aux_string1_64,ui8_aux_string2_64,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+				   GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)ui8_aux_string1_64,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 				}//if				
 			}else{
 			   // an error ocurred while getting the unit label	
@@ -4150,10 +4147,10 @@ int8_t SCREENS_dialog_show_TEST(uint8_t * ui8_message){
 			    GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)"        ??           ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			}else{
 				// show the size of the unit
-				AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-				AUX_FUNCS_itoa(ui32_aux,ui8_aux_string2,10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-				AUX_FUNCS_center_into_string(ui8_aux_string,ui8_aux_string2,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-				GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+				AUX_FUNCS_lstrfill(ui8_aux_string1_64,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+				AUX_FUNCS_itoa(ui32_aux,ui8_aux_string2_64,10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				AUX_FUNCS_center_into_string(ui8_aux_string1_64,ui8_aux_string2_64,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+				GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)ui8_aux_string1_64,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			}//if
 				
 			// refresh the content of the buffer to screen					
@@ -4604,70 +4601,3 @@ int8_t SCREENS_dialog_ev_manager_TEST(int16_t * pi16_encoders_var_value, uint8_t
 	return i8_ret_val;
 	
 }//SCREENS_dialog_ev_manager_TEST
-
-
-
-void SCREENS_print_current_rom_info(){
-		uint16_t ui16_col = 0;
-		uint16_t ui16_row = 0;
-		uint16_t ui16_char_count = 0;
-		uint8_t ui8_invert_chars = FALSE;
-		uint8_t ui8_aux = 0;
-
-	
-		ui16_row = 0;
-		ui16_col = 0;
-		ui16_char_count = 0;
-		ui8_invert_chars = FALSE;
-		while ((ui16_char_count<MAX_ROM_SONGS_INFO_BUFFER) && (ui8_dpack_songs_info_buffer[ui16_char_count]!='\0')){
-				
-			ui8_aux= ui8_dpack_songs_info_buffer[ui16_char_count];
-			
-			if (ui8_aux=='\r'){
-					
-				// carrier return: move cursor to screen column 0
-				ui16_col=0;
-				   
-            }else if (ui8_aux=='\n'){
-					
-				// line feed: jump to next screen row
-				if (ui16_row<(GRAPHIX_TEXT_BUFFER_MAX_ROWS-1)){
-					ui16_row++;
-				}
-				   
-            }else if (ui8_aux=='['){
-					
-				// enable color inversion. Characters between '[' and ']' are printed in inverted color
-				ui8_invert_chars = TRUE;
-					
-			}else if (ui8_aux==']'){
-					
-				// disable color inversion. Only chars between '[' and ']' are printed in inverted color	
-				ui8_invert_chars = FALSE;
-					
-			}else{
-					
-				// if it is a conventional char it is printed in the screen
-				if (ui8_invert_chars==TRUE){
-					GRAPHIX_text_buffer_set_char(ui16_col , ui16_row, ui8_aux, ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_NEUTRAL, GRAPHIX_TEXT_COL_IDX_BLACK);
-				}else{
-					GRAPHIX_text_buffer_set_char(ui16_col , ui16_row, ui8_aux, ATTR_SPACE_BACKSYMBOL, GRAPHIX_TEXT_COL_NEUTRAL, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);			
-				}//if
-
-				// move the char cursor to next position in the screen
-				if (ui16_col<(GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1)){
-					ui16_col++;
-				}else{
-					ui16_col=0;
-					if (ui16_row<(GRAPHIX_TEXT_BUFFER_MAX_ROWS-1)){
-						ui16_row++;
-					}
-				}//if
-		
-			}//if (ui8_aux='\n')
-							
-			ui16_char_count++;
-				
-		}//while
-			
-}//SCREENS_print_current_rom_info

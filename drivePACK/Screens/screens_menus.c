@@ -310,7 +310,7 @@ int8_t SCREENS_menus_load(int16_t i16_received_menu_id){
 
 void SCREENS_menus_show(){
 	int16_t i16_aux;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];	
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];	
 	int16_t i16_bot_row_index;
 	int16_t i16_top_row_index;
 	int16_t i16_curr_row_index;
@@ -322,20 +322,20 @@ void SCREENS_menus_show(){
 	for (i16_aux=i16_bot_row_index;i16_aux<=i16_top_row_index;i16_aux++){
 		
 		// check if the current option is the selected one
-		AUX_FUNCS_lstrcpy(ui8_aux_string,"",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+		AUX_FUNCS_lstrcpy(ui8_aux_string1_64,"",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 		if (i16_aux==screens_menus.stack[screens_menus.ui8_depth].i16_selected_index){
 			// add the brackets to mark the selected option
-			AUX_FUNCS_strcat(ui8_aux_string,"[",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-			AUX_FUNCS_strcat(ui8_aux_string,screens_menus.option[i16_aux].pui8_description, AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-			AUX_FUNCS_strcat(ui8_aux_string,"]",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+			AUX_FUNCS_strcat(ui8_aux_string1_64,"[",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+			AUX_FUNCS_strcat(ui8_aux_string1_64,screens_menus.option[i16_aux].pui8_description, AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+			AUX_FUNCS_strcat(ui8_aux_string1_64,"]",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 			// print the currently selected option in the string
-			GRAPHIX_text_buffer_set_string(0,i16_curr_row_index,(uint8_t*)ui8_aux_string,ATTR_NO_ATTRIBS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_GREY);			
+			GRAPHIX_text_buffer_set_string(0,i16_curr_row_index,(uint8_t*)ui8_aux_string1_64,ATTR_NO_ATTRIBS,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_GREY);			
 		}else{
-			AUX_FUNCS_strcat(ui8_aux_string,"-",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-			AUX_FUNCS_strcat(ui8_aux_string,screens_menus.option[i16_aux].pui8_description, AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-			AUX_FUNCS_strcat(ui8_aux_string," ",AUX_FUNCS_F_P_MAX_STR_SIZE_64);// " " blank space to clear the bracket "]"
+			AUX_FUNCS_strcat(ui8_aux_string1_64,"-",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+			AUX_FUNCS_strcat(ui8_aux_string1_64,screens_menus.option[i16_aux].pui8_description, AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+			AUX_FUNCS_strcat(ui8_aux_string1_64," ",AUX_FUNCS_F_P_MAX_STR_SIZE_64);// " " blank space to clear the bracket "]"
 			// print the option in screen
-			GRAPHIX_text_buffer_set_string(0,i16_curr_row_index,(uint8_t*)ui8_aux_string,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);			
+			GRAPHIX_text_buffer_set_string(0,i16_curr_row_index,(uint8_t*)ui8_aux_string1_64,ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);			
 		}//
 		
 		i16_curr_row_index++;

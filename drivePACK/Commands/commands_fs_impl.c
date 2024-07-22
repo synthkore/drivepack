@@ -111,7 +111,7 @@ int16_t COMMANDS_FS_IMPL_execute_dir(t_command * p_command){
 	uint8_t * path;
 	DWORD AccSize;				/* Work register for fs command */
 	WORD AccFiles, AccDirs;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
 	uint8_t ui8_flags;
 	uint64_t ui64_size;
 	uint16_t i=0;
@@ -132,7 +132,7 @@ int16_t COMMANDS_FS_IMPL_execute_dir(t_command * p_command){
 		while ( (i16_ret_val=FILE_SYS_dir_file_goto_next(NULL, FILE_SYS_FLAG_FOLDER|FILE_SYS_FLAG_FILE))>=0 ){
 			
 			// get current listed element information			
-			if (FILE_SYS_get_current_info(ui8_aux_string, AUX_FUNCS_F_P_MAX_STR_SIZE_64, &ui64_size, &ui8_flags)>=0){
+			if (FILE_SYS_get_current_info(ui8_aux_string1_64, AUX_FUNCS_F_P_MAX_STR_SIZE_64, &ui64_size, &ui8_flags)>=0){
 						
 				if (ui8_flags & FILE_SYS_FLAG_FOLDER) {
 				
@@ -141,7 +141,7 @@ int16_t COMMANDS_FS_IMPL_execute_dir(t_command * p_command){
 					// print directory information:
 					AccDirs++;
 					_USART_SEND_STRING("\r\n");
-					USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+					USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 					_USART_SEND_STRING("\t <DIR>");
 
 				}else if (ui8_flags & FILE_SYS_FLAG_FILE) {
@@ -152,12 +152,12 @@ int16_t COMMANDS_FS_IMPL_execute_dir(t_command * p_command){
 					// file name:
 					// AUX_FUNCS_strcpy(ui8_aux_string,(uint8_t*)ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE);
 					_USART_SEND_STRING("\r\n");
-					USART_send_string(ui8_aux_string,63);
+					USART_send_string(ui8_aux_string1_64,63);
 				
 					// file size:
-					AUX_FUNCS_itoa((int32_t)ui64_size, ui8_aux_string, 10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// base 10
+					AUX_FUNCS_itoa((int32_t)ui64_size, ui8_aux_string1_64, 10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// base 10
 					_USART_SEND_STRING("\t");
-					USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+					USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 					_USART_SEND_STRING(" bytes");
 			
 				}//if
@@ -278,7 +278,7 @@ int16_t COMMANDS_FS_IMPL_execute_command_type_txt(uint8_t * pui8_file_name){
 	uint32_t ui32_read_bytes; // read bytes on each f_read iteration
 	int32_t i32_total_read_bytes; // Total read bytes
 	uint8_t ui8_buffer[32]; // file read buffer
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
 	uint16_t ui16_aux;
 
 		
@@ -305,9 +305,9 @@ int16_t COMMANDS_FS_IMPL_execute_command_type_txt(uint8_t * pui8_file_name){
 			//  print the file position/address at the beginning of the line
 			if (ui32_read_bytes!=0){
 				_USART_SEND_STRING("\r\n0x");
-				AUX_FUNCS_itoa(i32_total_read_bytes, ui8_aux_string, 16, AUX_FUNCS_F_P_MAX_STR_SIZE_64); // print each char in hex (16 ) format
-				AUX_FUNCS_pad_begin_with_char(ui8_aux_string,'0',4,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// pad the number with '0's at the beginning
-				USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				AUX_FUNCS_itoa(i32_total_read_bytes, ui8_aux_string1_64, 16, AUX_FUNCS_F_P_MAX_STR_SIZE_64); // print each char in hex (16 ) format
+				AUX_FUNCS_pad_begin_with_char(ui8_aux_string1_64,'0',4,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// pad the number with '0's at the beginning
+				USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 				_USART_SEND_STRING(": ");
 			}//if			
 			
@@ -340,8 +340,8 @@ int16_t COMMANDS_FS_IMPL_execute_command_type_txt(uint8_t * pui8_file_name){
 
 		// print number of read bytes
 		_USART_SEND_STRING("\r\n");
-		AUX_FUNCS_itoa(i32_total_read_bytes, ui8_aux_string, 10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-		USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+		AUX_FUNCS_itoa(i32_total_read_bytes, ui8_aux_string1_64, 10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+		USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 		_USART_SEND_STRING(" bytes read.");
 			
 	}//if
@@ -356,7 +356,7 @@ int16_t COMMANDS_FS_IMPL_execute_command_type_hex(uint8_t * pui8_file_name){
 	uint32_t ui32_read_bytes; // read bytes on each f_read iteration
 	uint32_t ui32_total_read_bytes; // Total read bytes
 	uint8_t ui8_buffer[8]; // file read buffer
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
 	uint16_t ui16_aux = 0;
 	int32_t i32_aux = 0;
 
@@ -384,9 +384,9 @@ int16_t COMMANDS_FS_IMPL_execute_command_type_hex(uint8_t * pui8_file_name){
 			//  print the file position/address at the beginning of the line
 			if (ui32_read_bytes!=0){
 				_USART_SEND_STRING("\r\n0x");
-				AUX_FUNCS_itoa(ui32_total_read_bytes, ui8_aux_string, 16, AUX_FUNCS_F_P_MAX_STR_SIZE_64); // print each char in hex (16 ) format
-				AUX_FUNCS_pad_begin_with_char(ui8_aux_string,'0',4,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// pad the number with '0's at the beginning
-				USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				AUX_FUNCS_itoa(ui32_total_read_bytes, ui8_aux_string1_64, 16, AUX_FUNCS_F_P_MAX_STR_SIZE_64); // print each char in hex (16 ) format
+				AUX_FUNCS_pad_begin_with_char(ui8_aux_string1_64,'0',4,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// pad the number with '0's at the beginning
+				USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 				_USART_SEND_STRING(": ");
 			}//if
 			
@@ -394,9 +394,9 @@ int16_t COMMANDS_FS_IMPL_execute_command_type_hex(uint8_t * pui8_file_name){
 			for (ui16_aux=0;ui16_aux<ui32_read_bytes;ui16_aux++){
 				_USART_SEND_STRING(" 0x");
 				i32_aux = (int32_t)ui8_buffer[ui16_aux];
-				AUX_FUNCS_itoa(i32_aux, ui8_aux_string, 16, AUX_FUNCS_F_P_MAX_STR_SIZE_64); // print each char in hex (16 ) format
-				AUX_FUNCS_pad_begin_with_char(ui8_aux_string,'0',2,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// pad the number with '0's at the beginning
-				USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				AUX_FUNCS_itoa(i32_aux, ui8_aux_string1_64, 16, AUX_FUNCS_F_P_MAX_STR_SIZE_64); // print each char in hex (16 ) format
+				AUX_FUNCS_pad_begin_with_char(ui8_aux_string1_64,'0',2,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// pad the number with '0's at the beginning
+				USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 			}//for
 				
 			ui32_total_read_bytes = ui32_total_read_bytes + ui32_read_bytes;
@@ -415,8 +415,8 @@ int16_t COMMANDS_FS_IMPL_execute_command_type_hex(uint8_t * pui8_file_name){
 
 		// print number of read bytes
 		_USART_SEND_STRING("\r\n");
-		AUX_FUNCS_itoa(ui32_total_read_bytes, ui8_aux_string, 10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-		USART_send_string(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+		AUX_FUNCS_itoa(ui32_total_read_bytes, ui8_aux_string1_64, 10,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+		USART_send_string(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 		_USART_SEND_STRING(" bytes read.");
 			
 	}//if

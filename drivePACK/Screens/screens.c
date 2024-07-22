@@ -14,7 +14,7 @@
 
 
 struct ref_screens_control screens_control;
-
+extern uint8_t ui8_themes_titles_arr[MAX_THEME_TITLES_ARRAY][MAX_THEME_TITLE_BUFFER];
 
 void SCREENS_Init(){
 
@@ -162,3 +162,71 @@ void SCREENS_ev_manager(int16_t * pi16_encoders_var_value, uint8_t * pui8_button
 	}//switch
 
 }//SCREENS_ev_manager
+
+
+void SCREENS_print_current_rom_info(){
+	uint16_t ui16_col = 0;
+	uint16_t ui16_theme_title_read_bytes = 0;
+	uint16_t ui16_row = 0;
+	uint16_t ui16_len = 0;
+	uint8_t ui8_aux = 0;
+	uint8_t ui8_aux_string1_16[AUX_FUNCS_F_P_MAX_STR_SIZE_16];
+
+	// check if the ui8_themes_titles_arr array contains valid theme titles data or not
+	// If it contains valid data then show it in the screen, and if it does not contain valid
+	// data then show a message informing that theme titles data has not been initialized yet
+	if (ui8_themes_titles_arr[0][0]=='\0'){
+		
+		// ui8_themes_titles_arr themes titles array has not been initialized so show a message
+		// clear the screen buffer content by filling it with the SCREENS_DIALOG_BACKGROUND_CHAR char
+		GRAPHIX_text_buffer_fill(SCREENS_DIALOG_BACKGROUND_CHAR,ATTR_NO_ATTRIBS,GRAPHIX_TEXT_COL_IDX_DARK_GREY,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+		
+		// set the message in the screen buffer
+		GRAPHIX_text_buffer_set_string(0,3,(uint8_t*)"  The file does not   ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+		GRAPHIX_text_buffer_set_string(0,4,(uint8_t*)" contain information  ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+		GRAPHIX_text_buffer_set_string(0,5,(uint8_t*)" about the ROM. Use   ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+		GRAPHIX_text_buffer_set_string(0,6,(uint8_t*)" the drivePACK appli- ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+		GRAPHIX_text_buffer_set_string(0,7,(uint8_t*)"  cation to set the   ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+		GRAPHIX_text_buffer_set_string(0,8,(uint8_t*)"    theme titles.     ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+
+		// refresh the content of the buffer to screen
+		GRAPHIX_text_buffer_refresh();
+
+	}else{
+		
+		// ui8_themes_titles_arr themes titles array contains valid data so show it in the screen
+		
+		ui16_row = 0;
+		while ( (ui16_row<MAX_THEME_TITLES_ARRAY) && (ui16_row<GRAPHIX_TEXT_BUFFER_MAX_ROWS) && (ui8_themes_titles_arr[ui16_row][0]!='\0' ) ){
+			
+			ui16_col = 0;
+			
+			// print the theme number (idx) in inverted colors at the beginning of the line
+			AUX_FUNCS_itoa(ui16_row+1,ui8_aux_string1_16,10,AUX_FUNCS_F_P_MAX_STR_SIZE_16);
+			ui16_len = AUX_FUNCS_lstrlen(ui8_aux_string1_16,AUX_FUNCS_F_P_MAX_STR_SIZE_16);
+			while (ui16_col<ui16_len){
+				ui8_aux = ui8_aux_string1_16[ui16_col];
+				GRAPHIX_text_buffer_set_char(ui16_col , ui16_row, ui8_aux, ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_NEUTRAL, GRAPHIX_TEXT_COL_IDX_BLACK);
+				ui16_col++;
+			}//while
+			
+			// place each character of the theme title in the screen after the theme number
+			ui16_theme_title_read_bytes = 0;
+			while ( (ui16_theme_title_read_bytes<MAX_THEME_TITLE_BUFFER) && ( ui16_col<GRAPHIX_TEXT_BUFFER_MAX_COLUMNS) && (ui8_themes_titles_arr[ui16_row][ui16_theme_title_read_bytes]!='\0' ) ){
+				
+				// place each character of the title in the screen
+				ui8_aux= ui8_themes_titles_arr[ui16_row][ui16_theme_title_read_bytes];
+				GRAPHIX_text_buffer_set_char(ui16_col , ui16_row, ui8_aux, ATTR_SPACE_BACKSYMBOL, GRAPHIX_TEXT_COL_NEUTRAL, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
+				
+				ui16_theme_title_read_bytes++;
+				ui16_col++;
+				
+			}//while
+			
+			ui16_row++;
+			
+		}//while
+		
+	}//if
+	
+}//SCREENS_print_current_rom_info

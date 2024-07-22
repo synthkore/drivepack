@@ -623,8 +623,8 @@ EIC_1_Handler:
 																 // address befor dividing is EVEN the high 4 bits ( carry=0 so cc=true ) of the byte are taken.
 					.thumb_func 
 					EIC_1_Handler_RnW_1_data_nibble_is_even:     // take the nible from an EVEN address
-						 movw r3,#:lower16:ui8_dpack_dumper_nibbles_buffer // to access flash hardcoded ROMPACKS use: #:lower16:casio_rompack              
-						 movt r3,#:upper16:ui8_dpack_dumper_nibbles_buffer // to access flash hardcoded ROMPACKS use: #:upper16:casio_rompack              
+						 movw r3,#:lower16:ui8_nibbles_buffer // to access flash hardcoded ROMPACKS use: #:lower16:casio_rompack              
+						 movt r3,#:upper16:ui8_nibbles_buffer // to access flash hardcoded ROMPACKS use: #:upper16:casio_rompack              
 						 add  r3,r2                              // add the current ROM Pack address to the base address of the ROM Pack dump in the uC flash to get the address of the nibble in the uC flash
 						 ldrb r4,[r3] 
 						 lsr  r4,#4                              // as it is an even address value, nibble corresponds to the highest 4 bits                
@@ -632,8 +632,8 @@ EIC_1_Handler:
 
 					.thumb_func 
 					EIC_1_Handler_RnW_1_data_nibble_is_odd:       // take the nible from an ODD address
-						movw r3,#:lower16:ui8_dpack_dumper_nibbles_buffer  // to access flash hardcoded ROMPACKS use: #:lower16:casio_rompack        
-						movt r3,#:upper16:ui8_dpack_dumper_nibbles_buffer  // to access flash hardcoded ROMPACKS use: #:upper16:casio_rompack        
+						movw r3,#:lower16:ui8_nibbles_buffer  // to access flash hardcoded ROMPACKS use: #:lower16:casio_rompack        
+						movt r3,#:upper16:ui8_nibbles_buffer  // to access flash hardcoded ROMPACKS use: #:upper16:casio_rompack        
 						add  r3,r2                                // add the current ROM Pack address to the base address of the ROM dump in the uC flash to get the address of the nibble in the uC flash        
 						ldrb r4,[r3]                              // as it is an odd address value, nibble corresponds to the lowest 4 bits  	
 	       
@@ -760,8 +760,8 @@ EIC_1_Handler:
 																// address befor dividing is EVEN the high 4 bits ( carry=0 so cc=true ) of the byte are taken.
 				.thumb_func 
 				EIC_1_Handler_nCS_1_is_even:                 // take the nible from an EVEN address
-						movw r3,#:lower16:ui8_dpack_dumper_nibbles_buffer // to access flash hardcoded ROMPACKS use: #:lower16:casio_rompack              
-						movt r3,#:upper16:ui8_dpack_dumper_nibbles_buffer // to access flash hardcoded ROMPACKS use: #:upper16:casio_rompack              
+						movw r3,#:lower16:ui8_nibbles_buffer // to access flash hardcoded ROMPACKS use: #:lower16:casio_rompack              
+						movt r3,#:upper16:ui8_nibbles_buffer // to access flash hardcoded ROMPACKS use: #:upper16:casio_rompack              
 						add  r3,r2                              // add the current ROM Pack address to the base address of the ROM Pack dump in the uC flash to get the address of the nibble in the uC flash
 						ldrb r4,[r3] 
 						lsr  r4,#4                              // as it is an even address value, nibble corresponds to the highest 4 bits                
@@ -769,8 +769,8 @@ EIC_1_Handler:
 
 				.thumb_func 
 				EIC_1_Handler_nCS_1_is_odd:                  // take the nible from an ODD address
-					movw r3,#:lower16:ui8_dpack_dumper_nibbles_buffer  // to access flash hardcoded ROMPACKS use: #:lower16:casio_rompack        
-					movt r3,#:upper16:ui8_dpack_dumper_nibbles_buffer  // to access flash hardcoded ROMPACKS use: #:upper16:casio_rompack        
+					movw r3,#:lower16:ui8_nibbles_buffer  // to access flash hardcoded ROMPACKS use: #:lower16:casio_rompack        
+					movt r3,#:upper16:ui8_nibbles_buffer  // to access flash hardcoded ROMPACKS use: #:upper16:casio_rompack        
 					add  r3,r2                                // add the current ROM Pack address to the base address of the ROM dump in the uC flash to get the address of the nibble in the uC flash        
 					ldrb r4,[r3]                              // as it is an odd address value, nibble corresponds to the lowest 4 bits  	
 	       
@@ -1379,7 +1379,7 @@ config_ctrl_lines_as_output:
 // PREPARE NEXT NIBBLE TO WRITE
 // Procedure that prepares the data nibble to write into the bus on the next data write iteration. It
 // uses the last address value requested by the keyboard ui32_read_nibble_address to access to the 
-// ui8_dpack_dumper_nibbles_buffer then it takes the corresponding nibble places it into the variable 
+// ui8_nibbles_buffer then it takes the corresponding nibble places it into the variable 
 // ui8_write_nibble_val 
 // POST:
 //   r4,r,r6,r7 MODIFIED
@@ -1402,16 +1402,16 @@ prepare_next_data_nibble_to_write:
                                                      // address befor dividing is EVEN the high 4 bits ( carry=0 so cc=true ) of the byte are taken.
 		.thumb_func 
 		prepare_next_data_nibble_is_even:            // take the nible from an EVEN address
-				movw r6,#:lower16:ui8_dpack_dumper_nibbles_buffer // to access flash hardcoded ROMPACKS use: #:lower16:casio_rompack              
-				movt r6,#:upper16:ui8_dpack_dumper_nibbles_buffer // to access flash hardcoded ROMPACKS use: #:upper16:casio_rompack              
+				movw r6,#:lower16:ui8_nibbles_buffer // to access flash hardcoded ROMPACKS use: #:lower16:casio_rompack              
+				movt r6,#:upper16:ui8_nibbles_buffer // to access flash hardcoded ROMPACKS use: #:upper16:casio_rompack              
 				add  r6,r5                           // add the current ROM Pack address to the base address of the ROM Pack dump in the uC flash to get the address of the nibble in the uC flash
 				ldrb r7,[r6] 
 				lsr  r7,#4                           // as it is an even address value, nibble corresponds to the highest 4 bits                
 				b prepare_next_data_nibble
 		.thumb_func 
 		prepare_next_data_nibble_is_odd:             // take the nible from an ODD address
-				movw r6,#:lower16:ui8_dpack_dumper_nibbles_buffer      // to access flash hardcoded ROMPACKS use: #:lower16:casio_rompack        
-				movt r6,#:upper16:ui8_dpack_dumper_nibbles_buffer      // to access flash hardcoded ROMPACKS use: #:upper16:casio_rompack        
+				movw r6,#:lower16:ui8_nibbles_buffer      // to access flash hardcoded ROMPACKS use: #:lower16:casio_rompack        
+				movt r6,#:upper16:ui8_nibbles_buffer      // to access flash hardcoded ROMPACKS use: #:upper16:casio_rompack        
 				add  r6,r5                           // add the current ROM Pack address to the base address of the ROM dump in the uC flash to get the address of the nibble in the uC flash        
 				ldrb r7,[r6]                         // as it is an odd address value, nibble corresponds to the lowest 4 bits  	
 		.thumb_func 
@@ -2148,8 +2148,8 @@ dpack_dumper_store_in_buffer:
 	movt r0,#:upper16:ui8_dpack_dumper_last_data_nibble_read
 	ldrb r1,[r0]
 
-	movw r0,#:lower16:pui8_dpack_dumper_nibbles_buffer        // get the address of the next position to update in the buffer
-	movt r0,#:upper16:pui8_dpack_dumper_nibbles_buffer
+	movw r0,#:lower16:pui8_nibbles_buffer        // get the address of the next position to update in the buffer
+	movt r0,#:upper16:pui8_nibbles_buffer
 	ldr  r5,[r0]
 
 	movw r0,#:lower16:ui8_dpack_dumper_data_nibbles_read      // get the current number of nibbles read from the current data block
@@ -2164,7 +2164,7 @@ dpack_dumper_store_in_buffer:
 	dpack_dumper_store_in_buffer_is_odd:
 
 		// address ui8_dpack_dumper_data_nibbles_read is odd
-		ldrb r2,[r5]                                                // take the value of the buffer byte to which the variable 'pui8_dpack_dumper_nibbles_buffer' is pointing to 		
+		ldrb r2,[r5]                                                // take the value of the buffer byte to which the variable 'pui8_nibbles_buffer' is pointing to 		
 		and  r3,r2,#0xFFFFFF0F                                      // and update the 4 highest bits of the buffer position with the last read nibble value
 		lsl  r1,#4                                                  // shift the value 4 bits to the left to place the nibble in the 4 highest bits of the byte
 		and  r1,#0x000000F0                                         // clear all other bits that are not 4 highest bits of the byte before 'oring'
@@ -2176,15 +2176,15 @@ dpack_dumper_store_in_buffer:
 	dpack_dumper_store_in_buffer_is_even:
 
 	    // address ui8_dpack_dumper_data_nibbles_read is even
-		ldrb r2,[r5]                                                // take the byte to which the variable 'pui8_dpack_dumper_nibbles_buffer' is pointing to
+		ldrb r2,[r5]                                                // take the byte to which the variable 'pui8_nibbles_buffer' is pointing to
 		and  r3,r2,#0xFFFFFFF0                                      // and update the 4 lowest bits of the buffer position with the last read nibble value
 		and  r1,#0x000000F                                          // clear all other bits that are not 4 lowest bits of the byte before 'oring'
 		orr  r3,r1			
 		strb r3,[r5]                                                // after updating the 4 lowest bits of the byte with last read nibble value, update the new value in the buffer	   strb r3,[r5]                                                // after updating the 4 highest bits of the byte with last read nibble value, then update the new value in the buffer and increase the pointer
 
 		add r5,#1                                                   // after processing every odd byte then set the buffer pointer to next position
-		movw r0,#:lower16:pui8_dpack_dumper_nibbles_buffer         
-		movt r0,#:upper16:pui8_dpack_dumper_nibbles_buffer
+		movw r0,#:lower16:pui8_nibbles_buffer         
+		movt r0,#:upper16:pui8_nibbles_buffer
 		str  r5,[r0]
 
 	.thumb_func
@@ -2312,10 +2312,10 @@ dpack_dumper_main:
 	strb r0,[r1]
 
 	// set the pointer to the memory store buffer pointing to the beggining of the memory store
-    movw r1,#:lower16:pui8_dpack_dumper_nibbles_buffer
-	movt r1,#:upper16:pui8_dpack_dumper_nibbles_buffer
-	movw r0,#:lower16:ui8_dpack_dumper_nibbles_buffer
-	movt r0,#:upper16:ui8_dpack_dumper_nibbles_buffer
+    movw r1,#:lower16:pui8_nibbles_buffer
+	movt r1,#:upper16:pui8_nibbles_buffer
+	movw r0,#:lower16:ui8_nibbles_buffer
+	movt r0,#:upper16:ui8_nibbles_buffer
 	str  r0,[r1]
 
 	// init ui8_dpack_dumper_state variable to 0 start in IDLE_CFG state

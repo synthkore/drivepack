@@ -23,6 +23,28 @@
 #define FILE_DATA_BLOCK_SONGS_INFO       0x02
 #define FILE_DATA_BLOCK_SONGS_ROM        0x03
 
+// states of the state machine used to read the INFO DATA BLOCK with the 
+// ROM TITLE, THEMES and other information
+#define FSM_LOAD_DRP_XML_UNDEFINED          0
+#define FSM_LOAD_DRP_XML_TAG_MARK           1 // a TAG mark '<' has been read
+#define FSM_LOAD_DRP_XML_START_TAG          2 // the read TAG is a start TAG <xxx> ( not an END </xxx> TAG )
+#define FSM_LOAD_DRP_XML_END_TAG            3 // the read TAG is an END TAG </xxx> ( not a START <xxx> TAG )
+#define FSM_LOAD_DRP_XML_ROM_TITLE          4 // reading the content between the DRP_TAG_ROM_TITLE tags
+#define FSM_LOAD_DRP_XML_LI_THEMES_TITLES   6 // reading the content between the DRP_TAG_LIST_TITLES tags
+#define FSM_LOAD_DRP_XML_THEME_TITLE        7 // reading the content between the DRP_TAG_TITLE tags
+#define FSM_LOAD_DRP_XML_ROM_INFO           8 // reading the content between the DRP_TAG_ROM_INFO tags
+#define FSM_LOAD_DRP_XML_INFO               9 // reading the content between the DRP_TAG_INFO tags
+
+// tags that delimit the content in the INFO DATA BLOCK
+#define DRP_TAG_ROM_INFO     "rom_info"
+#define DRP_TAG_ROM_TITLE    "ro_ti"
+#define DRP_TAG_LIST_TITLES  "li_ti"
+#define DRP_TAG_TITLE        "ti"
+#define DRP_TAG_INFO         "info"
+
+#define DRP_DEFAULT_INFO_BLOCK     "<rom_info><ro_ti>Info not initialized</ro_ti><li_ti></li_ti><info></info></rom_info>"
+#define DRP_DEFAULT_INFO_BLOCK_LEN 84
+
 /*********************************************************************************************
 * @brief Procedure that reads and loads to RAM specified ROM file.
 * @param[in] pui8_file_name: name of the file to load

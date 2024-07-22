@@ -23,10 +23,11 @@
 // each ROMPACK address corresponds to 1 nibble, so in 1 memroy byte there 
 // will be space for 2 nibbles, for thar reason the size of teh buffer is  
 // the highest address read dividied by / 2
-#define DPACK_DUMPER_MAX_ADDRESS     0xFFFF // 0x1FFF = 8192 nibbles so 4012 bytes in RAM,  REMEMBER TO ALSO UPDATE UPDATE THE .equ DPACK_DUMPER_MAX_ADDRESS with the same value in dpack_dumper.s
+#define DPACK_DUMPER_MAX_ADDRESS       0xFFFF // 0x1FFF = 8192 nibbles so 4012 bytes in RAM,  REMEMBER TO ALSO UPDATE UPDATE THE .equ DPACK_DUMPER_MAX_ADDRESS with the same value in dpack_dumper.s
 #define MAX_ROM_NIBBLES_BUFFER         0x8000 // 0x1FFF / 2 = 0xFFF ( 2 nibbles stored per byte) that is from byte 0x0000 to 0x0FFF > that is 0x1000 elements. REMEMBER TO ALSO UPDATE THE .equ MAX_DATA_NIBBLE_BUFFER with the same value in dpack_dumper.s
-#define MAX_ROM_TITLE_BUFFER           65  // maximum number of characters that can be stored into the ROM TITLE buffer
-#define MAX_ROM_SONGS_INFO_BUFFER      360 // maximum number of characters that can be stored into the ROM SONGS INFO buffer
+#define MAX_ROM_TITLE_BUFFER           65 // maximum number of characters that can be stored into the ROM TITLE buffer
+#define MAX_THEME_TITLE_BUFFER         22 // maximum number of characters of each THEME TITLE that can be stored into the array of TITLES
+#define MAX_THEME_TITLES_ARRAY         13 // maximum number of TITLES that can be stored in the array of THEME TITLEs
 #define MAX_ROM_FILE_NAME              13  // The older MS-DOS FAT file system allows for a maximum of 8 characters in the basic file name and 3 characters in the extension, for a total of 12 characters with the dot separator.
 #define MAX_ROM_FILE_PATH              64  // size of the buffer used to store the string with current song path
 

@@ -2341,7 +2341,7 @@ static FRESULT dir_read (
 		{	/* On the FAT/FAT32 volume */
 			dp->obj.attr = attr = dp->dir[DIR_Attr] & AM_MASK;	/* Get attribute */
 #if FF_USE_LFN		/* LFN configuration */
-            // JBR 2024-10-16 Commented and modified to get the '.' and '..' entries when reading the dir. The original 
+            // JBR 2023-10-21 Commented and modified to get the '.' and '..' entries when reading the dir. The original 
 			// code was:
 			// if (b == DDEM || b == '.' || (int)((attr & ~AM_ARC) == AM_VOL) != vol) {	// An entry without valid data
 			// That original code ignored the entries whose name started with '.' this includes the '.'(current) and '..' 

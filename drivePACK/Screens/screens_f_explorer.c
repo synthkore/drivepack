@@ -147,8 +147,8 @@ int8_t SCREENS_f_explorer_load(int16_t i16_f_explorer_id,int16_t i16_f_explorer_
 
 void SCREENS_f_explorer_show(){
 	int16_t i16_row;
-	uint8_t ui8_aux_string1[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
-	uint8_t ui8_aux_string2[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string2_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
 	uint8_t ui8_aux1;
 	int16_t i16_file_index;
 	int16_t i16_aux1;
@@ -170,7 +170,7 @@ void SCREENS_f_explorer_show(){
 		// ( +1 for the '0' )
 		
 		// get the type,name and size of the element ( file or folder )
-		i16_aux1 = FILE_SYS_get_current_info((uint8_t*)ui8_aux_string1, AUX_FUNCS_F_P_MAX_STR_SIZE_64, &ui64_size, &ui8_flags);
+		i16_aux1 = FILE_SYS_get_current_info((uint8_t*)ui8_aux_string1_64, AUX_FUNCS_F_P_MAX_STR_SIZE_64, &ui64_size, &ui8_flags);
 		if (i16_aux1>=0){
 			
 			// get the icon code to show in front of the element name depending if it is a FOLDER or a FILE
@@ -184,24 +184,24 @@ void SCREENS_f_explorer_show(){
 				ui8_aux1='?';
 			}//switch
 
-			ui8_aux_string2[0]='\0';
+			ui8_aux_string2_64[0]='\0';
 			if (i16_file_index==screens_f_explorer.stack[ui8_depth].i16_selected_index){
 				// add the brackets to mark the selected file
-				AUX_FUNCS_strcat(ui8_aux_string2,"[ ",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-				AUX_FUNCS_strcat_char(ui8_aux_string2,ui8_aux1,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// add the FILE or FOLDER icon
-				AUX_FUNCS_strcat(ui8_aux_string2," ",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-				AUX_FUNCS_strcat(ui8_aux_string2,ui8_aux_string1, AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-				AUX_FUNCS_strcat(ui8_aux_string2,"]",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				AUX_FUNCS_strcat(ui8_aux_string2_64,"[ ",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				AUX_FUNCS_strcat_char(ui8_aux_string2_64,ui8_aux1,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// add the FILE or FOLDER icon
+				AUX_FUNCS_strcat(ui8_aux_string2_64," ",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				AUX_FUNCS_strcat(ui8_aux_string2_64,ui8_aux_string1_64, AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				AUX_FUNCS_strcat(ui8_aux_string2_64,"]",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
 				// print the currently selected file/folder in the screen
-				GRAPHIX_text_buffer_set_string(0,(uint16_t)i16_row,(uint8_t*)ui8_aux_string2,ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_NEUTRAL, GRAPHIX_TEXT_COL_IDX_BLACK);
+				GRAPHIX_text_buffer_set_string(0,(uint16_t)i16_row,(uint8_t*)ui8_aux_string2_64,ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_NEUTRAL, GRAPHIX_TEXT_COL_IDX_BLACK);
 			}else{
-				AUX_FUNCS_strcat(ui8_aux_string2,"- ",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-				AUX_FUNCS_strcat_char(ui8_aux_string2,ui8_aux1,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// add the FILE or FOLDER icon
-				AUX_FUNCS_strcat(ui8_aux_string2," ",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-				AUX_FUNCS_strcat(ui8_aux_string2,ui8_aux_string1, AUX_FUNCS_F_P_MAX_STR_SIZE_64);
-				AUX_FUNCS_strcat(ui8_aux_string2," ",AUX_FUNCS_F_P_MAX_STR_SIZE_64);// add " " blank space to clear the bracket "]"
+				AUX_FUNCS_strcat(ui8_aux_string2_64,"- ",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				AUX_FUNCS_strcat_char(ui8_aux_string2_64,ui8_aux1,AUX_FUNCS_F_P_MAX_STR_SIZE_64);// add the FILE or FOLDER icon
+				AUX_FUNCS_strcat(ui8_aux_string2_64," ",AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				AUX_FUNCS_strcat(ui8_aux_string2_64,ui8_aux_string1_64, AUX_FUNCS_F_P_MAX_STR_SIZE_64);
+				AUX_FUNCS_strcat(ui8_aux_string2_64," ",AUX_FUNCS_F_P_MAX_STR_SIZE_64);// add " " blank space to clear the bracket "]"
 				// print the currently selected file/folder in the screen
-				GRAPHIX_text_buffer_set_string(0,(uint16_t)i16_row,(uint8_t*)ui8_aux_string2,ATTR_SPACE_BACKSYMBOL, GRAPHIX_TEXT_COL_NEUTRAL, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
+				GRAPHIX_text_buffer_set_string(0,(uint16_t)i16_row,(uint8_t*)ui8_aux_string2_64,ATTR_SPACE_BACKSYMBOL, GRAPHIX_TEXT_COL_NEUTRAL, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
 			}//
 			
 		}//if (i16_aux1<0)
@@ -270,7 +270,7 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_ROM_FILE(int16_t * pi16_encoders_var_v
 	uint8_t ui8_enter_dir = FALSE;
 	uint8_t ui8_is_parent_dir = FALSE;
 	uint8_t ui8_is_curr_dir = FALSE;	
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
 
 
 	// ON LOAD event, a new file explorer screen has been loaded
@@ -410,7 +410,7 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_ROM_FILE(int16_t * pi16_encoders_var_v
 			}else{
 			
 				// get the information of selected item in the file explorer			
-				if (FILE_SYS_get_current_info(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64,&ui64_size,&ui8_file_folder)<0){
+				if (FILE_SYS_get_current_info(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64,&ui64_size,&ui8_file_folder)<0){
 			
 					// an error occurred so set the flag/code to load the corresponding error dialog when leaving
 					i16_error_code = -1;
@@ -418,8 +418,8 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_ROM_FILE(int16_t * pi16_encoders_var_v
 				}else{
 					 
 					 // check if the current item is the '..' ( parent dir ) or '.' ( curr dir ) entries					
-					 if ( (ui8_aux_string[0]=='.') && (ui8_aux_string[1]=='.') && (ui8_aux_string[2]=='\0') ){ ui8_is_parent_dir = TRUE;}
-					 else if ( (ui8_aux_string[0]=='.') && (ui8_aux_string[1]=='\0') ){ ui8_is_curr_dir = TRUE;}
+					 if ( (ui8_aux_string1_64[0]=='.') && (ui8_aux_string1_64[1]=='.') && (ui8_aux_string1_64[2]=='\0') ){ ui8_is_parent_dir = TRUE;}
+					 else if ( (ui8_aux_string1_64[0]=='.') && (ui8_aux_string1_64[1]=='\0') ){ ui8_is_curr_dir = TRUE;}
 					 
 					 if ( ((ui8_file_folder&FILE_SYS_FLAG_FOLDER)!=0) && ((screens_f_explorer.ui8_depth<(SCREENS_F_EXPLORER_MAX_FOLDERS_DEPTH-1)) || ui8_is_parent_dir ) ){
                         // selected item in the file explorer is a FOLDER and the current navigation depth is lower than 
@@ -474,7 +474,7 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_ROM_FILE(int16_t * pi16_encoders_var_v
 	if (ui8_enter_dir==TRUE){
 		
 		// try to change to new directory and open it
-		if ( (FILE_SYS_dir_ch(ui8_aux_string)>=0) && (FILE_SYS_dir_open("")<0) ){
+		if ( (FILE_SYS_dir_ch(ui8_aux_string1_64)>=0) && (FILE_SYS_dir_open("")<0) ){
 
 			// an error occurred so set the flag/code to load the corresponding error dialog when leaving
 			i16_error_code = -1;
@@ -495,7 +495,7 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_ROM_FILE(int16_t * pi16_encoders_var_v
 	if (ui8_load_file==TRUE){
 		
 		// selected item in the file explorer is a FILE
-		i16_error_code = DATA_IO_file_rom_load(ui8_aux_string);
+		i16_error_code = DATA_IO_file_rom_load(ui8_aux_string1_64);
 		if (i16_error_code>=0){
 			
 			// show LOADED dialog screen
@@ -555,7 +555,7 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_RUN_ROM_FILE(int16_t * pi16_encoders_v
 	uint8_t ui8_enter_dir = FALSE;
 	uint8_t ui8_is_parent_dir = FALSE;
 	uint8_t ui8_is_curr_dir = FALSE;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
 
 
 	// ON LOAD event, a new file explorer screen has been loaded
@@ -697,7 +697,7 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_RUN_ROM_FILE(int16_t * pi16_encoders_v
 			}else{
 						
 				// get the information of selected item in the file explorer			
-				if (FILE_SYS_get_current_info(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64,&ui64_size,&ui8_file_folder)<0){
+				if (FILE_SYS_get_current_info(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64,&ui64_size,&ui8_file_folder)<0){
 			
 					// an error occurred so set the flag/code to load the corresponding error dialog when leaving
 					i16_error_code = -1;
@@ -705,8 +705,8 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_RUN_ROM_FILE(int16_t * pi16_encoders_v
 				}else{
 					
 					 // check if the current item is the '..' ( parent dir ) or '.' ( curr dir ) entries
-					 if ( (ui8_aux_string[0]=='.') && (ui8_aux_string[1]=='.') && (ui8_aux_string[2]=='\0') ){ ui8_is_parent_dir = TRUE;}
-					 else if ( (ui8_aux_string[0]=='.') && (ui8_aux_string[1]=='\0') ){ ui8_is_curr_dir = TRUE;}
+					 if ( (ui8_aux_string1_64[0]=='.') && (ui8_aux_string1_64[1]=='.') && (ui8_aux_string1_64[2]=='\0') ){ ui8_is_parent_dir = TRUE;}
+					 else if ( (ui8_aux_string1_64[0]=='.') && (ui8_aux_string1_64[1]=='\0') ){ ui8_is_curr_dir = TRUE;}
 										
 					 if ( ((ui8_file_folder&FILE_SYS_FLAG_FOLDER)!=0) && ((screens_f_explorer.ui8_depth<(SCREENS_F_EXPLORER_MAX_FOLDERS_DEPTH-1)) || ui8_is_parent_dir ) ){
                         // selected item in the file explorer is a FOLDER and the current navigation depth is lower than 
@@ -761,7 +761,7 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_RUN_ROM_FILE(int16_t * pi16_encoders_v
 	if (ui8_enter_dir==TRUE){
 		
 		// try to change to new directory and open it
-		if ( (FILE_SYS_dir_ch(ui8_aux_string)>=0) && (FILE_SYS_dir_open("")<0) ){
+		if ( (FILE_SYS_dir_ch(ui8_aux_string1_64)>=0) && (FILE_SYS_dir_open("")<0) ){
 
 			// an error occurred so set the flag/code to load the corresponding error dialog when leaving
 			i16_error_code = -1;
@@ -782,7 +782,7 @@ int8_t SCREENS_f_explorer_ev_manager_LOAD_RUN_ROM_FILE(int16_t * pi16_encoders_v
 	if (ui8_load_run_file==TRUE){
 		
 		// selected item in the file explorer is a FILE
-		i16_error_code = DATA_IO_file_rom_load(ui8_aux_string);
+		i16_error_code = DATA_IO_file_rom_load(ui8_aux_string1_64);
 		if (i16_error_code>=0){
 							
 			// show LOADED and RUNNING dialog screen
@@ -842,7 +842,7 @@ int8_t SCREENS_f_explorer_ev_manager_SAVE_RAM(int16_t * pi16_encoders_var_value,
 	uint8_t ui8_enter_dir = FALSE;
 	uint8_t ui8_is_parent_dir = FALSE;
 	uint8_t ui8_is_curr_dir = FALSE;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string1_64[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
 
 
 	// ON LOAD event, a new file explorer screen has been loaded
@@ -983,7 +983,7 @@ int8_t SCREENS_f_explorer_ev_manager_SAVE_RAM(int16_t * pi16_encoders_var_value,
 			}else{
 						
 				// get the information of selected item in the file explorer			
-				if (FILE_SYS_get_current_info(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64,&ui64_size,&ui8_file_folder)<0){
+				if (FILE_SYS_get_current_info(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64,&ui64_size,&ui8_file_folder)<0){
 			
 					// an error occurred so set the flag/code to load the corresponding error dialog when leaving
 					i16_error_code = -1;
@@ -991,8 +991,8 @@ int8_t SCREENS_f_explorer_ev_manager_SAVE_RAM(int16_t * pi16_encoders_var_value,
 				}else{
 					
 					// check if the current item is the '..' ( parent dir ) or '.' ( curr dir ) entries
-					if ( (ui8_aux_string[0]=='.') && (ui8_aux_string[1]=='.') && (ui8_aux_string[2]=='\0') ){ ui8_is_parent_dir = TRUE;}
-					else if ( (ui8_aux_string[0]=='.') && (ui8_aux_string[1]=='\0') ){ ui8_is_curr_dir = TRUE;}
+					if ( (ui8_aux_string1_64[0]=='.') && (ui8_aux_string1_64[1]=='.') && (ui8_aux_string1_64[2]=='\0') ){ ui8_is_parent_dir = TRUE;}
+					else if ( (ui8_aux_string1_64[0]=='.') && (ui8_aux_string1_64[1]=='\0') ){ ui8_is_curr_dir = TRUE;}
 					
 					if ( ((ui8_file_folder&FILE_SYS_FLAG_FOLDER)!=0) && ((screens_f_explorer.ui8_depth<(SCREENS_F_EXPLORER_MAX_FOLDERS_DEPTH-1)) || ui8_is_parent_dir ) ){
 						// selected item in the file explorer is a FOLDER and the current navigation depth is lower than 
@@ -1110,7 +1110,7 @@ int8_t SCREENS_f_explorer_ev_manager_SAVE_RAM(int16_t * pi16_encoders_var_value,
 	if (ui8_enter_dir==TRUE){
 		
 		// try to change to new directory and open it
-		if ( (FILE_SYS_dir_ch(ui8_aux_string)>=0) && (FILE_SYS_dir_open("")<0) ){
+		if ( (FILE_SYS_dir_ch(ui8_aux_string1_64)>=0) && (FILE_SYS_dir_open("")<0) ){
 
 			// an error occurred so set the flag/code to load the corresponding error dialog when leaving
 			i16_error_code = -1;
@@ -1131,7 +1131,7 @@ int8_t SCREENS_f_explorer_ev_manager_SAVE_RAM(int16_t * pi16_encoders_var_value,
 	if (ui8_save_file==TRUE){
 		
 		// get the information of selected item in the file explorer
-		if (FILE_SYS_get_current_info(ui8_aux_string,AUX_FUNCS_F_P_MAX_STR_SIZE_64,&ui64_size,&ui8_file_folder)<0){
+		if (FILE_SYS_get_current_info(ui8_aux_string1_64,AUX_FUNCS_F_P_MAX_STR_SIZE_64,&ui64_size,&ui8_file_folder)<0){
 					
 			// an error occurred so set the flag/code to load the corresponding error dialog when leaving
 			i16_error_code = -1;

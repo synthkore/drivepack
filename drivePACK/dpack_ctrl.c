@@ -33,15 +33,14 @@ uint32_t ui32_dpack_dumper_address_to_write        = 0x0000000;
 uint8_t  ui8_dpack_dumper_last_data_nibble_read    = 0;          // stores the value of last read nibble
 
 // read data nibbles Tx buffer control variables
-uint8_t ui8_dpack_dumper_nibbles_buffer[MAX_ROM_NIBBLES_BUFFER];
-uint8_t ui8_dpack_dumper_buffer_initialized = FALSE; // FALSE if the ui8_dpack_dumper_nibbles_buffer does NOT contain valid ROM data, TRUE if ui8_dpack_dumper_nibbles_buffer contains valid ROM data
-int32_t i32_dpack_dumper_rom_size;// size in bytes of the ROM PACK loaded into the nibbles buffer. ROM PACK cartridges may have different sizes, and the size of a ROM PACK cartridge is determined by searching the end sequence: 0x23 0x83 0x93 0x06 0x47 0x83 0xAB 0x02 0x63 0x27 0x4B 0x27 0x47 0x93 0x2B 0x83 0xFF 0xFF 0xFF 0xFF 0x00 0x00 0x00 0x00
-uint8_t ui8_dpack_title_buffer[MAX_ROM_TITLE_BUFFER];
-uint8_t ui8_dpack_songs_info_buffer[MAX_ROM_SONGS_INFO_BUFFER];
-uint8_t ui8_dpack_file_name[MAX_ROM_FILE_NAME];
-uint8_t ui8_dpack_file_path[MAX_ROM_FILE_PATH];
-uint8_t * pui8_dpack_dumper_nibbles_buffer = NULL;// pointer to the elements of the ui8_dpack_dumper_nibbles_buffer
-
+uint8_t ui8_nibbles_buffer[MAX_ROM_NIBBLES_BUFFER];
+uint8_t ui8_nibbles_buffer_initialized = FALSE; // FALSE if the ui8_nibbles_buffer does NOT contain valid ROM data, TRUE if ui8_nibbles_buffer contains valid ROM data
+int32_t i32_dumper_rom_size;// size in bytes of the ROM PACK loaded into the nibbles buffer. ROM PACK cartridges may have different sizes, and the size of a ROM PACK cartridge is determined by searching the end sequence: 0x23 0x83 0x93 0x06 0x47 0x83 0xAB 0x02 0x63 0x27 0x4B 0x27 0x47 0x93 0x2B 0x83 0xFF 0xFF 0xFF 0xFF 0x00 0x00 0x00 0x00
+uint8_t ui8_rom_title[MAX_ROM_TITLE_BUFFER];
+uint8_t ui8_themes_titles_arr[MAX_THEME_TITLES_ARRAY][MAX_THEME_TITLE_BUFFER];
+uint8_t ui8_file_name[MAX_ROM_FILE_NAME];
+uint8_t ui8_file_path[MAX_ROM_FILE_PATH];
+uint8_t * pui8_nibbles_buffer = NULL;// pointer to the elements of the ui8_nibbles_buffer
 
 //           CLCK2  |1   1     0   1  1   1 0   1 |1   1
 //           CLCK1  |0   1     1   1  0   1 1   1 |0   1
@@ -62,24 +61,22 @@ uint8_t  ui8_write_nibble_val                        = 0; // the nibble to write
 
 void DPACK_CTRL_Init(){
 	
-	// clear the ui8_dpack_dumper_nibbles_buffer content to all 0xFF
-	memset (ui8_dpack_dumper_nibbles_buffer,0xFF,sizeof(uint8_t)*MAX_ROM_NIBBLES_BUFFER);
+	// clear the ui8_nibbles_buffer content to all 0xFF
+	memset (ui8_nibbles_buffer,0xFF,sizeof(uint8_t)*MAX_ROM_NIBBLES_BUFFER);
 	
-	// clear the ui8_dpack_title_buffer and the ui8_dpack_songs_info_buffer to '\0'
-	memset (ui8_dpack_title_buffer,'\0',sizeof(uint8_t)*MAX_ROM_TITLE_BUFFER);
-	AUX_FUNCS_lstrcpy(ui8_dpack_title_buffer,"RO-XXX Unamed",MAX_ROM_TITLE_BUFFER);
-	memset (ui8_dpack_songs_info_buffer,'\0',sizeof(uint8_t)*MAX_ROM_SONGS_INFO_BUFFER);
-	AUX_FUNCS_lstrcpy(ui8_dpack_title_buffer,"[1]-Set song 1 info\r\n[2]-Set song 2 info\r\n...",MAX_ROM_SONGS_INFO_BUFFER);
-	
+	// clear the ui8_rom_title and the ui8_themes_titles_arr to '\0'
+	memset (ui8_rom_title,'\0',sizeof(ui8_rom_title));
+	AUX_FUNCS_lstrcpy(ui8_rom_title,"Info not initialized",MAX_ROM_TITLE_BUFFER);
+	memset (ui8_themes_titles_arr,'\0',sizeof(ui8_themes_titles_arr));
+
 	// clear the file name and path buffers used to store current songs file path	
-	memset (ui8_dpack_file_name,'\0',sizeof(uint8_t)*MAX_ROM_FILE_NAME);
-	memset (ui8_dpack_file_path,'\0',sizeof(uint8_t)*MAX_ROM_FILE_PATH);
+	memset (ui8_file_name,'\0',sizeof(uint8_t)*MAX_ROM_FILE_NAME);
+	memset (ui8_file_path,'\0',sizeof(uint8_t)*MAX_ROM_FILE_PATH);
 	
-	// ui8_dpack_dumper_nibbles_buffer does NOT contain valid ROM data yet
-	ui8_dpack_dumper_buffer_initialized = FALSE;
+	// ui8_nibbles_buffer does NOT contain valid ROM data yet
+	ui8_nibbles_buffer_initialized = FALSE;
 	
 }//DPACK_CTRL_Init
-
 
 
 int8_t DPACK_CTRL_check_buffer(){
@@ -88,19 +85,11 @@ int8_t DPACK_CTRL_check_buffer(){
 	int32_t i32_aux = 0;
 	uint8_t ui8_expected_header[] = ROMPACK_HEADER_NIBBLES;
 
-// JBR 2023-09-22
-// uint8_t ui8_borra[4];
-// ui8_borra[0]=ui8_dpack_dumper_nibbles_buffer[0];
-// ui8_borra[1]=ui8_dpack_dumper_nibbles_buffer[1];
-// ui8_borra[2]=ui8_dpack_dumper_nibbles_buffer[2];
-// ui8_borra[3]=ui8_dpack_dumper_nibbles_buffer[3];
-// FIN JBR 2023-09-22	
-	
 	// print current header bytes and compare them with expected
 	i32_aux=0;
 	while ( (i32_aux<ROMPACK_HEADER_NUM_BYTES)&&(i8_ret_val==0)){
 					
-		if (ui8_dpack_dumper_nibbles_buffer[i32_aux]!=ui8_expected_header[i32_aux]) i8_ret_val = -1;
+		if (ui8_nibbles_buffer[i32_aux]!=ui8_expected_header[i32_aux]) i8_ret_val = -1;
 		i32_aux++;
 		
 	}//while
@@ -110,13 +99,12 @@ int8_t DPACK_CTRL_check_buffer(){
 }//DPACK_CTRL_check_buffer
 
 
-
 int32_t DPACK_CTRL_get_size_rom_in_buffer(){
 	int32_t i32_ret_val=0;
     uint8_t ui8_found_end = FALSE;
     int32_t i32_aux = 0;
 
-    if (ui8_dpack_dumper_buffer_initialized==FALSE){
+    if (ui8_nibbles_buffer_initialized==FALSE){
 		
 		i32_ret_val = -1;
 		
@@ -129,10 +117,10 @@ int32_t DPACK_CTRL_get_size_rom_in_buffer(){
 		   // 0x4B 0x27 0x47 0x93 0x2B 0x83 0xFF 0xFF 0xFF 0xFF 0x00 0x00 0x00 0x00", there is no need to search for all them
 		   // and only search for "0xFF 0xFF 0xFF 0xFF 0x00 0x00 0x00 0x00" to detect the end of the ROM PACK cartridge
 	
-		   if ( (ui8_dpack_dumper_nibbles_buffer[i32_aux]  ==0xFF) && (ui8_dpack_dumper_nibbles_buffer[i32_aux+1]==0xFF) &&
-				(ui8_dpack_dumper_nibbles_buffer[i32_aux+2]==0xFF) && (ui8_dpack_dumper_nibbles_buffer[i32_aux+3]==0xFF)  &&
-				(ui8_dpack_dumper_nibbles_buffer[i32_aux+4]==0x00) && (ui8_dpack_dumper_nibbles_buffer[i32_aux+5]==0x00)  &&
-				(ui8_dpack_dumper_nibbles_buffer[i32_aux+6]==0x00) && (ui8_dpack_dumper_nibbles_buffer[i32_aux+7]==0x00) ){
+		   if ( (ui8_nibbles_buffer[i32_aux]  ==0xFF) && (ui8_nibbles_buffer[i32_aux+1]==0xFF) &&
+				(ui8_nibbles_buffer[i32_aux+2]==0xFF) && (ui8_nibbles_buffer[i32_aux+3]==0xFF)  &&
+				(ui8_nibbles_buffer[i32_aux+4]==0x00) && (ui8_nibbles_buffer[i32_aux+5]==0x00)  &&
+				(ui8_nibbles_buffer[i32_aux+6]==0x00) && (ui8_nibbles_buffer[i32_aux+7]==0x00) ){
 		     
 				 ui8_found_end = TRUE;
 				 i32_ret_val = i32_aux + 8; // 8 is the number of the bytes "0xFF 0xFF 0xFF 0xFF 0x00 0x00 0x00 0x00"

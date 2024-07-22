@@ -283,7 +283,7 @@ int8_t SCREENS_enter_txt_load_SAVE_RAM(){
 
 int8_t SCREENS_enter_txt_show_SAVE_RAM(uint8_t * ui8_message){
 	int8_t i8_ret_val = 1;
-	uint8_t ui8_aux_string[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
+	uint8_t ui8_aux_string64_1[AUX_FUNCS_F_P_MAX_STR_SIZE_64];
 
 
 	switch (screens_enter_txt.i8_state){
@@ -294,10 +294,10 @@ int8_t SCREENS_enter_txt_show_SAVE_RAM(uint8_t * ui8_message){
 			// set the message in the screen buffer
 			GRAPHIX_text_buffer_set_string(0,4,(uint8_t*)"   Enter file name:   ",ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			// centered entered text before placing it in the screen buffer
-			AUX_FUNCS_lstrfill(ui8_aux_string,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
-			AUX_FUNCS_center_into_string(ui8_aux_string,screens_enter_txt.ui8_text,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			AUX_FUNCS_lstrfill(ui8_aux_string64_1,' ',GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
+			AUX_FUNCS_center_into_string(ui8_aux_string64_1,screens_enter_txt.ui8_text,0,GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1); // important GRAPHIX_TEXT_BUFFER_MAX_COLUMNS-1 << AUX_FUNCS_F_P_MAX_STR_SIZE
 			// place entered text in screen buffer
-			GRAPHIX_text_buffer_set_string(0, 5,ui8_aux_string,  ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
+			GRAPHIX_text_buffer_set_string(0, 5,ui8_aux_string64_1,  ATTR_SPACE_BACKSYMBOL,GRAPHIX_TEXT_COL_NEUTRAL,GRAPHIX_TEXT_COL_IDX_BLACK,GRAPHIX_TEXT_COL_IDX_BLACK);
 			// refresh the content of the buffer to screen
 			GRAPHIX_text_buffer_refresh();
 			break;
