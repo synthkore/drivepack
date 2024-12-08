@@ -137,7 +137,8 @@
 #define SCREEN_DIALOG_INTRO_CONTINUE            3
 #define SCREEN_DIALOG_INTRO_FINISHED            4
 
-#define SCREEN_DIALOG_SHOW_FAST_MESSAGE_TIMEOUT       TIMMING_TICKS_500_MS// Fast message show timeout
+#define SCREEN_DIALOG_SHOW_FASTEST_MESSAGE_TIMEOUT    TIMMING_TICKS_500_MS// Fastest message show timeout
+#define SCREEN_DIALOG_SHOW_FAST_MESSAGE_TIMEOUT       TIMMING_TICKS_1_S// Fast message show timeout
 #define SCREEN_DIALOG_SHOW_SLOW_MESSAGE_TIMEOUT       TIMMING_TICKS_2_S// Slow message show timeout
 #define SCREEN_DIALOG_SHOW_SLOWEST_MESSAGE_TIMEOUT    TIMMING_TICKS_4_S// Slowest message show timeout
 

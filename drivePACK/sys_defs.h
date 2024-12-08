@@ -16,7 +16,7 @@
 #define FALSE  0
 #define NULL   0
 
-#define SW_VERSION "0.6"
+#define SW_VERSION "1.0"
 #define SW_NAME "dpack RomPack emulator"
 
 // rom file access defines

@@ -408,7 +408,7 @@ int8_t SCREENS_dialog_load_LOAD_ROM_FILE(){
 		
 		case SCREEN_DIALOG_INITIAL_STATE:	
 		case SCREEN_DIALOG_LOAD_ROM_FILE_MOUNTING:		
-			screens_dialog.timer = TIMING_SetTicksDelay(SCREEN_DIALOG_SHOW_FAST_MESSAGE_TIMEOUT);			  
+			screens_dialog.timer = TIMING_SetTicksDelay(SCREEN_DIALOG_SHOW_FASTEST_MESSAGE_TIMEOUT);			  
 			break;
 			
 		case SCREEN_DIALOG_LOAD_ROM_FILE_LOADING_FILE:
@@ -690,7 +690,7 @@ int8_t SCREENS_dialog_load_LOAD_RUN_ROM_FILE(){
 		case SCREEN_DIALOG_INITIAL_STATE:	
 		case SCREEN_DIALOG_LOAD_RUN_ROM_FILE_MOUNTING:		
 	    case SCREEN_DIALOG_LOAD_RUN_ROM_FILE_RUNNING_FILE:		
-			screens_dialog.timer = TIMING_SetTicksDelay(SCREEN_DIALOG_SHOW_FAST_MESSAGE_TIMEOUT);		
+			screens_dialog.timer = TIMING_SetTicksDelay(SCREEN_DIALOG_SHOW_FASTEST_MESSAGE_TIMEOUT);		
 			break;
 			
 		case SCREEN_DIALOG_LOAD_RUN_ROM_FILE_LOADED:
@@ -1039,7 +1039,7 @@ int8_t SCREENS_dialog_show_INTRO(uint8_t * ui8_message){
 			GRAPHIX_print_string(13,96, 1, 1, LCD_COLOR_WHITE, LCD_COLOR_BLACK, "OM cartridge emulator");
 			
 			GRAPHIX_print_string(18,106, 1, 1, LCD_COLOR_BLACK, LCD_COLOR_WHITE, "J");
-			GRAPHIX_print_string(26,106, 1, 1, LCD_COLOR_WHITE, LCD_COLOR_BLACK, ".Bartolome 2022");
+			GRAPHIX_print_string(26,106, 1, 1, LCD_COLOR_WHITE, LCD_COLOR_BLACK, ".Bartolome 2024");
 
 			GRAPHIX_print_string(5,116, 1, 1, LCD_COLOR_BLACK, LCD_COLOR_WHITE, "W");
 			GRAPHIX_print_string(13,116, 1, 1, LCD_COLOR_WHITE, LCD_COLOR_BLACK, "ww.tolaemon.com/dpack");
@@ -2052,7 +2052,7 @@ int8_t SCREENS_dialog_load_SAVE_RAM_AS_FILE(){
 		    break;
 			
 		case SCREEN_DIALOG_SAVE_RAM_AS_FILE_MOUNTING:
-			screens_dialog.timer = TIMING_SetTicksDelay(SCREEN_DIALOG_SHOW_FAST_MESSAGE_TIMEOUT);			  
+			screens_dialog.timer = TIMING_SetTicksDelay(SCREEN_DIALOG_SHOW_FASTEST_MESSAGE_TIMEOUT);			  
 			break;
 			
 		case SCREEN_DIALOG_SAVE_RAM_AS_FILE_SAVING_FILE:
@@ -2443,7 +2443,7 @@ int8_t SCREENS_dialog_load_SAVE_RAM_FILE(){
 		    break;
 				
 		case SCREEN_DIALOG_SAVE_RAM_FILE_MOUNTING:
-			screens_dialog.timer = TIMING_SetTicksDelay(SCREEN_DIALOG_SHOW_FAST_MESSAGE_TIMEOUT);			  
+			screens_dialog.timer = TIMING_SetTicksDelay(SCREEN_DIALOG_SHOW_FASTEST_MESSAGE_TIMEOUT);			  
 			break;
 			
 		case SCREEN_DIALOG_SAVE_RAM_FILE_SAVING_FILE:
@@ -2863,7 +2863,7 @@ int8_t SCREENS_dialog_load_RECEIVE_RUN_RAM(){
 			break;	
 
 		case SCREEN_DIALOG_RECEIVE_RUN_RAM_RECEIVED:
-			screens_dialog.timer = TIMING_SetTicksDelay(SCREEN_DIALOG_SHOW_SLOWEST_MESSAGE_TIMEOUT);	
+			screens_dialog.timer = TIMING_SetTicksDelay(SCREEN_DIALOG_SHOW_FAST_MESSAGE_TIMEOUT																									);	
 			break;
 	
 		case SCREEN_DIALOG_RECEIVE_RUN_RAM_TIMEOUT_ERROR:
@@ -3032,7 +3032,7 @@ int8_t SCREENS_dialog_ev_manager_RECEIVE_RUN_RAM(int16_t * pi16_encoders_var_val
 				pui8_pushbutton_values[USER_IFACE_PUSHBT_4]==USER_IFACE_PRESSED  ||
 				pui8_pushbutton_values[USER_IFACE_PUSHBT_ENC]==USER_IFACE_PRESSED  ){
 		
-					// load dialog that shows that the user has cancelled current operation
+					// load dialog that shows that the user has canceled current operation
 					SCREENS_dialog_load(SCREEN_DIALOG_ID_RECEIVE_RUN_RAM,SCREEN_DIALOG_RECEIVE_RUN_RAM_CANCELLED);
 		
 			}//if
@@ -3232,13 +3232,13 @@ int8_t SCREENS_dialog_ev_manager_RECEIVE_RUN_RAM(int16_t * pi16_encoders_var_val
 			GPIO_SetCtrlLinesOutput(0x00);
 
             // depending on the pressed key, go back to the MENU or to the previous DIALOG SCREEN to wait to receive new ROM PACK cartridge content
-            if ((ui32_aux&(P0_USER_IFACE_PUSHB_4|P0_USER_IFACE_PUSHB_ENC1))==(P0_USER_IFACE_PUSHB_4|P0_USER_IFACE_PUSHB_ENC1)){
-	            // if the user presses any other key go back to the previous DIALOG SCREEN to wait to receive new RAM buffer content
-				SCREENS_dialog_load(SCREEN_DIALOG_ID_RECEIVE_RUN_RAM,SCREEN_DIALOG_RECEIVE_RUN_RAM_WAITING);				
-	        }else{
+            //if ((ui32_aux&(P0_USER_IFACE_PUSHB_4|P0_USER_IFACE_PUSHB_ENC1))==(P0_USER_IFACE_PUSHB_4|P0_USER_IFACE_PUSHB_ENC1)){
+	        //    // if the user presses any other key go back to the previous DIALOG SCREEN to wait to receive new RAM buffer content
+			//	SCREENS_dialog_load(SCREEN_DIALOG_ID_RECEIVE_RUN_RAM,SCREEN_DIALOG_RECEIVE_RUN_RAM_WAITING);				
+	        //}else{
 	            // if the user has pressed button 4 (right) or the encoder button then leave the RECEIVE_RUN_RAM and go back to the main menu.
 	            SCREENS_menus_load(SCREEN_MENU_CURRENT);
-            }										
+            //}										
 			break;
 					
 		default:
