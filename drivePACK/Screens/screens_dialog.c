@@ -1027,7 +1027,8 @@ int8_t SCREENS_dialog_show_INTRO(uint8_t * ui8_message){
 		case SCREEN_DIALOG_INTRO_INIT:
 		
 		    // paint the image with the logo
-			GRAPHIX_print_img_from_mem(0, 0, img_size[0],img_size[1],1,img_data,(sizeof(img_data)/sizeof(uint16_t)));			
+			GRAPHIX_print_img_from_mem(0, 0, img_size[0],img_size[1],1,img_data,(uint32_t)(sizeof(img_data)/sizeof(uint16_t)));			
+			
 			// paint the red band with the text in the middle of the screen
 			LCD_ST7735_fast_fill (LCD_COLOR_RED, 0,74, 158, 90);// creates the RED rectangle on the INTRO screen
 			GRAPHIX_print_string(8, 78, 1, 1, LCD_COLOR_WHITE, LCD_COLOR_RED, "Firmware version ");
@@ -1039,7 +1040,7 @@ int8_t SCREENS_dialog_show_INTRO(uint8_t * ui8_message){
 			GRAPHIX_print_string(13,96, 1, 1, LCD_COLOR_WHITE, LCD_COLOR_BLACK, "OM cartridge emulator");
 			
 			GRAPHIX_print_string(18,106, 1, 1, LCD_COLOR_BLACK, LCD_COLOR_WHITE, "J");
-			GRAPHIX_print_string(26,106, 1, 1, LCD_COLOR_WHITE, LCD_COLOR_BLACK, ".Bartolome 2024");
+			GRAPHIX_print_string(26,106, 1, 1, LCD_COLOR_WHITE, LCD_COLOR_BLACK, ".Bartolome 2025");
 
 			GRAPHIX_print_string(5,116, 1, 1, LCD_COLOR_BLACK, LCD_COLOR_WHITE, "W");
 			GRAPHIX_print_string(13,116, 1, 1, LCD_COLOR_WHITE, LCD_COLOR_BLACK, "ww.tolaemon.com/dpack");

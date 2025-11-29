@@ -543,7 +543,7 @@ void LCD_ST7735_fast_fill(uint16_t ui16_color, uint16_t ui16_x1, uint16_t ui16_y
 		ui16_y2 = ui16_aux;
 	}
 	ui16_ay = ui16_y2 - ui16_y1;
-	
+
 	// send all the pixels colors
 	LCD_ST7735_set_xy(ui16_x1, ui16_y1, ui16_x2, ui16_y2);
 	// ui32_total = ui16_ax * ui16_ay;
@@ -556,7 +556,7 @@ void LCD_ST7735_fast_fill(uint16_t ui16_color, uint16_t ui16_x1, uint16_t ui16_y
 		   LCD_ST7735_write_SPI_data((uint8_t)(ui16_color&0x00FF));			
 		}
 	}
-	
+
 }//LCD_ST7735_fast_fill
 
 

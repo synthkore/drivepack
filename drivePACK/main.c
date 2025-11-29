@@ -28,7 +28,7 @@
 // Actualizar el nombre de los botones en los mensajes de usuario a '1' '2' '3' '4' etc.
 // Comprobar que el DrivePACK Editor pone bien la marca de final de fichero 23 83 93 06 47 83 AB 02 63 27 4B 27 47 93 2B 83 FF FF FF FF 00 00 00 00 
 // Al hacer el Dump deberia usarse un metodo que avise de cuando el cartucho está bien situado con los LEDs, y una vez lo esté avisar al usuario para que comience el Dump.
-// Reducir tiempo de mensaje al Recivir cancion desde el PC o tras hace el LOAD etc
+// Reducir tiempo de mensaje al Recibir cancion desde el PC o tras hace el LOAD etc
 // Cuando se está reproduciendo una ROM debería aparecer el titulo de la ROM, y no el "Run file in RAM".
 // La opcion "Save as" es una chusta... no se entiende nada como guardar el fichero, debería ser mucho más sencillo.
 // Revisar la carga de los ficheros .DRP, a ver si los campos son opcionales o no, y ¿que hace el software si el fichero no tien datos binarios de la ROM, o de titulo o de las canciones ?
@@ -123,73 +123,6 @@ int main(void)
 
     USER_IFACE_encoders_clear(pi16_encoders_var_value);
     USER_IFACE_pusbuttons_clear(pui8_buttons_state);
-
-/*
-	LCD_ST7735_fast_fill ( LCD_COLOR_BLUE, 0,0, 159, 127);
-	tticks_timer = TIMING_SetTicksDelay(50000);while (TIMING_CheckTicksDelayReached(tticks_timer)==FALSE){1;};
-
-	// LCD_ST7735_fast_fill ( LCD_COLOR_RED, 10,10, 100, 100);
-	// tticks_timer = TIMING_SetTicksDelay(50000);while (TIMING_CheckTicksDelayReached(tticks_timer)==FALSE){1;};
-
-	// LCD_ST7735_fast_fill ( LCD_COLOR_YELLOW, 30,30, 80, 80);
-	// tticks_timer = TIMING_SetTicksDelay(50000);while (TIMING_CheckTicksDelayReached(tticks_timer)==FALSE){1;};
-	
-	GRAPHIX_print_string(12, 20, 2, 2, LCD_COLOR_BLACK, LCD_COLOR_TRANSPARENT,(uint8_t*)"DRIVE pack",11);
-	GRAPHIX_print_string(11, 19, 2, 2, LCD_COLOR_WHITE, LCD_COLOR_TRANSPARENT,(uint8_t*)"DRIVE pack",11);
-
-    GRAPHIX_print_string(35, 50, 1, 1, LCD_COLOR_WHITE, LCD_COLOR_TRANSPARENT,(uint8_t*)"K4SIO ROM pack",15);
-	GRAPHIX_print_string(35, 60, 1, 1, LCD_COLOR_WHITE, LCD_COLOR_TRANSPARENT,(uint8_t*)"  emulator",15);
-
-    GRAPHIX_print_string(15, 80, 1, 1, LCD_COLOR_WHITE, LCD_COLOR_TRANSPARENT,(uint8_t*)"by synthkore - 2022",20);
-	GRAPHIX_print_string(0, 90, 1, 1, LCD_COLOR_WHITE, LCD_COLOR_TRANSPARENT,(uint8_t*)"www.synthkore.com/dpack",24);
-
-	// initialize the buffers used to store the state of the encoders and pushbuttons
-	USER_IFACE_samples_clear(i16_encoders_var_value,ui8_buttons_state);    
-		
-	GRAPHIX_text_buffer_set_string(0, 0,  "00cdefghijklmnopqrstxyz", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_WHITE, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 1,  "01234567890123456789012", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_WHITE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 2,  "02234567891011213141516", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_RED, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 3,  "03cdefghijklmnopqrstxyz", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_GREEN, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 4,  "04CDEFGHIJKLMNOPQRSTXYZ", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_BLUE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 5,  "05234567891011213141516", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_RED, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 6,  "06cdefghijklmnopqrstxyz", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_ORANGE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 7,  "07CDEFGHIJKLMNOPQRSTXYZ", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_YELLOW, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 8,  "08234567891011213141516", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_GREEN, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 9,  "09cdefghijklmnopqrstxyz", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_DARK_GREEN, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 10, "10CDEFGHIJKLMNOPQRSTXYZ", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_BLUE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 11, "11234567891011213141516", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_BRIGHT_BLUE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 12, "12cdefghijklmnopqrstxyz", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_DARK_BLUE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 13, "13CDEFGHIJKLMNOPQRSTXYZ", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_BLUE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 14, "14234567891011213141516", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_BRIGHT_BLUE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 15, "15cdefghijklmnopqrstxyz", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_DARK_BLUE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 16, "16CDEFGHIJKLMNOPQRSTXYZ", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_ORANGE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 17, "17234567891011213141516", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_ORANGE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 18, "18cdefghijklmnopqrstxyz", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_ORANGE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 19, "19CDEFGHIJKLMNOPQRSTXYZ", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_ORANGE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	GRAPHIX_text_buffer_set_string(0, 20, "20234567891011213141516", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_ORANGE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-		
-	GRAPHIX_text_buffer_refresh();
-
-	GRAPHIX_text_buffer_set_string(3, 3, "YES YOU CAN!", ATTR_SHADOW, GRAPHIX_TEXT_COL_IDX_BLUE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_YELLOW);
-	
-	GRAPHIX_text_buffer_refresh();
-	
-	GRAPHIX_text_buffer_set_string(3, 3, "YES YOU CAN!", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_BLUE, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	
-	GRAPHIX_text_buffer_refresh();
-	
-	GRAPHIX_text_buffer_set_string(3, 5, "Y S Y U C N!", ATTR_NO_ATTRIBS, GRAPHIX_TEXT_COL_IDX_RED, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_BLACK);
-	
-	GRAPHIX_text_buffer_refresh();
-
-    GRAPHIX_text_buffer_fill(129, ATTR_SHADOW, GRAPHIX_TEXT_COL_IDX_RED, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_YELLOW);
-
-	GRAPHIX_text_buffer_refresh();
-
-    GRAPHIX_text_buffer_fill(129, ATTR_SHADOW, GRAPHIX_TEXT_COL_IDX_RED, GRAPHIX_TEXT_COL_IDX_BLACK, GRAPHIX_TEXT_COL_IDX_YELLOW);
-	
-	GRAPHIX_text_buffer_refresh();
-*/
 
 	while (1){
 						

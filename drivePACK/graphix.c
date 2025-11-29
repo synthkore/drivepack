@@ -710,7 +710,7 @@ void GRAPHIX_print_string(uint16_t ui16_x_orig, uint16_t ui16_y_orig, uint8_t ui
 
 
 // Reads and plots the specified RUNING LENGTH compressed r5g6b5 file in 16 bits R5G6B5 compressed file format
-void GRAPHIX_print_img_from_mem(int16_t i16_x0, int16_t i16_y0, uint32_t ui32_width, uint32_t ui32_height, uint8_t ui8_pix_size, uint16_t * pui16_mem_img, uint32_t ui32_mem_img_words){
+void GRAPHIX_print_img_from_mem(int16_t i16_x0, int16_t i16_y0, uint16_t ui16_width, uint16_t ui16_height, uint8_t ui8_pix_size, uint16_t * pui16_mem_img, uint32_t ui32_mem_img_words){
 	int i_ret_val = 0;
 	uint16_t ui16_x;
 	uint16_t ui16_y;
@@ -732,7 +732,7 @@ void GRAPHIX_print_img_from_mem(int16_t i16_x0, int16_t i16_y0, uint32_t ui32_wi
         // read and plot RUNING LENGTH compressed R5G6B5 file pixels
 		ui16_pixels_curr_row = 0;
         ui16_x = ui16_orig_x;
-        ui16_y = ui16_orig_y + (int)(ui32_height*ui8_pix_size);
+        ui16_y = ui16_orig_y + (ui16_height*ui8_pix_size);
 		ui32_word_index = 0;
 		// ui32_width = ui32_width * ui8_pix_size;
 		// ui32_height = ui32_height * ui8_pix_size;
@@ -764,7 +764,7 @@ void GRAPHIX_print_img_from_mem(int16_t i16_x0, int16_t i16_y0, uint32_t ui32_wi
 		        // set next pixel coordinates
 		        ui16_x=ui16_x + ui8_pix_size;
 	            ui16_pixels_curr_row ++;				
-		        if (ui16_pixels_curr_row >= ui32_width ) {
+		        if (ui16_pixels_curr_row >= ui16_width ) {
 					ui16_pixels_curr_row = 0;
 			        ui16_x = ui16_orig_x;
 			        ui16_y=ui16_y - ui8_pix_size;

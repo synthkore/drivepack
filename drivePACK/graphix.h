@@ -278,14 +278,14 @@ void GRAPHIX_print_string(uint16_t ui16_x_orig, uint16_t ui16_y_orig, uint8_t ui
 * @brief receives an array with the pixels of an image and paints it into the screen.
 * @param[in] i16_x0 X coordinate in pixels at which the image will be rendered.
 * @param[in] i16_y0 y coordinate in pixels at which the image will be rendered.
-* @param[in] ui32_width original horizontal size of the image in pixels
-* @param[in] ui32_height original vertical size of the image in pixels
+* @param[in] ui16_width original horizontal size of the image in pixels
+* @param[in] ui16_height original vertical size of the image in pixels
 * @param[in] ui8_pix_size number of screen pixels (XxY) used to paint each image pixel in the 
 * screen.
 * @param[in] pui16_mem_img array with the RGB color codes of the images pixels to paint in the
 * screen.
 * @param[in] ui32_mem_img_size size of the arrya with the RGB color codes.
 *********************************************************************************************/
-void GRAPHIX_print_img_from_mem(int16_t i16_x0, int16_t i16_y0, uint32_t ui32_width, uint32_t ui32_height, uint8_t ui8_pix_size, uint16_t * pui16_mem_img, uint32_t ui32_mem_img_size);
+void GRAPHIX_print_img_from_mem(int16_t i16_x0, int16_t i16_y0, uint16_t ui16_width, uint16_t ui16_height, uint8_t ui8_pix_size, uint16_t * pui16_mem_img, uint32_t ui32_mem_img_words);
 
 #endif // _GRAPHIX_H_
